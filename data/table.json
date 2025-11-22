@@ -1,0 +1,242 @@
+{
+  "products": [
+    {
+      "name": "Modern Dining Table",
+      "product_picture": "../images/products/Modern Dining Table.jpg",
+      "description_picture": "../images/products/Modern Dining Table description.jpg",
+      "brief": "contemporary rectangular dining table",
+      "detail": "The Modern Dining Table features a sleek sintered stone top with natural marble patterns that resist scratches, stains, and heat. Supported by powder-coated metal legs in a minimalist design, this table seats 6-8 people comfortably. The durable non-porous surface requires minimal maintenance, making it perfect for busy family dining.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 2850,
+      "discount": "-20%",
+      "size": {
+        "6-Seater": "160 * 90 * 76",
+        "8-Seater": "200 * 100 * 76"
+      },
+      "color": {
+        "White Marble": "#F5F5F5",
+        "Black Marble": "#2C2C2C",
+        "Grey Marble": "#808080"
+      },
+      "SKU": "TB001",
+      "number_of_remain": 38,
+      "launch_time": "15-01-2024",
+      "category": "table",
+      "tags": "table,dining,home,shop,modern,marble",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.7,
+      "review": {
+        "Jessica Turner": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        },
+        "Daniel Brown": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Michelle Lee": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Executive Office Desk",
+      "product_picture": "../images/products/Executive Office Desk.jpg",
+      "description_picture": "../images/products/Executive Office Desk description.jpg",
+      "brief": "professional L-shaped work desk",
+      "detail": "The Executive Office Desk combines functionality with professional aesthetics in an L-shaped configuration. Features a spacious engineered wood surface with steel frame construction, integrated cable management, and multiple storage drawers. The corner design maximizes workspace while fitting efficiently into office layouts, perfect for home or corporate settings.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 1950,
+      "discount": "-15%",
+      "size": {
+        "Standard": "150 * 150 * 75"
+      },
+      "color": {
+        "Walnut": "#773F1A",
+        "Oak": "#D2B48C",
+        "Black": "#1C1C1C"
+      },
+      "SKU": "TB002",
+      "number_of_remain": 45,
+      "launch_time": "08-02-2024",
+      "category": "table",
+      "tags": "table,office,home,shop,desk,L-shaped",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.5,
+      "review": {
+        "Richard Wang": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Sarah Mitchell": {
+          "rate": 4.4,
+          "comment": "this is a product comment."
+        },
+        "Kevin Park": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Round Coffee Table",
+      "product_picture": "../images/products/Round Coffee Table.jpg",
+      "description_picture": "../images/products/Round Coffee Table description.jpg",
+      "brief": "elegant circular center table",
+      "detail": "The Round Coffee Table showcases mid-century modern design with its smooth circular walnut veneer top and tapered wooden legs. The organic round shape encourages conversation flow and softens room geometry. Features a lower shelf for magazines or decorative items, combining style with practical storage for living room spaces.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 850,
+      "discount": "-10%",
+      "size": {
+        "Medium": "80 * 80 * 45",
+        "Large": "100 * 100 * 45"
+      },
+      "color": {
+        "Natural Wood": "#D2B48C",
+        "Dark Walnut": "#5C4033",
+        "White Oak": "#F5F5DC"
+      },
+      "SKU": "TB003",
+      "number_of_remain": 56,
+      "launch_time": "22-03-2024",
+      "category": "table",
+      "tags": "table,coffee,living,home,shop,round",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.6,
+      "review": {
+        "Laura Chen": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        },
+        "Mark Johnson": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        },
+        "Amanda White": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Glass Console Table",
+      "product_picture": "../images/products/Glass Console Table.jpg",
+      "description_picture": "../images/products/Glass Console Table description.jpg",
+      "brief": "sleek tempered glass entryway table",
+      "detail": "The Glass Console Table brings contemporary elegance with its 12mm tempered glass top and polished stainless steel frame. The transparent surface creates visual lightness ideal for narrow entryways or hallways. Chrome-finished legs add a reflective quality, while the slim profile provides display space without overwhelming compact areas.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 680,
+      "discount": "0",
+      "size": {
+        "Standard": "120 * 40 * 80"
+      },
+      "color": {
+        "Clear Glass": "#F0F0F0",
+        "Smoked Glass": "#696969",
+        "Bronze Glass": "#8B7355"
+      },
+      "SKU": "TB004",
+      "number_of_remain": 42,
+      "launch_time": "10-05-2024",
+      "category": "table",
+      "tags": "table,console,living,home,shop,glass",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.4,
+      "review": {
+        "Victoria Adams": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        },
+        "Christopher Lee": {
+          "rate": 4.3,
+          "comment": "this is a product comment."
+        },
+        "Emma Davis": {
+          "rate": 4.4,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Extendable Farmhouse",
+      "product_picture": "../images/products/Extendable Farmhouse.jpg",
+      "description_picture": "../images/products/Extendable Farmhouse description.jpg",
+      "brief": "rustic expandable dining table",
+      "detail": "The Extendable Farmhouse table combines rustic charm with practical versatility. Crafted from solid reclaimed wood with visible grain patterns and distressed finish, it features a butterfly leaf mechanism that expands seating from 6 to 10 people. Chunky turned legs and cross-beam supports create authentic farmhouse character perfect for gatherings.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 3250,
+      "discount": "-18%",
+      "size": {
+        "Compact": "180 * 90 * 76",
+        "Extended": "240 * 90 * 76"
+      },
+      "color": {
+        "Natural Pine": "#E3C16F",
+        "Weathered Grey": "#8B8680",
+        "Rustic Brown": "#6F4E37"
+      },
+      "SKU": "TB005",
+      "number_of_remain": 27,
+      "launch_time": "28-06-2024",
+      "category": "table",
+      "tags": "table,dining,home,shop,farmhouse,extendable",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.8,
+      "review": {
+        "Matthew King": {
+          "rate": 4.9,
+          "comment": "this is a product comment."
+        },
+        "Jennifer Hill": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        },
+        "Steven Clark": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Adjustable Study Desk",
+      "product_picture": "../images/products/Adjustable Study Desk.jpg",
+      "description_picture": "../images/products/Adjustable Study Desk description.jpg",
+      "brief": "ergonomic height-adjustable desk",
+      "detail": "The Adjustable Study Desk promotes healthy posture with its pneumatic height adjustment mechanism ranging from sitting to standing positions. Features a spacious laminate work surface with rounded corners, integrated pencil groove, and side storage hook. Designed for students and professionals, the tilting desktop option accommodates drawing and reading tasks.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 1280,
+      "discount": "-12%",
+      "size": {
+        "Standard": "100 * 60 * 75"
+      },
+      "color": {
+        "White": "#FFFFFF",
+        "Blue": "#4682B4",
+        "Pink": "#FFB6C1",
+        "Grey": "#A9A9A9"
+      },
+      "SKU": "TB006",
+      "number_of_remain": 68,
+      "launch_time": "15-09-2024",
+      "category": "table",
+      "tags": "table,study,home,office,shop,adjustable",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.7,
+      "review": {
+        "Rachel Zhang": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        },
+        "Andrew Scott": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Sophie Martin": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        }
+      }
+    }
+  ]
+}
