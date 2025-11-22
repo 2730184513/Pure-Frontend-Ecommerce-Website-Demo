@@ -1,0 +1,238 @@
+{
+  "products": [
+    {
+      "name": "Arc Elegance",
+      "product_picture": "../images/products/Arc Elegance.jpg",
+      "description_picture": "../images/products/Arc Elegance description.jpg",
+      "brief": "modern arched floor lamp",
+      "detail": "The Arc Elegance floor lamp features a graceful curved design that extends light over seating areas without requiring ceiling installation. Finished in brushed brass with a marble base for stability, this statement piece includes an adjustable shade and dimmer switch. Perfect for creating ambient lighting in living rooms and reading corners.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 1580,
+      "discount": "-20%",
+      "size": {
+        "Standard": "40 * 40 * 210"
+      },
+      "color": {
+        "Brushed Brass": "#B5A642",
+        "Matte Black": "#28282B",
+        "Chrome": "#C0C0C0"
+      },
+      "SKU": "LA001",
+      "number_of_remain": 28,
+      "launch_time": "08-01-2024",
+      "category": "floor lamp",
+      "tags": "lamp,lighting,living,home,shop,arc",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.7,
+      "review": {
+        "Olivia Wright": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        },
+        "Nathan Scott": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Emily Roberts": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Tripod Modern",
+      "product_picture": "../images/products/Tripod Modern.jpg",
+      "description_picture": "../images/products/Tripod Modern description.jpg",
+      "brief": "minimalist tripod standing lamp",
+      "detail": "The Tripod Modern floor lamp combines mid-century aesthetics with contemporary functionality. Featuring three solid wood legs and a linen drum shade, this lamp provides warm diffused lighting. The adjustable height and stable tripod base make it versatile for various room configurations and design styles.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 890,
+      "discount": "-15%",
+      "size": {
+        "Standard": "55 * 55 * 165"
+      },
+      "color": {
+        "Natural Wood": "#D2B48C",
+        "Black Wood": "#3B3B3B",
+        "White Oak": "#F5F5DC"
+      },
+      "SKU": "LA002",
+      "number_of_remain": 45,
+      "launch_time": "22-02-2024",
+      "category": "floor lamp",
+      "tags": "lamp,lighting,living,home,shop,tripod,modern",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.6,
+      "review": {
+        "Jacob Lee": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        },
+        "Abigail Turner": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        },
+        "William Harris": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Reading Gooseneck",
+      "product_picture": "../images/products/Reading Gooseneck.jpg",
+      "description_picture": "../images/products/Reading Gooseneck description.jpg",
+      "brief": "adjustable task reading lamp",
+      "detail": "The Reading Gooseneck floor lamp is designed for precision lighting with its flexible gooseneck arm and focused LED bulb. Features touch controls, stepless dimming, and three color temperature settings from warm to cool white. Energy-efficient LED technology and a slim profile make it ideal for home offices and reading nooks.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 650,
+      "discount": "0",
+      "size": {
+        "Standard": "30 * 30 * 150"
+      },
+      "color": {
+        "Black": "#000000",
+        "Silver": "#C0C0C0",
+        "White": "#FFFFFF"
+      },
+      "SKU": "LA003",
+      "number_of_remain": 62,
+      "launch_time": "15-03-2024",
+      "category": "floor lamp",
+      "tags": "lamp,lighting,office,home,shop,reading,LED",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.5,
+      "review": {
+        "Madison Clark": {
+          "rate": 4.4,
+          "comment": "this is a product comment."
+        },
+        "Elijah Martin": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Sophia Anderson": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Torchiere Uplighter",
+      "product_picture": "../images/products/Torchiere Uplighter.jpg",
+      "description_picture": "../images/products/Torchiere Uplighter description.jpg",
+      "brief": "classic upward lighting lamp",
+      "detail": "The Torchiere Uplighter floor lamp creates ambient room illumination by directing light toward the ceiling for soft reflection. Features a sleek metal column design with a frosted glass shade that diffuses light evenly. Includes a rotary dimmer for adjustable brightness and complements both traditional and contemporary interiors.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 720,
+      "discount": "-10%",
+      "size": {
+        "Standard": "35 * 35 * 180"
+      },
+      "color": {
+        "Bronze": "#CD7F32",
+        "Nickel": "#727472",
+        "Black": "#1C1C1C"
+      },
+      "SKU": "LA004",
+      "number_of_remain": 38,
+      "launch_time": "28-04-2024",
+      "category": "floor lamp",
+      "tags": "lamp,lighting,living,home,shop,torchiere",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.4,
+      "review": {
+        "Alexander White": {
+          "rate": 4.3,
+          "comment": "this is a product comment."
+        },
+        "Charlotte Adams": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        },
+        "Daniel King": {
+          "rate": 4.4,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Tree Multi-Arm",
+      "product_picture": "../images/products/Tree Multi-Arm.jpg",
+      "description_picture": "../images/products/Tree Multi-Arm description.jpg",
+      "brief": "contemporary multi-light floor lamp",
+      "detail": "The Tree Multi-Arm floor lamp features five adjustable arms with individual LED bulbs, providing versatile lighting for large spaces. Each arm can be positioned independently to direct light where needed. Modern industrial design with a matte black finish and weighted base ensures stability while creating dramatic lighting effects.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 1350,
+      "discount": "-18%",
+      "size": {
+        "Standard": "45 * 45 * 175"
+      },
+      "color": {
+        "Matte Black": "#28282B",
+        "Brass": "#B5A642",
+        "Gunmetal": "#2C3539"
+      },
+      "SKU": "LA005",
+      "number_of_remain": 22,
+      "launch_time": "10-06-2024",
+      "category": "floor lamp",
+      "tags": "lamp,lighting,living,home,shop,tree,multi-arm",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.8,
+      "review": {
+        "Victoria Bennett": {
+          "rate": 4.9,
+          "comment": "this is a product comment."
+        },
+        "Ryan Mitchell": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        },
+        "Hannah Price": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Sculptural Statement",
+      "product_picture": "../images/products/Sculptural Statement.jpg",
+      "description_picture": "../images/products/Sculptural Statement description.jpg",
+      "brief": "artistic designer floor lamp",
+      "detail": "The Sculptural Statement floor lamp doubles as functional art with its abstract geometric design and premium materials. Featuring a handcrafted metal frame with integrated LED strips, this lamp creates unique light patterns and shadows. A bold focal point that combines artistic expression with sophisticated lighting technology.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 2150,
+      "discount": "0",
+      "size": {
+        "Standard": "50 * 50 * 190"
+      },
+      "color": {
+        "Gold": "#FFD700",
+        "Copper": "#B87333",
+        "Black Steel": "#3B3B3B"
+      },
+      "SKU": "LA006",
+      "number_of_remain": 15,
+      "launch_time": "25-08-2024",
+      "category": "floor lamp",
+      "tags": "lamp,lighting,living,home,shop,sculptural,designer",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.9,
+      "review": {
+        "Isabella Moore": {
+          "rate": 5.0,
+          "comment": "this is a product comment."
+        },
+        "Christopher Taylor": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        },
+        "Emma Davis": {
+          "rate": 4.9,
+          "comment": "this is a product comment."
+        }
+      }
+    }
+  ]
+}
