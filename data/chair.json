@@ -1,445 +1,401 @@
 {
   "products": [
     {
-      "name": "Asgaard sofa",
-      "product_picture": "../images/products/Asgaard sofa.jpg",
-      "description_picture": "../images/products/Asgaard sofa description.jpg",
-      "brief": "luxury scandinavian inspired sofa",
-      "detail": "The Asgaard sofa combines Scandinavian design aesthetics with ultimate comfort. Featuring an elegant upholstered frame that appears seamlessly crafted from one piece, complemented by plush seat and back cushions. This statement piece brings sophistication and warmth to any living space with its clean lines and premium materials.",
+      "name": "Wingback Elegance",
+      "product_picture": "../images/products/Wingback Elegance.jpg",
+      "description_picture": "../images/products/Wingback Elegance description.jpg",
+      "brief": "classic high back armchair",
+      "detail": "The Wingback Elegance chair features distinctive side panels and a high back that provide excellent head and neck support. Upholstered in premium velvet with button tufting details, this traditional design includes carved wooden legs and brass nailhead trim. Perfect for creating a sophisticated reading nook or accent piece.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 2500,
-      "discount": "-30%",
+      "price": 1850,
+      "discount": "-20%",
       "size": {
-        "L": "200 * 90 * 85",
-        "XL": "230 * 95 * 85",
-        "XXL": "260 * 100 * 90"
+        "Standard": "75 * 80 * 110"
       },
       "color": {
-        "Charcoal Grey": "#36454F",
-        "Cream White": "#FFFDD0",
-        "Navy Blue": "#000080"
+        "Navy Blue": "#000080",
+        "Emerald Green": "#50C878",
+        "Burgundy": "#800020"
       },
-      "SKU": "SS001",
-      "number_of_remain": 45,
-      "launch_time": "15-03-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,luxury",
-      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
-      "average_rate": 4.7,
-      "review": {
-        "Emily Johnson": {
-          "rate": 4.8,
-          "comment": "this is a product comment."
-        },
-        "Michael Chen": {
-          "rate": 5.0,
-          "comment": "this is a product comment."
-        },
-        "Sarah Williams": {
-          "rate": 4.5,
-          "comment": "this is a product comment."
-        },
-        "David Anderson": {
-          "rate": 4.2,
-          "comment": "this is a product comment."
-        },
-        "Lisa Martinez": {
-          "rate": 4.9,
-          "comment": "this is a product comment."
-        }
-      }
-    },
-    {
-      "name": "Modular Sectional",
-      "product_picture": "../images/products/Modular Sectional.jpg",
-      "description_picture": "../images/products/Modular Sectional description.jpg",
-      "brief": "customizable modular seating system",
-      "detail": "The Modular Sectional offers unparalleled flexibility for modern living spaces. Each piece can be rearranged to create L-shaped, linear, or corner configurations. Featuring premium fabric upholstery and deep cushions for maximum comfort, this adaptable design grows with your lifestyle and entertaining needs.",
-      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 3200,
-      "discount": "0",
-      "size": {
-        "M": "180 * 85 * 80",
-        "L": "220 * 90 * 80",
-        "XL": "280 * 95 * 85"
-      },
-      "color": {
-        "Stone Grey": "#8C8C8C",
-        "Sage Green": "#87AE73",
-        "Warm Beige": "#D4C5B9"
-      },
-      "SKU": "SS002",
-      "number_of_remain": 28,
-      "launch_time": "22-05-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,modular",
+      "SKU": "CH001",
+      "number_of_remain": 35,
+      "launch_time": "18-01-2024",
+      "category": "chair",
+      "tags": "chair,living,home,shop,classic,accent",
       "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
       "average_rate": 4.6,
       "review": {
-        "Robert Taylor": {
+        "Rachel Cooper": {
           "rate": 4.7,
           "comment": "this is a product comment."
         },
-        "Jennifer Lee": {
-          "rate": 4.3,
-          "comment": "this is a product comment."
-        },
-        "James Wilson": {
-          "rate": 4.9,
-          "comment": "this is a product comment."
-        },
-        "Amanda Brown": {
+        "Andrew Martinez": {
           "rate": 4.5,
           "comment": "this is a product comment."
-        }
-      }
-    },
-    {
-      "name": "Chesterfield Classic",
-      "product_picture": "../images/products/Chesterfield Classic.jpg",
-      "description_picture": "../images/products/Chesterfield Classic description.jpg",
-      "brief": "timeless tufted leather sofa",
-      "detail": "The Chesterfield Classic embodies traditional elegance with its signature deep button tufting and rolled arms. Crafted from genuine top-grain leather, this iconic design features a solid hardwood frame and individually hand-applied brass nailhead trim. A sophisticated centerpiece that adds distinguished character to any room.",
-      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 4500,
-      "discount": "-15%",
-      "size": {
-        "M": "190 * 88 * 78",
-        "L": "210 * 92 * 78",
-        "XL": "240 * 95 * 80"
-      },
-      "color": {
-        "Rich Brown": "#654321",
-        "Oxblood Red": "#800020",
-        "Forest Green": "#014421",
-        "Black": "#1C1C1C"
-      },
-      "SKU": "SS003",
-      "number_of_remain": 15,
-      "launch_time": "10-01-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,classic,leather",
-      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
-      "average_rate": 4.9,
-      "review": {
-        "Christopher Moore": {
-          "rate": 5.0,
-          "comment": "this is a product comment."
         },
-        "Patricia Garcia": {
+        "Sophia Bennett": {
           "rate": 4.8,
           "comment": "this is a product comment."
         },
-        "Daniel Martinez": {
-          "rate": 4.9,
+        "Lucas Gray": {
+          "rate": 4.4,
           "comment": "this is a product comment."
         }
       }
     },
     {
-      "name": "Velvet Luxe",
-      "product_picture": "../images/products/Velvet Luxe.jpg",
-      "description_picture": "../images/products/Velvet Luxe description.jpg",
-      "brief": "sumptuous velvet upholstered sofa",
-      "detail": "The Velvet Luxe sofa showcases opulent comfort with its plush velvet upholstery and generous proportions. Featuring channel-tufted seat cushions and elegant curved armrests, this contemporary piece offers a perfect blend of visual luxury and sink-in comfort. Gold-finished metal legs provide a glamorous finishing touch.",
+      "name": "Scandinavian Dining",
+      "product_picture": "../images/products/Scandinavian Dining.jpg",
+      "description_picture": "../images/products/Scandinavian Dining description.jpg",
+      "brief": "minimalist wooden dining chair",
+      "detail": "The Scandinavian Dining chair embodies Nordic simplicity with its clean lines and natural wood construction. Featuring a contoured seat for ergonomic comfort and angled legs for stability, this chair is crafted from sustainable oak wood with a smooth matte finish. Ideal for modern dining spaces seeking functional elegance.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 3800,
-      "discount": "-25%",
+      "price": 680,
+      "discount": "0",
       "size": {
-        "M": "195 * 92 * 82",
-        "L": "225 * 96 * 85",
-        "XL": "255 * 100 * 88"
+        "Standard": "50 * 52 * 82"
       },
       "color": {
-        "Emerald Green": "#50C878",
-        "Royal Blue": "#4169E1",
-        "Blush Pink": "#FFB6C1",
-        "Foggy Purple": "#9F86C0"
+        "Natural Oak": "#D2B48C",
+        "Walnut": "#773F1A",
+        "White Ash": "#F5F5DC"
       },
-      "SKU": "SS004",
-      "number_of_remain": 32,
-      "launch_time": "08-04-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,velvet,luxury",
+      "SKU": "CH002",
+      "number_of_remain": 68,
+      "launch_time": "25-02-2024",
+      "category": "chair",
+      "tags": "chair,dining,home,shop,scandinavian,wood",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.7,
+      "review": {
+        "Oliver Reed": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Emma Wilson": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        },
+        "Noah Carter": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Executive Leather",
+      "product_picture": "../images/products/Executive Leather.jpg",
+      "description_picture": "../images/products/Executive Leather description.jpg",
+      "brief": "premium office executive chair",
+      "detail": "The Executive Leather chair delivers superior comfort and professional style for home offices and corporate settings. Features genuine bonded leather upholstery, lumbar support cushioning, 360-degree swivel, and pneumatic height adjustment. Chrome-finished five-star base with smooth-rolling casters ensures mobility and durability.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 2450,
+      "discount": "-15%",
+      "size": {
+        "Standard": "65 * 70 * 115"
+      },
+      "color": {
+        "Black": "#1C1C1C",
+        "Brown": "#654321",
+        "Grey": "#808080"
+      },
+      "SKU": "CH003",
+      "number_of_remain": 42,
+      "launch_time": "10-03-2024",
+      "category": "chair",
+      "tags": "chair,office,home,shop,executive,leather",
       "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
       "average_rate": 4.5,
       "review": {
-        "Michelle Davis": {
+        "Victoria Hayes": {
           "rate": 4.6,
           "comment": "this is a product comment."
         },
-        "Thomas White": {
+        "Benjamin Foster": {
           "rate": 4.4,
           "comment": "this is a product comment."
         },
-        "Karen Thompson": {
-          "rate": 4.7,
-          "comment": "this is a product comment."
-        },
-        "Steven Harris": {
-          "rate": 4.3,
+        "Chloe Murphy": {
+          "rate": 4.5,
           "comment": "this is a product comment."
         }
       }
     },
     {
-      "name": "Minimalist Track Arm",
-      "product_picture": "../images/products/Minimalist Track Arm.jpg",
-      "description_picture": "../images/products/Minimalist Track Arm description.jpg",
-      "brief": "sleek contemporary design sofa",
-      "detail": "The Minimalist Track Arm sofa features clean lines and a streamlined silhouette perfect for modern interiors. With its straight track arms and low-profile design, this sofa maximizes seating space while maintaining an airy aesthetic. Premium linen-blend fabric and high-density foam cushions ensure lasting comfort and durability.",
+      "name": "Café Bistro",
+      "product_picture": "../images/products/Café Bistro.jpg",
+      "description_picture": "../images/products/Café Bistro description.jpg",
+      "brief": "stylish metal dining chair",
+      "detail": "The Café Bistro chair brings industrial chic to any dining space with its powder-coated metal frame and vintage-inspired design. Stackable for easy storage, featuring a curved backrest for comfort and cross-brace construction for strength. Available in multiple colors to complement various interior styles.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 2800,
-      "discount": "0",
+      "price": 420,
+      "discount": "-10%",
       "size": {
-        "M": "185 * 86 * 78",
-        "L": "215 * 90 * 80",
-        "XL": "245 * 94 * 82"
+        "Standard": "45 * 50 * 85"
       },
       "color": {
-        "Light Grey": "#D3D3D3",
-        "Charcoal": "#36454F",
-        "Natural Linen": "#F5F5DC"
+        "Matte Black": "#28282B",
+        "Copper": "#B87333",
+        "White": "#FFFFFF",
+        "Mint Green": "#98FF98"
       },
-      "SKU": "SS005",
-      "number_of_remain": 52,
-      "launch_time": "18-06-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,modern,minimalist",
+      "SKU": "CH004",
+      "number_of_remain": 95,
+      "launch_time": "05-04-2024",
+      "category": "chair",
+      "tags": "chair,dining,home,shop,bistro,metal",
       "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
       "average_rate": 4.4,
       "review": {
-        "Kevin Clark": {
+        "Isabella Torres": {
+          "rate": 4.3,
+          "comment": "this is a product comment."
+        },
+        "Mason Brooks": {
           "rate": 4.5,
           "comment": "this is a product comment."
         },
-        "Nancy Lewis": {
-          "rate": 4.2,
-          "comment": "this is a product comment."
-        },
-        "Brian Walker": {
-          "rate": 4.6,
-          "comment": "this is a product comment."
-        },
-        "Sandra Hall": {
-          "rate": 4.3,
+        "Ava Richardson": {
+          "rate": 4.4,
           "comment": "this is a product comment."
         }
       }
     },
     {
-      "name": "Curved Boomerang",
-      "product_picture": "../images/products/Curved Boomerang.jpg",
-      "description_picture": "../images/products/Curved Boomerang description.jpg",
-      "brief": "organic curved contemporary sofa",
-      "detail": "The Curved Boomerang sofa makes a bold statement with its graceful arc design that encourages conversation and creates visual interest. Upholstered in soft boucle fabric, this sculptural piece features a continuous curved backrest and tapered wooden legs. An artistic focal point that combines comfort with contemporary design.",
+      "name": "Velvet Accent",
+      "product_picture": "../images/products/Velvet Accent.jpg",
+      "description_picture": "../images/products/Velvet Accent description.jpg",
+      "brief": "luxurious velvet lounge chair",
+      "detail": "The Velvet Accent chair adds a touch of glamour with its plush velvet upholstery and gold-finished metal legs. Featuring a deep seat, curved armrests, and channel tufting on the backrest, this piece combines Art Deco elegance with modern comfort. A stunning focal point for bedrooms or living rooms.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 4200,
-      "discount": "-20%",
+      "price": 1650,
+      "discount": "-25%",
       "size": {
-        "L": "240 * 95 * 82",
-        "XL": "270 * 100 * 85"
+        "Standard": "70 * 75 * 85"
       },
       "color": {
-        "Cream Boucle": "#FFFDD0",
-        "Terracotta": "#E2725B",
-        "Dusty Rose": "#DCAE96"
+        "Dusty Pink": "#DCAE96",
+        "Royal Blue": "#4169E1",
+        "Forest Green": "#014421",
+        "Charcoal": "#36454F"
       },
-      "SKU": "SS006",
-      "number_of_remain": 18,
-      "launch_time": "05-02-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,curved,contemporary",
+      "SKU": "CH005",
+      "number_of_remain": 29,
+      "launch_time": "20-05-2024",
+      "category": "chair",
+      "tags": "chair,living,bedroom,home,shop,velvet,accent",
       "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
       "average_rate": 4.8,
       "review": {
-        "Elizabeth Allen": {
+        "Ethan Powell": {
           "rate": 4.9,
           "comment": "this is a product comment."
         },
-        "Richard Young": {
+        "Mia Jenkins": {
           "rate": 4.7,
           "comment": "this is a product comment."
         },
-        "Barbara King": {
+        "Liam Peterson": {
           "rate": 4.8,
           "comment": "this is a product comment."
         }
       }
     },
     {
-      "name": "Lawson Comfort",
-      "product_picture": "../images/products/Lawson Comfort.jpg",
-      "description_picture": "../images/products/Lawson Comfort description.jpg",
-      "brief": "classic comfortable family sofa",
-      "detail": "The Lawson Comfort sofa features a timeless design with its simple boxed shape, padded arms, and loose back cushions. Built for everyday living, it offers exceptional comfort with deep seating and resilient foam-wrapped coil spring cushioning. Durable performance fabric makes this sofa ideal for busy households and family gatherings.",
+      "name": "Ergonomic Mesh",
+      "product_picture": "../images/products/Ergonomic Mesh.jpg",
+      "description_picture": "../images/products/Ergonomic Mesh description.jpg",
+      "brief": "breathable office task chair",
+      "detail": "The Ergonomic Mesh chair prioritizes comfort and health with its breathable mesh backrest and contoured seat cushion. Features adjustable lumbar support, armrests, and seat height with tilt tension control. Designed to promote proper posture during extended work sessions, ideal for home offices and workspaces.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 2950,
-      "discount": "-10%",
+      "price": 1280,
+      "discount": "0",
       "size": {
-        "M": "188 * 90 * 85",
-        "L": "218 * 94 * 88",
-        "XL": "248 * 98 * 90"
+        "Standard": "60 * 65 * 105"
       },
       "color": {
-        "Denim Blue": "#1560BD",
-        "Warm Grey": "#8B8680",
-        "Oatmeal": "#E8E4C9"
+        "Black": "#000000",
+        "Grey": "#808080",
+        "Blue": "#0000FF"
       },
-      "SKU": "SS007",
-      "number_of_remain": 41,
-      "launch_time": "12-07-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,family,comfortable",
+      "SKU": "CH006",
+      "number_of_remain": 57,
+      "launch_time": "12-06-2024",
+      "category": "chair",
+      "tags": "chair,office,home,shop,ergonomic,mesh",
       "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
       "average_rate": 4.6,
       "review": {
-        "Matthew Scott": {
+        "Charlotte Russell": {
+          "rate": 4.5,
+          "comment": "this is a product comment."
+        },
+        "James Griffin": {
           "rate": 4.7,
           "comment": "this is a product comment."
         },
-        "Dorothy Adams": {
-          "rate": 4.4,
+        "Amelia Coleman": {
+          "rate": 4.6,
           "comment": "this is a product comment."
-        },
-        "Joseph Baker": {
+        }
+      }
+    },
+    {
+      "name": "Rattan Bohemian",
+      "product_picture": "../images/products/Rattan Bohemian.jpg",
+      "description_picture": "../images/products/Rattan Bohemian description.jpg",
+      "brief": "natural woven accent chair",
+      "detail": "The Rattan Bohemian chair brings organic texture and relaxed style with its handwoven natural rattan construction. Featuring a rounded peacock-style back, comfortable seat cushion, and sturdy wooden frame, this chair adds coastal or boho charm to any space. Perfect for sunrooms, patios, or eclectic interiors.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 950,
+      "discount": "-18%",
+      "size": {
+        "Standard": "68 * 70 * 95"
+      },
+      "color": {
+        "Natural": "#D2B48C",
+        "Honey Brown": "#C19A6B",
+        "White Wash": "#F5F5F5"
+      },
+      "SKU": "CH007",
+      "number_of_remain": 33,
+      "launch_time": "28-07-2024",
+      "category": "chair",
+      "tags": "chair,living,home,shop,bohemian,rattan",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.7,
+      "review": {
+        "Henry Sanders": {
           "rate": 4.8,
           "comment": "this is a product comment."
         },
-        "Betty Nelson": {
+        "Grace Watson": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Sebastian Price": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Modern Barrel",
+      "product_picture": "../images/products/Modern Barrel.jpg",
+      "description_picture": "../images/products/Modern Barrel description.jpg",
+      "brief": "curved contemporary lounge chair",
+      "detail": "The Modern Barrel chair features a distinctive rounded silhouette with enveloping sides that create a cozy cocoon effect. Upholstered in soft boucle fabric with a 360-degree swivel base, this chair offers both style and functionality. Black powder-coated metal legs provide a sleek contrast to the plush upholstery.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 1580,
+      "discount": "-22%",
+      "size": {
+        "Standard": "72 * 76 * 78"
+      },
+      "color": {
+        "Cream Boucle": "#FFFDD0",
+        "Camel": "#C19A6B",
+        "Slate Grey": "#708090"
+      },
+      "SKU": "CH008",
+      "number_of_remain": 25,
+      "launch_time": "15-08-2024",
+      "category": "chair",
+      "tags": "chair,living,home,shop,modern,swivel",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.8,
+      "review": {
+        "Lily Howard": {
+          "rate": 4.9,
+          "comment": "this is a product comment."
+        },
+        "Jack Morgan": {
+          "rate": 4.7,
+          "comment": "this is a product comment."
+        },
+        "Harper Reed": {
+          "rate": 4.8,
+          "comment": "this is a product comment."
+        }
+      }
+    },
+    {
+      "name": "Gaming Pro",
+      "product_picture": "../images/products/Gaming Pro.jpg",
+      "description_picture": "../images/products/Gaming Pro description.jpg",
+      "brief": "high performance gaming chair",
+      "detail": "The Gaming Pro chair delivers competitive edge with its racing-inspired design and premium features. Includes adjustable lumbar pillow, headrest cushion, 4D armrests, and full recline capability up to 180 degrees. Heavy-duty nylon base and smooth PU casters support intense gaming sessions with maximum comfort.",
+      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
+      "price": 1950,
+      "discount": "0",
+      "size": {
+        "Standard": "68 * 70 * 125"
+      },
+      "color": {
+        "Black Red": "#8B0000",
+        "Black Blue": "#000080",
+        "Black White": "#F5F5F5"
+      },
+      "SKU": "CH009",
+      "number_of_remain": 48,
+      "launch_time": "02-09-2024",
+      "category": "chair",
+      "tags": "chair,gaming,office,home,shop",
+      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
+      "average_rate": 4.5,
+      "review": {
+        "Dylan Cooper": {
+          "rate": 4.6,
+          "comment": "this is a product comment."
+        },
+        "Zoe Butler": {
+          "rate": 4.4,
+          "comment": "this is a product comment."
+        },
+        "Ryan Kelly": {
           "rate": 4.5,
           "comment": "this is a product comment."
         }
       }
     },
     {
-      "name": "Mid-Century Modern",
-      "product_picture": "../images/products/Mid-Century Modern.jpg",
-      "description_picture": "../images/products/Mid-Century Modern description.jpg",
-      "brief": "retro inspired angular sofa",
-      "detail": "The Mid-Century Modern sofa captures the essence of 1950s design with its angular silhouette, tapered wooden legs, and button-tufted seat cushions. Upholstered in rich, textured fabric, this piece features characteristic clean lines and geometric forms. A nostalgic yet timeless addition that brings vintage charm to contemporary spaces.",
+      "name": "Classic Windsor",
+      "product_picture": "../images/products/Classic Windsor.jpg",
+      "description_picture": "../images/products/Classic Windsor description.jpg",
+      "brief": "traditional spindle back chair",
+      "detail": "The Classic Windsor chair honors centuries of craftsmanship with its distinctive spindle back and saddle-shaped seat. Handcrafted from solid hardwood with turned legs and stretchers, this timeless design adds warmth and character to dining rooms and kitchens. Available in various wood finishes to match traditional or farmhouse décor.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 3350,
-      "discount": "-18%",
-      "size": {
-        "M": "192 * 88 * 80",
-        "L": "222 * 92 * 82",
-        "XL": "252 * 96 * 84"
-      },
-      "color": {
-        "Mustard Yellow": "#FFDB58",
-        "Teal": "#008080",
-        "Burnt Orange": "#CC5500",
-        "Walnut Brown": "#773F1A"
-      },
-      "SKU": "SS008",
-      "number_of_remain": 24,
-      "launch_time": "25-08-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,retro,mid-century",
-      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
-      "average_rate": 4.7,
-      "review": {
-        "George Hill": {
-          "rate": 4.8,
-          "comment": "this is a product comment."
-        },
-        "Carol Green": {
-          "rate": 4.6,
-          "comment": "this is a product comment."
-        },
-        "Paul Mitchell": {
-          "rate": 4.7,
-          "comment": "this is a product comment."
-        }
-      }
-    },
-    {
-      "name": "Recliner Elegance",
-      "product_picture": "../images/products/Recliner Elegance.jpg",
-      "description_picture": "../images/products/Recliner Elegance description.jpg",
-      "brief": "power reclining luxury sofa",
-      "detail": "The Recliner Elegance sofa combines sophisticated style with ultimate relaxation features. Each seat includes independent power reclining mechanisms with USB charging ports. Premium leather upholstery with contrast stitching, memory foam seating, and adjustable headrests provide personalized comfort. Modern luxury meets functional innovation.",
-      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 5200,
-      "discount": "0",
-      "size": {
-        "L": "210 * 95 * 100",
-        "XL": "240 * 100 * 105"
-      },
-      "color": {
-        "Espresso Brown": "#4E3B31",
-        "Slate Grey": "#708090",
-        "Caramel Tan": "#B87333"
-      },
-      "SKU": "SS009",
-      "number_of_remain": 12,
-      "launch_time": "30-09-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,recliner,luxury",
-      "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
-      "average_rate": 4.9,
-      "review": {
-        "Mark Campbell": {
-          "rate": 5.0,
-          "comment": "this is a product comment."
-        },
-        "Helen Parker": {
-          "rate": 4.9,
-          "comment": "this is a product comment."
-        },
-        "Donald Evans": {
-          "rate": 4.8,
-          "comment": "this is a product comment."
-        }
-      }
-    },
-    {
-      "name": "English Rolled Arm",
-      "product_picture": "../images/products/English Rolled Arm.jpg",
-      "description_picture": "../images/products/English Rolled Arm description.jpg",
-      "brief": "traditional elegant rolled arm sofa",
-      "detail": "The English Rolled Arm sofa exemplifies classic British styling with its distinctive low, scrolled arms and deep seating. Upholstered in premium cotton-linen blend fabric, featuring eight-way hand-tied spring construction for superior support. Turned wood legs and welted seam details complete this refined, sophisticated design that never goes out of style.",
-      "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
-      "price": 3600,
+      "price": 780,
       "discount": "-12%",
       "size": {
-        "M": "194 * 91 * 84",
-        "L": "224 * 95 * 86",
-        "XL": "254 * 99 * 88"
+        "Standard": "48 * 50 * 90"
       },
       "color": {
-        "Ivory": "#FFFFF0",
-        "Taupe": "#B38B6D",
-        "Midnight Blue": "#191970",
-        "Burgundy": "#800020"
+        "Natural Pine": "#E3C16F",
+        "Cherry": "#9C4A4A",
+        "Black": "#1C1C1C",
+        "White": "#FFFFFF"
       },
-      "SKU": "SS010",
-      "number_of_remain": 36,
-      "launch_time": "14-10-2024",
-      "category": "sofa",
-      "tags": "sofa,living,home,shop,traditional,elegant",
+      "SKU": "CH010",
+      "number_of_remain": 61,
+      "launch_time": "19-10-2024",
+      "category": "chair",
+      "tags": "chair,dining,home,shop,traditional,wood",
       "additional_information": "this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,\nthis is an additional information for this product,this is an additional information for this product,this is an additional information for this product,this is an additional information for this product,",
-      "average_rate": 4.8,
+      "average_rate": 4.6,
       "review": {
-        "Susan Turner": {
-          "rate": 4.9,
-          "comment": "this is a product comment."
-        },
-        "William Phillips": {
+        "Hannah Price": {
           "rate": 4.7,
           "comment": "this is a product comment."
         },
-        "Margaret Collins": {
-          "rate": 4.8,
+        "Aiden Hughes": {
+          "rate": 4.5,
           "comment": "this is a product comment."
         },
-        "Charles Stewart": {
+        "Madison Foster": {
           "rate": 4.6,
           "comment": "this is a product comment."
         }
       }
-    },
-    
+    }
   ]
 }
