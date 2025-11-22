@@ -1,0 +1,91 @@
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+
+.header {
+    height: 100px;
+    background: white;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo img {
+    width: 50px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.nav-links {
+    display: flex;
+    gap: 75px;
+}
+
+.nav-link-text {
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-link-text:hover {
+    color: var(--primary-color);
+}
+
+.header-icons {
+    display: flex;
+    gap: 45px;
+}
+
+.icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon:hover {
+    opacity: 0.7;
+}
+
+.icon-user {
+    background-image: url('../images/icons/user.svg');
+}
+
+.icon-search {
+    background-image: url('../images/icons/search.svg');
+}
+
+.icon-heart {
+    background-image: url('../images/icons/heart.svg');
+}
+
+.icon-cart {
+    background-image: url('../images/icons/cart.svg');
+}

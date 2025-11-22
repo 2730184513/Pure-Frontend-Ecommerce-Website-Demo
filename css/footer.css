@@ -1,0 +1,146 @@
+/* ========================================
+   FOOTER SECTION
+   ======================================== */
+
+.footer {
+    width: 100%;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.17);
+    padding: 48px 0;
+}
+
+.footer-wrapper {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 100px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 285px 100px 150px 1fr;
+    gap: 136px;
+    margin-bottom: 48px;
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: black;
+}
+
+.brand-address {
+    color: var(--text-light-gray);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 55px;
+}
+
+.footer-title {
+    color: var(--text-light-gray);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.footer-column a {
+    display: block;
+    margin-bottom: 46px;
+}
+
+.footer-column a:last-child {
+    margin-bottom: 0;
+}
+
+.footer-link {
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--primary-color);
+}
+
+.footer-newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: 31px;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.email-input {
+    border: none;
+    border-bottom: 1px solid black;
+    padding: 8px 0 3px 0;
+    font-size: 14px;
+    color: var(--text-light-gray);
+    font-family: var(--font-main);
+    outline: none;
+}
+
+.email-input::placeholder {
+    color: var(--text-light-gray);
+}
+
+.subscribe-btn {
+    align-self: flex-start;
+    border: none;
+    border-bottom: 1px solid black;
+    background: transparent;
+    padding: 8px 0 3px 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.subscribe-btn:hover .subscribe-span {
+    color: var(--primary-color);
+}
+
+.subscribe-span {
+    color: black;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.footer-bottom {
+    padding-top: 35px;
+    border-top: 1px solid #D9D9D9;
+}
+
+.copyright-span {
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1440px) {
+    .inspirations-wrapper {
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}

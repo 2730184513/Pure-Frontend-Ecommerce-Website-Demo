@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Furniro - Premium Home Furniture</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/browse-range.css">
+    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/carousel.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
+            rel="stylesheet">
+</head>
+<body>
+
+<!-- FIXED HEADER -->
+<header class="header">
+    <div class="container header-container">
+        <div class="logo">
+            <img src="images/icons/logo.png" alt="Furniro Logo">
+            <span class="logo-text">Furniro</span>
+        </div>
+
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="#"><span class="nav-link-text">Home</span></a></li>
+                <li><a href="#"><span class="nav-link-text">Shop</span></a></li>
+                <li><a href="#"><span class="nav-link-text">About</span></a></li>
+                <li><a href="#"><span class="nav-link-text">Contact</span></a></li>
+            </ul>
+        </nav>
+
+        <div class="header-icons">
+            <div class="icon icon-user">
+                <img src="images/icons/user.png" alt="User">
+            </div>
+            <div class="icon icon-search">
+                <img src="images/icons/search.png" alt="Search">
+            </div>
+            <div class="icon icon-heart">
+                <img src="images/icons/heart.png" alt="Wishlist">
+            </div>
+            <div class="icon icon-cart">
+                <img src="images/icons/shopping_cart.png" alt="Shopping Cart">
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-background">
+        <img src="images/hero.png" alt="Modern Living Room">
+    </div>
+    <div class="hero-card">
+        <span class="hero-subtitle">New Arrival</span>
+        <div class="hero-title-wrapper">
+            <span class="hero-title">Discover Our<br>New Collection</span>
+        </div>
+        <div class="hero-text-wrapper">
+            <span class="hero-text">Transform your living space with our curated selection of premium furniture. Quality craftsmanship meets modern design to create the perfect home environment.</span>
+        </div>
+        <a href="#products" class="btn-primary">
+            <span class="btn-primary-text">BUY NOW</span>
+        </a>
+    </div>
+</section>
+
+<!-- BROWSE THE RANGE -->
+<section class="browse-range section-padding" id="browseRange">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-main-title">Browse The Range</span>
+            <span class="section-subtitle">Explore our diverse collection of furniture categories designed for every room in your home.</span>
+        </div>
+        <div class="category-grid">
+            <div class="category-card" data-category="dining">
+                <div class="category-image-wrapper">
+                    <img src="images/dining1.png" alt="Dining Room Furniture" class="category-image">
+                </div>
+                <span class="category-name">Dining</span>
+            </div>
+            <div class="category-card" data-category="living">
+                <div class="category-image-wrapper">
+                    <img src="images/living1.png" alt="Living Room Furniture" class="category-image">
+                </div>
+                <span class="category-name">Living</span>
+            </div>
+            <div class="category-card" data-category="bedroom">
+                <div class="category-image-wrapper">
+                    <img src="images/bedroom1.png" alt="Bedroom Furniture" class="category-image">
+                </div>
+                <span class="category-name">Bedroom</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OUR PRODUCTS -->
+<section class="products section-padding" id="products">
+    <div class="container">
+        <div class="products-title-wrapper">
+            <span class="section-title">Our Products</span>
+        </div>
+
+        <div class="product-grid">
+            <!-- Product Card 1 -->
+            <article class="product-card" data-product-id="1">
+                <div class="product-image">
+                    <img src="images/products/product1.jpg" alt="Syltherine Chair">
+                    <span class="badge badge-discount">-30%</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Syltherine</span>
+                    <span class="product-desc">Stylish cafe chair</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 2.500.000</span>
+                        <span class="old-price">Rp 3.500.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 2 -->
+            <article class="product-card" data-product-id="2">
+                <div class="product-image">
+                    <img src="images/products/product2.jpg" alt="Leviosa Chair">
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Leviosa</span>
+                    <span class="product-desc">Stylish cafe chair</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 2.500.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 3 -->
+            <article class="product-card" data-product-id="3">
+                <div class="product-image">
+                    <img src="images/products/product3.jpg" alt="Lolito Sofa">
+                    <span class="badge badge-discount">-50%</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Lolito</span>
+                    <span class="product-desc">Luxury big sofa</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 7.000.000</span>
+                        <span class="old-price">Rp 14.000.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 4 -->
+            <article class="product-card" data-product-id="4">
+                <div class="product-image">
+                    <img src="images/products/product4.jpg" alt="Respira Table">
+                    <span class="badge badge-new">New</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Respira</span>
+                    <span class="product-desc">Outdoor bar table and stool</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 500.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 5 -->
+            <article class="product-card" data-product-id="5">
+                <div class="product-image">
+                    <img src="images/products/product5.jpg" alt="Grifo Lamp">
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Grifo</span>
+                    <span class="product-desc">Night lamp</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 1.500.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 6 -->
+            <article class="product-card" data-product-id="6">
+                <div class="product-image">
+                    <img src="images/products/product6.jpg" alt="Muggo Mug">
+                    <span class="badge badge-new">New</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Muggo</span>
+                    <span class="product-desc">Small mug</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 150.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 7 -->
+            <article class="product-card" data-product-id="7">
+                <div class="product-image">
+                    <img src="images/products/product7.jpg" alt="Pingky Bed Set">
+                    <span class="badge badge-discount">-50%</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Pingky</span>
+                    <span class="product-desc">Cute bed set</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 7.000.000</span>
+                        <span class="old-price">Rp 14.000.000</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product Card 8 -->
+            <article class="product-card" data-product-id="8">
+                <div class="product-image">
+                    <img src="images/products/product8.jpg" alt="Potty Flower Pot">
+                    <span class="badge badge-new">New</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-name">Potty</span>
+                    <span class="product-desc">Minimalist flower pot</span>
+                    <div class="price-box">
+                        <span class="current-price">Rp 500.000</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="show-more-container">
+            <a href="#" class="btn-outline">
+                <span class="showmore-span">Show More</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- INSPIRATIONS CAROUSEL -->
+<section class="inspirations" id="inspirationsCarousel">
+    <div class="inspirations-wrapper">
+        <div class="inspiration-content">
+            <div class="title">
+                <span class="title-span">50+ Beautiful rooms<br>inspiration</span>
+            </div>
+            <div class="subtitle">
+                <span class="subtitle-span">Our designers have crafted stunning room concepts to inspire your next home makeover. Browse through our gallery of professionally designed spaces.</span>
+            </div>
+            <div class="explore-more">
+                <span class="exploremore-span">Explore More</span>
+            </div>
+        </div>
+
+        <!-- Carousel Container -->
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <!-- Images will be dynamically inserted here by JS -->
+            </div>
+
+            <!-- Image Info Overlay -->
+            <div class="image-info-overlay">
+                <div class="info-category">
+                    <span class="category-number" id="roomNumber">01</span>
+                    <span class="category-name-text"> — </span>
+                    <span class="category-name-text" id="roomType">Bed Room</span>
+                </div>
+                <div class="info-title">
+                    <span class="innerpeace-span" id="roomName">Inner Peace</span>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons (使用图片背景) -->
+            <div class="carousel-nav-btn prev-btn" id="prevBtn" aria-label="Previous slide"></div>
+            <div class="carousel-nav-btn next-btn" id="nextBtn" aria-label="Next slide"></div>
+
+            <!-- Indicators -->
+            <div class="indicator" id="carouselIndicators">
+                <!-- Indicators will be dynamically generated by JS -->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-wrapper">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="brand-name">Funiro.</span>
+                <span class="brand-address">Level 1, Building E42, Chancellory II Universiti Sains Malaysia<br>11800 USM Penang, Malaysia</span>
+            </div>
+
+            <div class="footer-column">
+                <span class="footer-title">Links</span>
+                <a href="#"><span class="footer-link">Home</span></a>
+                <a href="#"><span class="footer-link">Shop</span></a>
+                <a href="#"><span class="footer-link">About</span></a>
+                <a href="#"><span class="footer-link">Contact</span></a>
+            </div>
+
+            <div class="footer-column">
+                <span class="footer-title">Help</span>
+                <a href="#"><span class="footer-link">Payment Options</span></a>
+                <a href="#"><span class="footer-link">Returns</span></a>
+                <a href="#"><span class="footer-link">Privacy Policies</span></a>
+            </div>
+
+            <div class="footer-newsletter">
+                <span class="footer-title">Newsletter</span>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter Your Email Address" class="email-input">
+                    <button type="submit" class="subscribe-btn">
+                        <span class="subscribe-span">SUBSCRIBE</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span class="copyright-span">2025 furniro. All rights reserved</span>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript Files -->
+<script src="js/main.js"></script>
+<script src="js/browse-range.js"></script>
+<script src="js/carousel.js"></script>
+<script src="js/product-hover.js"></script>
+</body>
+</html>

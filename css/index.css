@@ -1,0 +1,88 @@
+/* ========================================
+   FURNIRO - Main Styles
+   ======================================== */
+
+/* RESET & VARIABLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #B88E2F;
+    --text-dark: #3A3A3A;
+    --text-gray: #616161;
+    --text-light-gray: #9F9F9F;
+    --bg-light: #F4F5F7;
+    --bg-cream: #FFF3E3;
+    --bg-beige: #FCF8F3;
+    --font-main: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    padding-top: 100px;
+}
+
+ul { list-style: none; }
+a { text-decoration: none; color: inherit; }
+
+/* UTILITIES */
+.container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-padding {
+    padding: 60px 0;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 25px 72px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    text-transform: uppercase;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #A07828;
+}
+
+.btn-primary-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.btn-outline {
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 12px 74px;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+}
+
+.btn-outline:hover .showmore-span {
+    color: white;
+}
+
+.showmore-span {
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 600;
+}
