@@ -74,18 +74,3 @@
     opacity: 0.7;
 }
 
-.icon-user {
-    background-image: url('../images/icons/user.svg');
-}
-
-.icon-search {
-    background-image: url('../images/icons/search.svg');
-}
-
-.icon-heart {
-    background-image: url('../images/icons/heart.svg');
-}
-
-.icon-cart {
-    background-image: url('../images/icons/cart.svg');
-}
