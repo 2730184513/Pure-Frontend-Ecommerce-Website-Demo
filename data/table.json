@@ -2,8 +2,8 @@
   "products": [
     {
       "name": "Modern Dining Table",
-      "product_picture": "../images/products/Modern Dining Table.jpg",
-      "description_picture": "../images/products/Modern Dining Table description.jpg",
+      "product_picture": "/201-project/images/products/Modern Dining Table.jpg",
+      "description_picture": "/201-project/images/products/Modern Dining Table description.jpg",
       "brief": "contemporary rectangular dining table",
       "detail": "The Modern Dining Table features a sleek sintered stone top with natural marble patterns that resist scratches, stains, and heat. Supported by powder-coated metal legs in a minimalist design, this table seats 6-8 people comfortably. The durable non-porous surface requires minimal maintenance, making it perfect for busy family dining.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -42,8 +42,8 @@
     },
     {
       "name": "Executive Office Desk",
-      "product_picture": "../images/products/Executive Office Desk.jpg",
-      "description_picture": "../images/products/Executive Office Desk description.jpg",
+      "product_picture": "/201-project/images/products/Executive Office Desk.jpg",
+      "description_picture": "/201-project/images/products/Executive Office Desk description.jpg",
       "brief": "professional L-shaped work desk",
       "detail": "The Executive Office Desk combines functionality with professional aesthetics in an L-shaped configuration. Features a spacious engineered wood surface with steel frame construction, integrated cable management, and multiple storage drawers. The corner design maximizes workspace while fitting efficiently into office layouts, perfect for home or corporate settings.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -81,8 +81,8 @@
     },
     {
       "name": "Round Coffee Table",
-      "product_picture": "../images/products/Round Coffee Table.jpg",
-      "description_picture": "../images/products/Round Coffee Table description.jpg",
+      "product_picture": "/201-project/images/products/Round Coffee Table.jpg",
+      "description_picture": "/201-project/images/products/Round Coffee Table description.jpg",
       "brief": "elegant circular center table",
       "detail": "The Round Coffee Table showcases mid-century modern design with its smooth circular walnut veneer top and tapered wooden legs. The organic round shape encourages conversation flow and softens room geometry. Features a lower shelf for magazines or decorative items, combining style with practical storage for living room spaces.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -121,8 +121,8 @@
     },
     {
       "name": "Glass Console Table",
-      "product_picture": "../images/products/Glass Console Table.jpg",
-      "description_picture": "../images/products/Glass Console Table description.jpg",
+      "product_picture": "/201-project/images/products/Glass Console Table.jpg",
+      "description_picture": "/201-project/images/products/Glass Console Table description.jpg",
       "brief": "sleek tempered glass entryway table",
       "detail": "The Glass Console Table brings contemporary elegance with its 12mm tempered glass top and polished stainless steel frame. The transparent surface creates visual lightness ideal for narrow entryways or hallways. Chrome-finished legs add a reflective quality, while the slim profile provides display space without overwhelming compact areas.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -160,8 +160,8 @@
     },
     {
       "name": "Extendable Farmhouse",
-      "product_picture": "../images/products/Extendable Farmhouse.jpg",
-      "description_picture": "../images/products/Extendable Farmhouse description.jpg",
+      "product_picture": "/201-project/images/products/Extendable Farmhouse.jpg",
+      "description_picture": "/201-project/images/products/Extendable Farmhouse description.jpg",
       "brief": "rustic expandable dining table",
       "detail": "The Extendable Farmhouse table combines rustic charm with practical versatility. Crafted from solid reclaimed wood with visible grain patterns and distressed finish, it features a butterfly leaf mechanism that expands seating from 6 to 10 people. Chunky turned legs and cross-beam supports create authentic farmhouse character perfect for gatherings.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -200,8 +200,8 @@
     },
     {
       "name": "Adjustable Study Desk",
-      "product_picture": "../images/products/Adjustable Study Desk.jpg",
-      "description_picture": "../images/products/Adjustable Study Desk description.jpg",
+      "product_picture": "/201-project/images/products/Adjustable Study Desk.jpg",
+      "description_picture": "/201-project/images/products/Adjustable Study Desk description.jpg",
       "brief": "ergonomic height-adjustable desk",
       "detail": "The Adjustable Study Desk promotes healthy posture with its pneumatic height adjustment mechanism ranging from sitting to standing positions. Features a spacious laminate work surface with rounded corners, integrated pencil groove, and side storage hook. Designed for students and professionals, the tilting desktop option accommodates drawing and reading tasks.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
