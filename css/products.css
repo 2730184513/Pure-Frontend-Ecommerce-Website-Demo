@@ -50,10 +50,17 @@
     display: block;
 }
 
-.badge {
+.badge-container {
     position: absolute;
     top: 24px;
     right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2;
+}
+
+.badge {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -62,7 +69,6 @@
     justify-content: center;
     font-size: 16px;
     font-weight: 600;
-    z-index: 2;
 }
 
 .badge-discount {
