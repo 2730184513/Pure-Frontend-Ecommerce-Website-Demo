@@ -32,7 +32,7 @@ class ProductCardRenderer {
         img.src = product.product_picture;
         img.alt = product.name;
         img.onerror = () => {
-            img.src = 'images/products/placeholder.jpg';
+            img.src = '/201-project/images/products/placeholder.jpg';
         };
         imageDiv.appendChild(img);
 
