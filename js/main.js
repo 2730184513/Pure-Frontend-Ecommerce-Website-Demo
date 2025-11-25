@@ -1,13 +1,15 @@
 /**
  * Furniro E-commerce - Main Application Controller
+ * Central controller: manages component loading, global initialization, and page routing
  */
 
 class FurniroApp {
     constructor() {
-        this.modules = {
-            categoryRotator: null,
-            carousel: null,
-            productRepository: null
+        this.pageManagers = {
+            header: null,
+            shop: null,
+            index: null
+            // Future page managers will be registered here
         };
         this.config = {
             initialProductCount: 8,
@@ -25,14 +27,15 @@ class FurniroApp {
         console.log('🚀 Initializing Furniro Application...');
 
         try {
-            // Load header and footer components
+            // 1. 优先加载 Header 和 Footer 组件
+            // 必须等待 HTML 注入完成后，才能初始化 Header 的交互逻辑
             await this.loadComponents();
 
-            // Initialize product repository
-            await this.initProductRepository();
+            // 2. 初始化全局 Header 功能 (Search, Cart, Wishlist)
+            this.initHeaderManager();
 
-            // Initialize "Show More" functionality
-            this.initShowMore();
+            // 3. 路由/页面逻辑分发
+            await this.dispatchPageLogic();
 
             this.isInitialized = true;
             console.log('✓ Furniro Application initialized successfully');
@@ -43,17 +46,72 @@ class FurniroApp {
 
     async loadComponents() {
         console.log('📦 Loading components...');
-        await ComponentLoader.initCommonComponents();
+        // 确保 ComponentLoader 已加载
+        if (window.ComponentLoader) {
+            await ComponentLoader.initCommonComponents();
+        } else {
+            console.error('ComponentLoader not found');
+        }
+    }
+
+    /**
+     * 初始化头部功能管理器
+     * 依赖 js/header-features.js
+     */
+    /**
+     * Initialize header manager with all header components
+     */
+    initHeaderManager() {
+        console.log('🎯 Initializing Header Manager...');
+        if (window.HeaderManager) {
+            this.pageManagers.header = new HeaderManager();
+            this.pageManagers.header.init();
+        } else {
+            console.warn('HeaderManager not available. Please load header.js and related files');
+        }
+    }
+
+    /**
+     * Route logic based on current page
+     * Prevents running index page logic on shop page
+     */
+    async dispatchPageLogic() {
+        // A. Shop Page Logic
+        const isShopPage = document.getElementById('shop-product-grid');
+        if (isShopPage && window.ShopManager) {
+            this.pageManagers.shop = new ShopManager();
+            await this.pageManagers.shop.init();
+            return;
+        }
+
+        // B. Index Page Logic
+        // Check for carousel
+        if (document.querySelector('#inspirationsCarousel')) {
+            this.initCarousel();
+        }
+
+        // Check for Browse Range
+        if (document.querySelector('#browseRange')) {
+            this.initCategoryRotator();
+        }
+
+        // C. Generic product list logic (only for non-Shop pages)
+        const hasProductGrid = document.querySelector('.product-grid');
+        if (hasProductGrid && !isShopPage) {
+            await this.initProductRepository();
+            this.initShowMore(); // Index page "Show More" button
+        }
     }
 
     async initProductRepository() {
-        console.log('🛍️ Initializing product repository...');
+        console.log('🛍️ Initializing generic product repository...');
 
-        this.modules.productRepository = new ProductRepository();
-        this.modules.productRepository.initRenderer('.product-grid');
+        this.pageManagers.productRepository = new ProductRepository();
+        // 渲染到通用的 .product-grid
+        this.pageManagers.productRepository.initRenderer('.product-grid');
 
-        // Load initial products
-        await this.modules.productRepository.loadInitialProducts(
+        // 加载初始产品
+        await this.pageManagers.productRepository.loadInitialProducts(
             this.config.initialProductCount
         );
     }
@@ -62,7 +120,6 @@ class FurniroApp {
         const showMoreBtn = document.querySelector('.show-more-container .btn-outline');
 
         if (!showMoreBtn) {
-            console.warn('Show More button not found');
             return;
         }
 
@@ -75,12 +132,9 @@ class FurniroApp {
     }
 
     async handleShowMore() {
-        const repository = this.modules.productRepository;
+        const repository = this.pageManagers.productRepository;
 
-        if (!repository) {
-            console.error('Product repository not initialized');
-            return;
-        }
+        if (!repository) return;
 
         // Check if there are more products
         const hasMore = await repository.hasMore();
@@ -107,33 +161,29 @@ class FurniroApp {
         }
     }
 
-    getModule(name) {
-        return this.modules[name];
+    initCarousel() {
+        if (window.InspirationsCarousel) {
+            console.log('🎠 Initializing carousel...');
+            this.pageManagers.carousel = new InspirationsCarousel();
+            this.pageManagers.carousel.init();
+        }
     }
 
-    getProductRepository() {
-        return this.modules.productRepository;
+    initCategoryRotator() {
+        if (window.CategoryRotator) {
+            console.log('🔄 Initializing category rotator...');
+            this.pageManagers.categoryRotator = new CategoryRotator();
+            this.pageManagers.categoryRotator.init();
+        }
     }
 
-    async destroy() {
-        Object.values(this.modules).forEach(module => {
-            if (module && typeof module.destroy === 'function') {
-                module.destroy();
-            }
-        });
-
-        this.modules = {};
-        this.isInitialized = false;
-        console.log('Application destroyed');
-    }
-
-    async restart() {
-        await this.destroy();
-        await this.init();
+    // 辅助方法：获取页面管理器
+    getPageManager(name) {
+        return this.pageManagers[name];
     }
 }
 
-// Bootstrap
+// Bootstrap Application
 const app = new FurniroApp();
 
 if (document.readyState === 'loading') {
@@ -142,4 +192,5 @@ if (document.readyState === 'loading') {
     app.init();
 }
 
+// 暴露给全局，以便调试或其他脚本访问
 window.FurniroApp = app;
