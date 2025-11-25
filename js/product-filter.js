@@ -1,188 +1,141 @@
 /**
  * Product Filter
  * Handles filtering logic for products based on various criteria
+ * Pure Logic Class - No UI dependencies
  */
 
 class ProductFilter {
     constructor() {
+        this.reset(); // Initialize default state
+    }
+
+    reset() {
         this.filters = {
-            category: null,
+            keyword: '', // Name, Brief, Tags
+            categories: [],
             priceRange: { min: 0, max: Infinity },
-            rating: 0,
+            ratingRange: { min: 0, max: 5 },
+            dateRange: { from: null, to: null },
             tags: [],
             discount: false,
             inStock: false
         };
-    }
-
-    /**
-     * Set category filter
-     * @param {string|null} category - Category to filter by
-     * @returns {ProductFilter} this (for chaining)
-     */
-    setCategory(category) {
-        this.filters.category = category;
         return this;
     }
 
-    /**
-     * Set price range filter
-     * @param {number} min - Minimum price
-     * @param {number} max - Maximum price
-     * @returns {ProductFilter} this (for chaining)
-     */
+    // --- Setters ---
+
+    setKeyword(keyword) {
+        this.filters.keyword = (keyword || '').toLowerCase();
+        return this;
+    }
+
+    setCategories(categories) {
+        this.filters.categories = Array.isArray(categories) ? categories : [categories];
+        return this;
+    }
+
     setPriceRange(min, max) {
         this.filters.priceRange = { min, max };
         return this;
     }
 
-    /**
-     * Set minimum rating filter
-     * @param {number} rating - Minimum rating (0-5)
-     * @returns {ProductFilter} this (for chaining)
-     */
-    setMinRating(rating) {
-        this.filters.rating = rating;
+    setRatingRange(min, max) {
+        this.filters.ratingRange = { min, max };
         return this;
     }
 
-    /**
-     * Set tags filter
-     * @param {Array<string>} tags - Array of tags to filter by
-     * @returns {ProductFilter} this (for chaining)
-     */
-    setTags(tags) {
-        this.filters.tags = Array.isArray(tags) ? tags : [tags];
+    setDateRange(from, to) {
+        this.filters.dateRange = { from, to };
         return this;
     }
 
-    /**
-     * Filter only discounted products
-     * @param {boolean} enabled - Enable discount filter
-     * @returns {ProductFilter} this (for chaining)
-     */
-    setDiscountOnly(enabled) {
-        this.filters.discount = enabled;
-        return this;
-    }
+    // --- Main Apply Method ---
 
-    /**
-     * Filter only in-stock products
-     * @param {boolean} enabled - Enable in-stock filter
-     * @returns {ProductFilter} this (for chaining)
-     */
-    setInStockOnly(enabled) {
-        this.filters.inStock = enabled;
-        return this;
-    }
-
-    /**
-     * Apply all filters to products array
-     * @param {Array} products - Array of products to filter
-     * @returns {Array} Filtered products
-     */
     apply(products) {
-        let filtered = [...products];
+        if (!products || products.length === 0) return [];
 
-        // Category filter
-        if (this.filters.category) {
-            filtered = filtered.filter(product =>
-                product.category === this.filters.category
-            );
-        }
+        return products.filter(product => {
+            // 1. Keyword Filter
+            if (this.filters.keyword && !this._checkKeyword(product)) return false;
 
-        // Price range filter
-        if (this.filters.priceRange.min > 0 || this.filters.priceRange.max < Infinity) {
-            filtered = filtered.filter(product => {
-                const price = this.getEffectivePrice(product);
-                return price >= this.filters.priceRange.min &&
-                       price <= this.filters.priceRange.max;
-            });
-        }
+            // 2. Category Filter
+            if (this.filters.categories.length > 0 && !this.filters.categories.includes(product.category)) return false;
 
-        // Rating filter
-        if (this.filters.rating > 0) {
-            filtered = filtered.filter(product =>
-                (product.average_rate || 0) >= this.filters.rating
-            );
-        }
+            // 3. Price Filter
+            if (!this._checkPrice(product)) return false;
 
-        // Tags filter
-        if (this.filters.tags.length > 0) {
-            filtered = filtered.filter(product => {
-                const productTags = (product.tags || '').toLowerCase().split(',');
-                return this.filters.tags.some(tag =>
-                    productTags.some(pt => pt.trim().includes(tag.toLowerCase()))
-                );
-            });
-        }
+            // 4. Rating Filter
+            if (!this._checkRating(product)) return false;
 
-        // Discount filter
-        if (this.filters.discount) {
-            filtered = filtered.filter(product =>
-                product.discount && product.discount !== '0%'
-            );
-        }
+            // 5. Date Filter
+            if (!this._checkDate(product)) return false;
 
-        // In-stock filter
-        if (this.filters.inStock) {
-            filtered = filtered.filter(product =>
-                product.number_of_remain > 0
-            );
-        }
-
-        return filtered;
+            return true;
+        });
     }
 
-    /**
-     * Get effective price (after discount)
-     * @param {Object} product - Product object
-     * @returns {number} Effective price
-     * @private
-     */
+    // --- Helper Checkers ---
+
+    _checkKeyword(product) {
+        const k = this.filters.keyword;
+        return (
+            product.name.toLowerCase().includes(k) ||
+            product.brief.toLowerCase().includes(k) ||
+            (product.tags && product.tags.toLowerCase().includes(k))
+        );
+    }
+
+    _checkPrice(product) {
+        const price = this.getEffectivePrice(product);
+        return price >= this.filters.priceRange.min && price <= this.filters.priceRange.max;
+    }
+
+    _checkRating(product) {
+        const rate = product.average_rate || 0;
+        return rate >= this.filters.ratingRange.min && rate <= this.filters.ratingRange.max;
+    }
+
+    _checkDate(product) {
+        const { from, to } = this.filters.dateRange;
+        if (!from && !to) return true;
+        if (!product.launch_time) return false;
+
+        // Assuming launch_time is "dd-mm-yyyy" from JSON
+        const [d, m, y] = product.launch_time.split('-');
+        // Note: Months are 0-indexed in JS Date
+        const pDate = new Date(y, m - 1, d);
+
+        if (from) {
+            const fromDate = new Date(from);
+            // Reset time to ensure fair comparison
+            fromDate.setHours(0,0,0,0);
+            if (pDate < fromDate) return false;
+        }
+
+        if (to) {
+            const toDate = new Date(to);
+            toDate.setHours(0,0,0,0);
+            if (pDate > toDate) return false;
+        }
+
+        return true;
+    }
+
     getEffectivePrice(product) {
         const basePrice = product.price || 0;
-
-        if (!product.discount) {
+        if (!product.discount || product.discount === '0') {
             return basePrice;
         }
-
         const discountMatch = product.discount.match(/-?(\d+)%/);
         if (discountMatch) {
             const discountPercent = parseInt(discountMatch[1]);
-            return basePrice * (1 - discountPercent / 100);
+            return Math.round(basePrice * (1 - discountPercent / 100));
         }
-
         return basePrice;
-    }
-
-    /**
-     * Reset all filters
-     * @returns {ProductFilter} this (for chaining)
-     */
-    reset() {
-        this.filters = {
-            category: null,
-            priceRange: { min: 0, max: Infinity },
-            rating: 0,
-            tags: [],
-            discount: false,
-            inStock: false
-        };
-        return this;
-    }
-
-    /**
-     * Get current filter configuration
-     * @returns {Object} Current filters
-     */
-    getFilters() {
-        return { ...this.filters };
     }
 }
 
-// Export
 if (typeof window !== 'undefined') {
     window.ProductFilter = ProductFilter;
 }
-
