@@ -160,8 +160,10 @@ class WishlistManager {
 
         this.wishlist.push(product);
         this.saveWishlist();
-        this.showDropdown();
         this.showNotification(`${product.name} added to wishlist!`, 'success');
+
+        // Auto-open dropdown after adding
+        this.showDropdown();
         return true;
     }
 
@@ -255,8 +257,11 @@ class WishlistManager {
      * @param {string} type - Notification type
      */
     showNotification(message, type = 'info') {
-        // Simple alert for now, can be enhanced with toast notifications
-        alert(message);
+        if (window.toast) {
+            window.toast.show(message, type);
+        } else {
+            console.warn('Toast manager not available');
+        }
     }
 }
 

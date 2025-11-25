@@ -84,7 +84,6 @@ class ProductPopup {
      */
     handleAddToCart(event) {
         event.stopPropagation();
-        console.log(`[Cart] Added: ${this.product.name} (ID: ${this.product.id})`);
 
         // Dispatch custom event for cart management
         // The CartManager will handle user feedback
@@ -100,7 +99,6 @@ class ProductPopup {
      */
     handleShare(event) {
         event.stopPropagation();
-        console.log(`[Share] Product: ${this.product.name}`);
 
         if (navigator.share) {
             navigator.share({
@@ -108,10 +106,12 @@ class ProductPopup {
                 text: `Check out ${this.product.name} - ${this.product.brief}`,
                 url: window.location.href
             }).catch(() => {
-                console.log('Share cancelled');
+                // Share cancelled - silent fail
             });
         } else {
-            alert(`Share ${this.product.name} - Feature coming soon!`);
+            if (window.toast) {
+                window.toast.info(`Share ${this.product.name} - Feature coming soon!`);
+            }
         }
     }
 
@@ -122,15 +122,12 @@ class ProductPopup {
      */
     handleLike(event) {
         event.stopPropagation();
-        console.log(`[Like] Product: ${this.product.name}`);
 
         // Dispatch custom event for wishlist management
-        // The WishlistManager will handle the alert for duplicates
+        // The WishlistManager will handle user feedback
         window.dispatchEvent(new CustomEvent('addToWishlist', {
             detail: { product: this.product }
         }));
-
-        // No alert here - WishlistManager handles user feedback
     }
 
     /**

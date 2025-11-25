@@ -55,20 +55,34 @@ class FurniroApp {
     }
 
     /**
-     * 初始化头部功能管理器
-     * 依赖 js/header-features.js
-     */
-    /**
-     * Initialize header manager with all header components
+     * Initialize header components directly
+     * Cart, Wishlist, Search, and Navigation are auto-initialized on load
      */
     initHeaderManager() {
-        console.log('🎯 Initializing Header Manager...');
-        if (window.HeaderManager) {
-            this.pageManagers.header = new HeaderManager();
-            this.pageManagers.header.init();
-        } else {
-            console.warn('HeaderManager not available. Please load header.js and related files');
+        console.log('🎯 Initializing Header Components...');
+
+        // Initialize individual header components
+        if (window.NavigationManager) {
+            const navigation = new NavigationManager();
+            navigation.init();
         }
+
+        if (window.SearchManager) {
+            const search = new SearchManager();
+            search.init();
+        }
+
+        if (window.CartManager) {
+            const cart = new CartManager();
+            cart.init();
+        }
+
+        if (window.WishlistManager) {
+            const wishlist = new WishlistManager();
+            wishlist.init();
+        }
+
+        console.log('✓ Header components initialized');
     }
 
     /**

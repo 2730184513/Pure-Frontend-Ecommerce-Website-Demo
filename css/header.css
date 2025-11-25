@@ -195,15 +195,46 @@
     right: 0;
     background: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    padding: 20px;
-    border-radius: 4px;
+    padding: 0;
+    border-radius: 8px;
     z-index: 1001;
     display: none;
-    width: 350px;
+    width: 380px;
 }
 
 .header-dropdown.active {
     display: block;
+}
+
+/* Cart and Wishlist items container with scrollbar */
+.cart-items,
+.wishlist-items {
+    max-height: 520px; /* Approximately 5 items (each ~104px) */
+    overflow-y: auto;
+    padding: 20px;
+}
+
+/* Custom scrollbar styling */
+.cart-items::-webkit-scrollbar,
+.wishlist-items::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cart-items::-webkit-scrollbar-track,
+.wishlist-items::-webkit-scrollbar-track {
+    background: #F9F1E7;
+    border-radius: 3px;
+}
+
+.cart-items::-webkit-scrollbar-thumb,
+.wishlist-items::-webkit-scrollbar-thumb {
+    background: #B88E2F;
+    border-radius: 3px;
+}
+
+.cart-items::-webkit-scrollbar-thumb:hover,
+.wishlist-items::-webkit-scrollbar-thumb:hover {
+    background: #9A7328;
 }
 
 /* --- CART & WISHLIST ITEMS --- */
