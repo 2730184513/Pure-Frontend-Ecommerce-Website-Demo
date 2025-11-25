@@ -199,7 +199,6 @@
 }
 
 .icon-share,
-.icon-compare,
 .icon-like {
     width: 16px;
     height: 16px;
@@ -209,10 +208,6 @@
 
 .icon-share {
     background-image: url('../images/icons/share.png');
-}
-
-.icon-compare {
-    background-image: url('../images/icons/compare.png');
 }
 
 .icon-like {
