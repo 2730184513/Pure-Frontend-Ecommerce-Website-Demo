@@ -1,0 +1,47 @@
+/* css/feature-banner.css */
+
+/* --- FEATURES BANNER --- */
+.features-banner {
+    background: #FAF3EA;
+    padding: 100px 0;
+}
+
+.features-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.feature-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* Define icons via CSS */
+.icon-trophy { background-image: url('../images/icons/trophy.png'); }
+.icon-guarantee { background-image: url('../images/icons/guarantee.png'); }
+.icon-shipping { background-image: url('../images/icons/shipping.png'); }
+.icon-support { background-image: url('../images/icons/customer-support.png'); }
+
+.feature-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #242424;
+    margin-bottom: 5px;
+}
+
+.feature-desc {
+    font-size: 18px;
+    color: #898989;
+    font-weight: 500;
+}

@@ -1,0 +1,240 @@
+/* ========================================
+   FILTER SIDEBAR STYLES
+   ======================================== */
+
+/* Sidebar Container */
+.filter-sidebar {
+    position: fixed;
+    top: 100px;
+    bottom: 0;
+    left: -400px;
+    width: 400px;
+    background: white;
+    z-index: 900;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+    transition: left 0.4s ease;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: block;
+}
+
+/* Sidebar Open State */
+.shop-layout-wrapper.sidebar-open .filter-sidebar {
+    left: 0;
+}
+
+/* Hide Scrollbar for Chrome/Safari/Opera */
+.filter-sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-inner-content {
+    padding: 40px 30px; /* 增加内部留白 */
+    min-width: 400px;
+    box-sizing: border-box; /* Important for padding calculation */
+}
+
+/* Header */
+.filter-header {
+    margin-bottom: 30px;
+    /* 移除 Header 下划线，因为每个模块都有分割线了 */
+    padding-bottom: 0;
+}
+
+.filter-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+}
+
+/* Filter Groups & Separators */
+.filter-group {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    /* 模块底部分割线 */
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.filter-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.filter-label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: block;
+    color: #000;
+}
+
+/* Category Buttons */
+.category-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.category-btn {
+    cursor: pointer;
+    flex-basis: 22%; /* 一行排列 */
+    flex-grow: 1;
+}
+
+.category-btn input { display: none; }
+
+.category-btn span {
+    display: block;
+    text-align: center;
+    padding: 10px 5px;
+    background: #F9F1E7;
+    border-radius: 8px;
+    color: black;
+    font-size: 14px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.category-btn input:checked + span {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Dual Slider Common Styles */
+.range-slider-container {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    margin: 20px 0 30px 0;
+}
+
+.slider-track {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background: #E0E0E0;
+    border-radius: 5px;
+    top: 0;
+}
+
+.range-slider-container input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    top: 0;
+    margin: 0;
+}
+
+.range-slider-container input[type="range"]::-webkit-slider-thumb {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    pointer-events: auto;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 3px solid white;
+    margin-top: -9px;
+}
+
+/* Inputs Layout (With Labels) */
+.range-inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Align bottom */
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+}
+
+.input-label-text {
+    font-size: 12px;
+    color: #9F9F9F;
+    margin-bottom: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.range-inputs input {
+    width: 100%;
+    height: 50px; /* 增加高度 */
+    padding: 0 15px;
+    border: 1px solid #9F9F9F;
+    border-radius: 10px;
+    text-align: center;
+    font-family: var(--font-main);
+    font-size: 16px;
+    outline: none;
+    font-weight: 500;
+    background: #fff;
+}
+
+.range-inputs input:focus {
+    border-color: var(--primary-color);
+}
+
+.range-separator {
+    color: #9F9F9F;
+    font-weight: 700;
+    padding-bottom: 15px; /* Align visually with inputs */
+}
+
+/* Date Picker */
+.date-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.date-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.date-label {
+    width: 50px;
+    font-weight: 500;
+    color: #333;
+}
+
+.date-picker {
+    padding: 8px 10px;
+    border: 1px solid #9F9F9F;
+    border-radius: 10px;
+    font-family: var(--font-main);
+    flex: 1;
+    color: #333;
+    background: white;
+    outline: none;
+    background-image: url('/201-project/images/icons/calendar.png');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    font-size: 14px;
+}
+
+/* Hide Native Date UI */
+.date-picker::-webkit-inner-spin-button,
+.date-picker::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    left: 0; top: 0;
+}
+
+.date-picker:focus {
+    border-color: var(--primary-color);
+}

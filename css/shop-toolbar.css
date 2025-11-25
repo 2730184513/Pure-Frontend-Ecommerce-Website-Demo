@@ -1,0 +1,169 @@
+/* shop-toolbar.css - Shop page toolbar (filter, sort, show controls) */
+
+.shop-toolbar {
+    /* Sticky Behavior Logic */
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 100px; /* Stops exactly below the 100px fixed Header */
+    z-index: 800;
+
+    /* Width & Alignment Constraints */
+    max-width: 1240px; /* Same as .product-grid-container */
+    margin: 0 auto; /* Center horizontally */
+    width: 100%; /* Responsive fit */
+
+    /* Styling */
+    background: #F9F1E7;
+    padding: 20px 30px;
+    margin-bottom: 30px; /* Spacing from grid */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 10px; /* Rounded corners for aesthetic independent bar */
+}
+
+/* --- LEFT SECTION --- */
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: opacity 0.2s;
+}
+
+.filter-btn:hover {
+    opacity: 0.8;
+}
+
+.icon-filter {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+
+.filter-span {
+    font-size: 20px;
+    font-weight: 400;
+    color: black;
+}
+
+.divider {
+    width: 2px;
+    height: 30px;
+    background: #9F9F9F;
+}
+
+.results-text {
+    font-size: 16px;
+    color: black;
+}
+
+/* --- RIGHT SECTION --- */
+.toolbar-right {
+    display: flex;
+    gap: 30px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.control-label {
+    font-size: 20px;
+    color: black;
+}
+
+/* --- CUSTOM DROPDOWN STYLES --- */
+.custom-dropdown {
+    position: relative;
+    background: white;
+    min-width: 180px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.selected-option {
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: 4px;
+}
+
+.dropdown-arrow {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.2s;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Hidden by default */
+    z-index: 850;
+    border-radius: 4px;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.custom-dropdown.open .dropdown-options {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    font-size: 16px;
+    color: #9F9F9F;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #F9F1E7;
+    color: var(--primary-color);
+}
+
+.dropdown-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+    background: #F9F1E7;
+}
+
+.sort-state-icon {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* --- UTILITIES --- */
+.highlight-red {
+    color: #E97171;
+    font-weight: 700;
+    background: rgba(233, 113, 113, 0.1);
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
