@@ -1,0 +1,74 @@
+/* search.css - Search overlay styles */
+
+/* ========================================
+   SEARCH OVERLAY
+   ======================================== */
+
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    padding-top: 120px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.search-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+.search-bar-container {
+    width: 600px;
+    height: 60px;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    border: 1px solid #eee;
+}
+
+.search-icon-large {
+    width: 24px;
+    height: 24px;
+    background-image: url('/201-project/images/icons/search.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#global-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    margin: 0 15px;
+    font-family: var(--font-main);
+    color: var(--text-gray);
+}
+
+#global-search-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+#global-search-btn:hover {
+    background: #A07828;
+}
+
