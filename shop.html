@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Furniro</title>
 
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/products.css">
     <link rel="stylesheet" href="css/pop-up.css">
     <link rel="stylesheet" href="css/toast.css">
-    <link rel="stylesheet" href="css/shop-banner.css">
+    <link rel="stylesheet" href="css/banner.css">
     <link rel="stylesheet" href="css/shop-layout.css">
     <link rel="stylesheet" href="css/shop-toolbar.css">
     <link rel="stylesheet" href="css/pagination.css">
@@ -25,18 +25,7 @@
 
 <div id="header-placeholder"></div>
 
-
-<section class="shop-hero">
-    <div class="hero-bg-blur"></div>
-    <div class="shop-hero-content">
-        <div class="page-title">Shop</div>
-        <div class="breadcrumb">
-            <a href="index.html" class="breadcrumb-link">Home</a>
-            <span class="breadcrumb-separator">&gt;</span>
-            <span class="breadcrumb-current">Shop</span>
-        </div>
-    </div>
-</section>
+<div id="banner-placeholder"></div>
 
 <section class="shop-layout-wrapper" id="shop-layout">
 
@@ -248,6 +237,16 @@
 
 <!-- Main controller -->
 <script src="js/main.js"></script>
+
+<script>
+    // Load page banner component
+    document.addEventListener('DOMContentLoaded', async () => {
+        await ComponentLoader.loadComponent('page-banner', '#banner-placeholder', {
+            'banner-title': 'Shop',
+            'banner-breadcrumb': 'Shop'
+        });
+    });
+</script>
 
 </body>
 </html>

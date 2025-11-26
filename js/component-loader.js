@@ -8,9 +8,10 @@ class ComponentLoader {
      * Load a component from the components directory
      * @param {string} componentName - Name of the component file (without .html)
      * @param {string} targetSelector - CSS selector for the target container
+     * @param {Object} params - Optional parameters to set in the component after loading
      * @returns {Promise<void>}
      */
-    static async loadComponent(componentName, targetSelector) {
+    static async loadComponent(componentName, targetSelector, params = {}) {
         try {
             const response = await fetch(`components/${componentName}.html`);
 
@@ -26,6 +27,12 @@ class ComponentLoader {
             }
 
             targetElement.innerHTML = html;
+
+            // Apply parameters to the loaded component
+            if (params && Object.keys(params).length > 0) {
+                this.applyParameters(targetElement, params);
+            }
+
             console.log(`✓ Component loaded: ${componentName}`);
         } catch (error) {
             console.error(`✗ Error loading component ${componentName}:`, error);
@@ -34,13 +41,28 @@ class ComponentLoader {
     }
 
     /**
+     * Apply parameters to elements in the loaded component
+     * @param {HTMLElement} container - Container element
+     * @param {Object} params - Parameters object with element IDs as keys
+     * @private
+     */
+    static applyParameters(container, params) {
+        Object.keys(params).forEach(elementId => {
+            const element = container.querySelector(`#${elementId}`);
+            if (element) {
+                element.textContent = params[elementId];
+            }
+        });
+    }
+
+    /**
      * Load multiple components in parallel
-     * @param {Array<{name: string, target: string}>} components - Array of component configs
+     * @param {Array<{name: string, target: string, params?: Object}>} components - Array of component configs
      * @returns {Promise<void[]>}
      */
     static async loadComponents(components) {
         const loadPromises = components.map(component =>
-            this.loadComponent(component.name, component.target)
+            this.loadComponent(component.name, component.target, component.params || {})
         );
 
         return Promise.all(loadPromises);

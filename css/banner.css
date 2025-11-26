@@ -1,6 +1,6 @@
-/* shop-banner.css - Shop page hero banner section */
+/* banner.css - Reusable page banner component */
 
-.shop-hero {
+.banner {
     position: relative;
     height: 316px;
     background-image: url('/201-project/images/shop_banner.png');
@@ -11,7 +11,7 @@
     justify-content: center;
 }
 
-.hero-bg-blur {
+.banner-bg-blur {
     position: absolute;
     top: 0;
     left: 0;
@@ -21,13 +21,13 @@
     background: rgba(255, 255, 255, 0.3);
 }
 
-.shop-hero-content {
+.banner-content {
     position: relative;
     text-align: center;
     z-index: 1;
 }
 
-.page-title {
+.banner-title {
     font-size: 48px;
     font-weight: 500;
     margin-bottom: 5px;
