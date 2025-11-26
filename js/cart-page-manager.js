@@ -1,0 +1,94 @@
+/**
+ * Cart Page Manager
+ * Main controller for the cart.html page
+ */
+class CartPageManager {
+    constructor() {
+        this.cartManager = null;
+        this.lineRenderer = null;
+        this.summaryManager = null;
+        this.container = null;
+    }
+
+    /**
+     * Initialize the cart page
+     */
+    async init() {
+        console.log('🛒 Initializing Cart Page...');
+
+        // Wait for cart manager to be available
+        if (!window.CartManager) {
+            console.error('CartManager not found');
+            return;
+        }
+
+        // Get the existing cart manager instance or create new one
+        this.cartManager = window.cartManagerInstance || new CartManager();
+
+        if (!window.cartManagerInstance) {
+            this.cartManager.init();
+            window.cartManagerInstance = this.cartManager;
+        }
+
+        // Cache DOM
+        this.container = document.getElementById('cart-items-container');
+
+        if (!this.container) {
+            console.error('Cart items container not found');
+            return;
+        }
+
+        // Initialize renderers
+        this.lineRenderer = new CartProductLineRenderer(this.cartManager);
+        this.summaryManager = new CartSummaryManager(this.cartManager);
+
+        // Bind events
+        this.bindEvents();
+
+        // Initial render
+        this.render();
+
+        // Initialize summary
+        this.summaryManager.init();
+
+        console.log('✓ Cart Page initialized');
+    }
+
+    /**
+     * Bind global events
+     */
+    bindEvents() {
+        // Listen for cart updates
+        window.addEventListener('cartUpdated', () => {
+            this.render();
+        });
+
+        // Listen for storage changes (sync across tabs)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'furniro_cart') {
+                this.render();
+            }
+        });
+    }
+
+    /**
+     * Render the cart page
+     */
+    render() {
+        if (!this.lineRenderer || !this.container) return;
+
+        this.lineRenderer.renderAll(this.container);
+
+        // Trigger summary update after render
+        setTimeout(() => {
+            if (this.summaryManager) {
+                this.summaryManager.update();
+            }
+        }, 0);
+    }
+}
+
+if (typeof window !== 'undefined') {
+    window.CartPageManager = CartPageManager;
+}
+

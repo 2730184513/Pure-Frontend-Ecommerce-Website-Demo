@@ -90,6 +90,12 @@ class CartManager {
             this.showDropdown();
         });
 
+        // Double-click to navigate to cart page
+        this.icon.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            window.location.href = '/201-project/cart.html';
+        });
+
         // Hover to show (0.5s delay)
         this.icon.addEventListener('mouseenter', () => {
             this.hoverTimer = setTimeout(() => {
@@ -206,13 +212,20 @@ class CartManager {
     updateQuantity(variantId, delta) {
         const item = this.cart.find(i => i.variantId === variantId);
         if (item) {
-            item.qty += delta;
-            if (item.qty <= 0) {
-                this.cart = this.cart.filter(i => i.variantId !== variantId);
+            const newQty = item.qty + delta;
+
+            // Enforce minimum quantity of 1
+            if (newQty < 1) {
+                return; // Don't allow quantity below 1
             }
+
+            item.qty = newQty;
             this.saveCart();
             this.render();
             this.updateBadge();
+
+            // Dispatch event for cart page to sync
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
         }
     }
 
@@ -293,9 +306,10 @@ class CartManager {
                     <span class="cart-item-price">RM ${item.price.toLocaleString()}</span>
                 </div>
                 <div class="cart-controls">
-                    <button class="qty-btn minus" data-id="${item.variantId}">-</button>
+                    <button class="qty-btn minus" data-id="${item.variantId}" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
                     <span>${item.qty}</span>
                     <button class="qty-btn plus" data-id="${item.variantId}">+</button>
+                    <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
                 </div>
             `;
             container.appendChild(el);
@@ -305,7 +319,11 @@ class CartManager {
         container.querySelectorAll('.minus').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this.updateQuantity(btn.dataset.id, -1);
+                const variantId = btn.dataset.id;
+                const item = this.cart.find(i => i.variantId === variantId);
+                if (item && item.qty > 1) {
+                    this.updateQuantity(variantId, -1);
+                }
             });
         });
 
@@ -313,6 +331,19 @@ class CartManager {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.updateQuantity(btn.dataset.id, 1);
+            });
+        });
+
+        // Bind delete buttons
+        container.querySelectorAll('.delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const variantId = btn.dataset.id;
+                const item = this.cart.find(i => i.variantId === variantId);
+                if (item) {
+                    this.removeProduct(variantId);
+                    this.showNotification(`${item.name} removed from cart`, 'info');
+                }
             });
         });
     }

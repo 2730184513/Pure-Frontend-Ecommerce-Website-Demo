@@ -1,0 +1,89 @@
+/* Custom Checkbox Styles for Cart */
+
+.checkbox-container {
+    margin-right: 20px;
+}
+
+.checkbox-container input[type="checkbox"],
+.select-all-checkbox {
+    display: none;
+}
+
+.custom-checkbox {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #B88E2F;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: all 0.15s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .custom-checkbox {
+    border-width: 4px;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .custom-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #B88E2F;
+}
+
+/* Select All Checkbox Styling */
+.select-all-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #B88E2F;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    transition: all 0.15s ease;
+    margin-right: 8px;
+}
+
+/* Indeterminate state (some items selected) */
+.select-all-checkbox:indeterminate + .select-all-custom {
+    background-color: #B88E2F;
+    border-width: 2px;
+}
+
+.select-all-checkbox:indeterminate + .select-all-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 2px;
+    background-color: white;
+}
+
+/* All selected state - using image */
+.select-all-checkbox:checked + .select-all-custom {
+    background-color: #B88E2F;
+    border-width: 2px;
+}
+
+.select-all-checkbox:checked + .select-all-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-image: url('/201-project/images/icons/check.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
