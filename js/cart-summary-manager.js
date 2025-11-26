@@ -5,8 +5,8 @@
 class CartSummaryManager {
     constructor(cartManager) {
         this.cartManager = cartManager;
-        this.carouselPosition = 0;
         this.previewExpanded = false;
+        this.carousel = new CartSummaryCarousel();
     }
 
     /**
@@ -52,16 +52,12 @@ class CartSummaryManager {
             toggleBtn.addEventListener('click', () => this.togglePreview());
         }
 
-        // Carousel buttons
+        // Initialize carousel component
         const prevBtn = document.querySelector('.carousel-btn:first-child');
         const nextBtn = document.querySelector('.carousel-btn:last-child');
 
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => this.scrollCarousel(-1));
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => this.scrollCarousel(1));
+        if (this.carouselTrack && prevBtn && nextBtn) {
+            this.carousel.init(this.carouselTrack, prevBtn, nextBtn);
         }
     }
 
@@ -87,11 +83,7 @@ class CartSummaryManager {
         let selectedCount = 0;
         let productTotal = 0;
         let originalTotal = 0;
-
-        // Clear carousel
-        if (this.carouselTrack) {
-            this.carouselTrack.innerHTML = '';
-        }
+        const carouselItems = [];
 
         itemCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
@@ -105,14 +97,9 @@ class CartSummaryManager {
                 productTotal += currentPrice * quantity;
                 originalTotal += originalPrice * quantity;
 
-                // Add image to carousel
-                if (this.carouselTrack) {
-                    const imgSrc = cartItem.querySelector('.product-image').src;
-                    const previewItem = document.createElement('div');
-                    previewItem.className = 'preview-item';
-                    previewItem.innerHTML = `<img src="${imgSrc}" alt="Selected product">`;
-                    this.carouselTrack.appendChild(previewItem);
-                }
+                // Collect variantId for carousel (to find existing cart item)
+                const variantId = cartItem.dataset.variantId;
+                carouselItems.push({ variantId });
             }
         });
 
@@ -128,9 +115,8 @@ class CartSummaryManager {
         // Update select all checkbox state
         this.updateSelectAllState(selectedCount, itemCheckboxes.length);
 
-        // Reset carousel position
-        this.carouselPosition = 0;
-        this.updateCarouselPosition();
+        // Update carousel with collected items
+        this.carousel.update(carouselItems);
     }
 
     /**
@@ -164,31 +150,6 @@ class CartSummaryManager {
         }
     }
 
-    /**
-     * Scroll carousel
-     * @param {number} direction - Scroll direction (-1 for left, 1 for right)
-     */
-    scrollCarousel(direction) {
-        if (!this.carouselTrack) return;
-
-        const itemWidth = 70; // 60px + 10px gap
-        const visibleItems = Math.floor(this.carouselTrack.parentElement.offsetWidth / itemWidth);
-        const totalItems = this.carouselTrack.children.length;
-        const maxPosition = Math.max(0, totalItems - visibleItems);
-
-        this.carouselPosition = Math.max(0, Math.min(maxPosition, this.carouselPosition + direction));
-        this.updateCarouselPosition();
-    }
-
-    /**
-     * Update carousel transform position
-     */
-    updateCarouselPosition() {
-        if (!this.carouselTrack) return;
-
-        const itemWidth = 70;
-        this.carouselTrack.style.transform = `translateX(-${this.carouselPosition * itemWidth}px)`;
-    }
 }
 
 if (typeof window !== 'undefined') {

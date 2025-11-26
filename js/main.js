@@ -8,7 +8,8 @@ class FurniroApp {
         this.pageManagers = {
             header: null,
             shop: null,
-            index: null
+            index: null,
+            cart: null  // Cart page manager (initialized in cart.html)
             // Future page managers will be registered here
         };
         this.config = {
@@ -98,7 +99,16 @@ class FurniroApp {
             return;
         }
 
-        // B. Index Page Logic
+        // B. Cart Page Logic
+        const isCartPage = document.getElementById('cart-items-container');
+        if (isCartPage && window.CartPageManager) {
+            // Cart page manager is initialized in cart.html inline script
+            // No need to initialize here as it's handled separately
+            console.log('✓ Cart page detected - manager will be initialized by inline script');
+            return;
+        }
+
+        // C. Index Page Logic
         // Check for carousel
         if (document.querySelector('#inspirationsCarousel')) {
             this.initCarousel();

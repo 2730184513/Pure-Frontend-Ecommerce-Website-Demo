@@ -18,6 +18,13 @@ class CartProductLineRenderer {
             return;
         }
 
+        // Save current checkbox states before re-rendering
+        const checkboxStates = {};
+        const existingCheckboxes = container.querySelectorAll('.item-checkbox');
+        existingCheckboxes.forEach(checkbox => {
+            checkboxStates[checkbox.dataset.variantId] = checkbox.checked;
+        });
+
         const cartItems = this.cartManager.getCart();
         container.innerHTML = '';
 
@@ -29,6 +36,12 @@ class CartProductLineRenderer {
         cartItems.forEach((item, index) => {
             const lineElement = this.createProductLine(item, index);
             container.appendChild(lineElement);
+
+            // Restore checkbox state
+            const checkbox = lineElement.querySelector('.item-checkbox');
+            if (checkbox && checkboxStates[item.variantId] !== undefined) {
+                checkbox.checked = checkboxStates[item.variantId];
+            }
         });
     }
 
