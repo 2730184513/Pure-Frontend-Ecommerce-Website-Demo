@@ -820,9 +820,10 @@ background-image: url('/201-project/images/hero.png');
 ```
 
 #### ❌ 错误示例
+
 ```html
 <!-- 禁止使用相对路径 -->
-<link rel="stylesheet" href="./css/index.css">
+<link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="../css/index.css">
 <img src="images/hero.png" alt="Hero">
 ```
