@@ -78,7 +78,7 @@ class CartProductLineRenderer {
             <div class="product-info">
                 <div class="product-title">${item.name}</div>
                 <div class="product-variant">${item.selectedSize} / ${colorDisplay}</div>
-                <div class="product-warranty">1 year warranty</div>
+                <div class="product-warranty">2 year warranty</div>
             </div>
             
             <div class="price-section">
