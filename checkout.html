@@ -16,7 +16,11 @@
     <link rel="stylesheet" href="css/toast.css">
     <link rel="stylesheet" href="css/banner.css">
     <link rel="stylesheet" href="css/feature-banner.css">
+
+    <!-- Checkout page styles -->
     <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="css/form-billing.css">
+    <link rel="stylesheet" href="css/checkout-summary.css">
     <link rel="stylesheet" href="css/searchable-dropdown.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
@@ -32,8 +36,13 @@
     <form id="checkoutForm" class="checkout-form" novalidate>
         <section class="billing-section">
             <div class="billing-header">
-                <h1>Billing details</h1>
-                <p class="required-note"><span class="required">*</span> indicates required field</p>
+                <button type="button" class="back-button" title="Back to Cart">
+                    <img src="images/icons/arrow-left.png" alt="Back">
+                </button>
+                <div class="billing-header-content">
+                    <h1>Billing details</h1>
+                    <p class="required-note"><span class="required">*</span> indicates required field</p>
+                </div>
             </div>
 
             <div class="form-row">
@@ -163,22 +172,27 @@
         <aside class="order-summary">
             <div class="summary-header">
                 <h2>Product</h2>
-                <h2>Subtotal</h2>
+                <span class="summary-item-count">(0 items)</span>
             </div>
 
-            <div class="product-item">
-                <p class="product-name">Asgaard sofa <span class="quantity">X 1</span></p>
-                <p class="product-price">Rs. 250,000.00</p>
+            <!-- Products container with scrolling -->
+            <div class="summary-products">
+                <!-- Products will be dynamically rendered here -->
             </div>
 
             <div class="summary-row">
                 <p>Subtotal</p>
-                <p>Rs. 250,000.00</p>
+                <p>RM 0.00</p>
+            </div>
+
+            <div class="summary-row">
+                <p>Discount Amount</p>
+                <p>RM 0.00</p>
             </div>
 
             <div class="summary-row total">
-                <p>Total</p>
-                <p class="total-price">Rs. 250,000.00</p>
+                <p>Grand Total</p>
+                <p class="total-price">RM 0.00</p>
             </div>
 
             <hr>
@@ -225,28 +239,49 @@
 <!-- Core utilities -->
 <script src="js/component-loader.js"></script>
 <script src="js/toast.js"></script>
-<!-- Header components -->
+
+<!-- Data layer -->
+<script src="js/product-data-loader.js"></script>
+<script src="js/product-repository.js"></script>
+
+<!-- Header components (registered in main.js) -->
 <script src="js/navigate.js"></script>
 <script src="js/search.js"></script>
 <script src="js/cart-dropdown-renderer.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/wishlist-dropdown-renderer.js"></script>
 <script src="js/wishlist.js"></script>
-<!--Specific-->
 
-<!-- Main controller -->
+<!-- Checkout page dependencies -->
+<script src="js/location-data-service.js"></script>
+<script src="js/searchable-dropdown.js"></script>
+<script src="js/field-validator.js"></script>
+<script src="js/form-renderer.js"></script>
+
+<!-- Checkout page managers -->
+<script src="js/form-manager.js"></script>
+<script src="js/checkout-summary-manager.js"></script>
+<script src="js/checkout-manager.js"></script>
+
+<!-- Main controller (initializes all page managers) -->
 <script src="js/main.js"></script>
 
 <script>
-    // Load page banner and feature banner components, then initialize checkout page
+    // Load page banner with multi-level breadcrumb
     document.addEventListener('DOMContentLoaded', async () => {
+        console.log('=== Checkout Page DOMContentLoaded ===');
+
         await ComponentLoader.loadComponents([
             {
                 name: 'page-banner',
                 target: '#banner-placeholder',
                 params: {
                     'banner-title': 'Checkout',
-                    'banner-breadcrumb': 'Checkout'
+                    'banner-breadcrumb': [
+                        { text: 'Home', href: 'index.html' },
+                        { text: 'Cart', href: 'cart.html' },
+                        { text: 'Checkout' }
+                    ]
                 }
             },
             {
@@ -254,21 +289,48 @@
                 target: '#feature-banner-placeholder'
             }
         ]);
-    });
-</script>
+        console.log('✓ Banner components loaded');
 
-<script type="module">
-    import { CheckoutManager } from './js/checkout-manager.js';
+        // Wait for main app to fully initialize (especially cart manager)
+        let attempts = 0;
+        const maxAttempts = 20;
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const manager = new CheckoutManager('checkoutForm');
-            await manager.initialize();
-            console.log('Checkout page loaded successfully');
-        } catch (error) {
-            console.error('Failed to initialize checkout:', error);
-            alert('Failed to load form. Please refresh the page.');
-        }
+        const checkAndInit = async () => {
+            attempts++;
+            console.log(`Initialization attempt ${attempts}/${maxAttempts}`);
+
+            // Check if all required components are ready
+            const cartReady = window.cartManagerInstance !== undefined;
+            const managerReady = window.CheckoutManager !== undefined;
+            const formManagerReady = window.FormManager !== undefined;
+            const summaryManagerReady = window.CheckoutSummaryManager !== undefined;
+
+            console.log('Cart manager ready:', cartReady);
+            console.log('CheckoutManager ready:', managerReady);
+            console.log('FormManager ready:', formManagerReady);
+            console.log('CheckoutSummaryManager ready:', summaryManagerReady);
+
+            if (cartReady && managerReady && formManagerReady && summaryManagerReady) {
+                console.log('✅ All components ready, initializing checkout...');
+                try {
+                    const manager = new CheckoutManager('checkoutForm');
+                    await manager.initialize();
+                    console.log('🎉 Checkout page fully initialized!');
+                } catch (error) {
+                    console.error('❌ Failed to initialize checkout:', error);
+                    alert('Failed to load checkout page: ' + error.message);
+                }
+            } else if (attempts < maxAttempts) {
+                console.log(`⏳ Waiting for components... retrying in 200ms`);
+                setTimeout(checkAndInit, 200);
+            } else {
+                console.error('❌ Timeout: Required components not ready after', maxAttempts, 'attempts');
+                alert('Failed to initialize page. Please refresh.');
+            }
+        };
+
+        // Start checking after a short delay
+        setTimeout(checkAndInit, 300);
     });
 </script>
 

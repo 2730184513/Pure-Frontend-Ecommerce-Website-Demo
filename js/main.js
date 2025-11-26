@@ -9,7 +9,8 @@ class FurniroApp {
             header: null,
             shop: null,
             index: null,
-            cart: null  // Cart page manager (initialized in cart.html)
+            cart: null,      // Cart page manager (initialized in cart.html)
+            checkout: null   // Checkout page manager (initialized in checkout.html)
             // Future page managers will be registered here
         };
         this.config = {
@@ -76,6 +77,8 @@ class FurniroApp {
         if (window.CartManager) {
             const cart = new CartManager();
             cart.init();
+            // Save to window for checkout page to access
+            window.cartManagerInstance = cart;
         }
 
         if (window.WishlistManager) {
@@ -108,7 +111,15 @@ class FurniroApp {
             return;
         }
 
-        // C. Index Page Logic
+        // C. Checkout Page Logic
+        const isCheckoutPage = document.getElementById('checkoutForm');
+        if (isCheckoutPage) {
+            // Checkout page manager is initialized in checkout.html inline script
+            console.log('✓ Checkout page detected - manager will be initialized by inline script');
+            return;
+        }
+
+        // D. Index Page Logic
         // Check for carousel
         if (document.querySelector('#inspirationsCarousel')) {
             this.initCarousel();
@@ -119,7 +130,7 @@ class FurniroApp {
             this.initCategoryRotator();
         }
 
-        // C. Generic product list logic (only for non-Shop pages)
+        // Generic product list logic (only for non-Shop pages)
         const hasProductGrid = document.querySelector('.product-grid');
         if (hasProductGrid && !isShopPage) {
             await this.initProductRepository();

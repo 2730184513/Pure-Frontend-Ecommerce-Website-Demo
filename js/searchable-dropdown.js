@@ -1,7 +1,7 @@
 /**
  * SearchableDropdown - 负责生成下拉框的HTML结构和选项过滤逻辑
  */
-export class SearchableDropdown {
+class SearchableDropdown {
     constructor(inputElement, options = {}) {
         this.input = inputElement;
         this.searchFunction = options.searchFunction;
@@ -147,3 +147,9 @@ export class SearchableDropdown {
         this.input.disabled = true;
     }
 }
+
+// Export to window
+if (typeof window !== 'undefined') {
+    window.SearchableDropdown = SearchableDropdown;
+}
+

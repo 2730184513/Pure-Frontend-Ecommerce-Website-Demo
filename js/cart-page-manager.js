@@ -51,7 +51,26 @@ class CartPageManager {
         // Initialize summary
         this.summaryManager.init();
 
+        // Check if redirected from successful order placement
+        this.checkOrderSuccess();
+
         console.log('✓ Cart Page initialized');
+    }
+
+    /**
+     * Check if order was successfully placed and show notification
+     */
+    checkOrderSuccess() {
+        const orderSuccess = sessionStorage.getItem('order_placed_success');
+        if (orderSuccess === 'true') {
+            // Clear the flag
+            sessionStorage.removeItem('order_placed_success');
+
+            // Show success toast
+            if (window.toast) {
+                window.toast.show('Order placed successfully! Thank you for your purchase🎉', 'success', 3000);
+            }
+        }
     }
 
     /**

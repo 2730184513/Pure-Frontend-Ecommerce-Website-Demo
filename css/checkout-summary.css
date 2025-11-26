@@ -1,0 +1,332 @@
+/* checkout-summary.css - Checkout order summary and payment styles */
+
+/* ========================================
+   ORDER SUMMARY SECTION
+   ======================================== */
+
+.order-summary {
+    background: #fff;
+    padding: 87px 38px 86px 38px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================
+   SUMMARY HEADER
+   ======================================== */
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.summary-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.summary-item-count {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-light-gray);
+}
+
+/* ========================================
+   PRODUCTS DISPLAY AREA
+   ======================================== */
+
+.summary-products {
+    max-height: 780px;  /* Increased from 520px to accommodate ~5 product rows */
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 20px;
+}
+
+/* Custom scrollbar styling - matching cart-wishlist.css */
+.summary-products::-webkit-scrollbar {
+    width: 6px;
+}
+
+.summary-products::-webkit-scrollbar-track {
+    background: #F9F1E7;
+    border-radius: 3px;
+}
+
+.summary-products::-webkit-scrollbar-thumb {
+    background: #B88E2F;
+    border-radius: 3px;
+}
+
+.summary-products::-webkit-scrollbar-thumb:hover {
+    background: #9A7328;
+}
+
+/* ========================================
+   PRODUCT ITEM
+   ======================================== */
+
+.summary-product-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F9F1E7;
+}
+
+.summary-product-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.summary-product-img {
+    width: 80px;
+    height: 119px;
+    min-width: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--bg-light);
+    flex-shrink: 0;
+}
+
+.summary-product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.summary-product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.summary-product-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex: 1;
+}
+
+.summary-product-qty {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+    white-space: nowrap;
+    min-width: 42px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.summary-product-variant {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.summary-product-price {
+    font-size: 15px;
+    color: #B88E2F;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Empty state */
+.summary-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light-gray);
+    font-size: 16px;
+}
+
+/* ========================================
+   SUMMARY CALCULATIONS
+   ======================================== */
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 16px 0;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.summary-row.total {
+    font-weight: 400;
+    margin-top: 24px;
+}
+
+.total-price {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #D9D9D9;
+    margin: 35px 0;
+}
+
+/* ========================================
+   PAYMENT METHODS
+   ======================================== */
+
+.payment-methods {
+    margin: 23px 0 32px 0;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+}
+
+.payment-option input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    margin-right: 17px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.payment-option label {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-light-gray);
+    transition: all 0.3s ease;
+}
+
+.payment-option input[type="radio"]:checked + label {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Payment method descriptions */
+.payment-description {
+    color: var(--text-light-gray);
+    font-size: 16px;
+    font-weight: 300;
+    text-align: justify;
+    line-height: 1.5;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.payment-description.visible {
+    height: auto;
+    opacity: 1;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+.payment-description.hidden {
+    height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.bank-description {
+    height: auto;
+    opacity: 1;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+.cash-description {
+    height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* ========================================
+   PRIVACY NOTICE
+   ======================================== */
+
+.privacy-notice {
+    font-size: 16px;
+    font-weight: 300;
+    text-align: justify;
+    margin: 24px 0;
+    line-height: 1.5;
+    color: var(--text-gray);
+}
+
+.privacy-notice strong {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* ========================================
+   PLACE ORDER BUTTON
+   ======================================== */
+
+.place-order-btn {
+    width: 100%;
+    max-width: 318px;
+    height: 64px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    font-family: var(--font-main);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.place-order-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(184, 142, 47, 0.4);
+}
+
+.place-order-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(184, 142, 47, 0.3);
+}
+
+.place-order-btn:disabled {
+    background: var(--text-light-gray);
+    color: #fff;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .order-summary {
+        padding: 20px;
+    }
+
+    .place-order-btn {
+        max-width: 100%;
+        height: 56px;
+        font-size: 18px;
+    }
+}
+

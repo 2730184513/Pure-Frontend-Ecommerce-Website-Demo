@@ -1,7 +1,7 @@
 /**
  * FormRenderer - 负责整个Checkout界面的UI渲染
  */
-export class FormRenderer {
+class FormRenderer {
     constructor(formElement) {
         this.form = formElement;
         this.renderQueue = [];
@@ -156,3 +156,9 @@ export class FormRenderer {
         });
     }
 }
+
+// Export to window
+if (typeof window !== 'undefined') {
+    window.FormRenderer = FormRenderer;
+}
+

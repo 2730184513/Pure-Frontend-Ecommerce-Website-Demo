@@ -59,6 +59,12 @@ class CartSummaryManager {
         if (this.carouselTrack && prevBtn && nextBtn) {
             this.carousel.init(this.carouselTrack, prevBtn, nextBtn);
         }
+
+        // Checkout button
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', () => this.handleCheckout());
+        }
     }
 
     /**
@@ -148,6 +154,49 @@ class CartSummaryManager {
                 this.arrowIcon.classList.toggle('rotated');
             }
         }
+    }
+
+    /**
+     * Handle checkout button click
+     */
+    handleCheckout() {
+        console.log('=== handleCheckout() called ===');
+
+        const itemCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+        console.log('Selected checkboxes:', itemCheckboxes.length);
+
+        if (itemCheckboxes.length === 0) {
+            console.warn('No items selected for checkout');
+            if (window.Toast) {
+                Toast.show('Please select at least one item to checkout', 'info');
+            } else {
+                alert('Please select at least one item to checkout');
+            }
+            return;
+        }
+
+        // Collect selected variantIds
+        const selectedVariantIds = [];
+        itemCheckboxes.forEach(checkbox => {
+            const cartItem = checkbox.closest('.cart-item');
+            const variantId = cartItem.dataset.variantId;
+            console.log('Adding variantId:', variantId);
+            selectedVariantIds.push(variantId);
+        });
+
+        console.log('Selected variant IDs:', selectedVariantIds);
+
+        // Save to localStorage for checkout page
+        localStorage.setItem('checkout_selected_items', JSON.stringify(selectedVariantIds));
+        console.log('✓ Saved to localStorage');
+
+        // Verify
+        const saved = localStorage.getItem('checkout_selected_items');
+        console.log('Verification:', saved);
+
+        // Navigate to checkout
+        console.log('Navigating to checkout...');
+        window.location.href = 'checkout.html';
     }
 
 }

@@ -1,7 +1,7 @@
 /**
  * FieldValidator - 纯验证逻辑
  */
-export class FieldValidator {
+class FieldValidator {
     constructor(field) {
         this.field = field;
         this.hasBeenTouched = false;
@@ -94,3 +94,9 @@ export class FieldValidator {
         this.hasBeenTouched = false;
     }
 }
+
+// Export to window
+if (typeof window !== 'undefined') {
+    window.FieldValidator = FieldValidator;
+}
+

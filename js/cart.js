@@ -110,8 +110,9 @@ class CartManager {
     /**
      * Remove product from cart
      * @param {string} variantId - Variant ID to remove
+     * @param {boolean} silent - If true, don't show notification (default: false)
      */
-    removeProduct(variantId) {
+    removeProduct(variantId, silent = false) {
         const item = this.cart.find(i => i.variantId === variantId);
 
         this.cart = this.cart.filter(i => i.variantId !== variantId);
@@ -123,8 +124,8 @@ class CartManager {
             this.dropdownRenderer.render();
         }
 
-        // Show notification
-        if (item) {
+        // Show notification (unless silent mode)
+        if (item && !silent) {
             this.showNotification(`${item.name} removed from cart`, 'info');
         }
 

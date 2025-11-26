@@ -2,7 +2,7 @@
  * LocationDataService - 简化的高性能数据服务
  * 使用首字母Map实现快速搜索
  */
-export class LocationDataService {
+class LocationDataService {
     constructor() {
         // 首字母索引：key为首字母，value为国家名称数组
         this.countriesByFirstLetter = new Map();
@@ -75,3 +75,9 @@ export class LocationDataService {
         return this.statesByCountryName.get(countryName) || [];
     }
 }
+
+// Export to window
+if (typeof window !== 'undefined') {
+    window.LocationDataService = LocationDataService;
+}
+

@@ -50,9 +50,52 @@ class ComponentLoader {
         Object.keys(params).forEach(elementId => {
             const element = container.querySelector(`#${elementId}`);
             if (element) {
-                element.textContent = params[elementId];
+                // Special handling for breadcrumb
+                if (elementId === 'banner-breadcrumb' && typeof params[elementId] === 'object') {
+                    this.applyBreadcrumbStructure(container, params[elementId]);
+                } else {
+                    element.textContent = params[elementId];
+                }
             }
         });
+    }
+
+    /**
+     * Apply multi-level breadcrumb structure
+     * @param {HTMLElement} container - Container element
+     * @param {Array|Object} breadcrumbData - Breadcrumb structure
+     * @private
+     */
+    static applyBreadcrumbStructure(container, breadcrumbData) {
+        const breadcrumbContainer = container.querySelector('.breadcrumb');
+        if (!breadcrumbContainer) return;
+
+        // Handle array format: [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}, {text: 'Checkout'}]
+        if (Array.isArray(breadcrumbData)) {
+            breadcrumbContainer.innerHTML = '';
+
+            breadcrumbData.forEach((item, index) => {
+                if (index > 0) {
+                    const separator = document.createElement('span');
+                    separator.className = 'breadcrumb-separator';
+                    separator.textContent = '>';
+                    breadcrumbContainer.appendChild(separator);
+                }
+
+                if (item.href) {
+                    const link = document.createElement('a');
+                    link.href = item.href;
+                    link.className = 'breadcrumb-link';
+                    link.textContent = item.text;
+                    breadcrumbContainer.appendChild(link);
+                } else {
+                    const current = document.createElement('span');
+                    current.className = 'breadcrumb-current';
+                    current.textContent = item.text;
+                    breadcrumbContainer.appendChild(current);
+                }
+            });
+        }
     }
 
     /**
