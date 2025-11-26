@@ -1,0 +1,265 @@
+/* ==========================================
+   可搜索下拉框样式
+   适用于 country 和 province 输入框
+   ========================================== */
+
+/* 确保 form-group 有相对定位 */
+.form-group {
+    position: relative;
+}
+
+/* ==========================================
+   输入框样式（通用）
+   ========================================== */
+.searchable-input {
+    width: 100%;
+    padding: 25px 30px;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: var(--font-main);
+    color: var(--text-dark);
+    background: white;
+    transition: all 0.3s ease;
+    min-height: 75px;
+    cursor: pointer;
+}
+
+/* 聚焦状态 */
+.searchable-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(184, 142, 47, 0.1);
+}
+
+/* placeholder样式 */
+.searchable-input::placeholder {
+    color: var(--text-light-gray);
+}
+
+/* 禁用状态 */
+.searchable-input:disabled {
+    background: var(--bg-light);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* 验证状态 - 有效 */
+.searchable-input.valid {
+    border-color: #4CAF50;
+}
+
+/* 验证状态 - 无效 */
+.searchable-input.invalid {
+    border-color: #ff0000;
+}
+
+/* ==========================================
+   下拉列表容器
+   ========================================== */
+.custom-dropdown-list {
+    position: absolute;
+    top: 100%; /* 紧贴输入框底部 */
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    z-index: 1000;
+    overflow: hidden;
+    max-height: 0; /* 默认隐藏 */
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    margin-top: 0;
+}
+
+/* 打开状态 */
+.custom-dropdown-list.open {
+    max-height: 300px;
+    opacity: 1;
+    overflow-y: auto;
+}
+
+/* ==========================================
+   滚动条样式
+   ========================================== */
+.custom-dropdown-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-track {
+    background: var(--bg-light);
+    border-radius: 0 10px 10px 0;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-thumb {
+    background: var(--text-light-gray);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* ==========================================
+   下拉选项
+   ========================================== */
+.dropdown-item {
+    padding: 14px 20px;
+    font-size: 16px;
+    color: var(--text-gray);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-main);
+    user-select: none;
+}
+
+/* 悬停状态 */
+.dropdown-item:hover {
+    background: #F9F1E7;
+    color: var(--primary-color);
+}
+
+/* 选中状态（可选） */
+.dropdown-item.selected {
+    color: var(--primary-color);
+    font-weight: 600;
+    background: #F9F1E7;
+}
+
+/* 无结果状态 */
+.dropdown-item.no-results {
+    color: var(--text-light-gray);
+    cursor: default;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+.dropdown-item.no-results:hover {
+    background: transparent;
+    color: var(--text-light-gray);
+}
+
+/* ==========================================
+   响应式设计
+   ========================================== */
+@media (max-width: 768px) {
+    .searchable-input {
+        padding: 20px 25px;
+        min-height: 65px;
+        font-size: 15px;
+    }
+
+    .custom-dropdown-list.open {
+        max-height: 250px;
+    }
+
+    .dropdown-item {
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .searchable-input {
+        padding: 18px 20px;
+        min-height: 60px;
+        font-size: 14px;
+    }
+
+    .custom-dropdown-list.open {
+        max-height: 200px;
+    }
+
+    .dropdown-item {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+
+/* ==========================================
+   动画效果增强
+   ========================================== */
+/* 下拉列表展开动画 */
+@keyframes slideDown {
+    from {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        max-height: 300px;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 可选：为打开状态添加动画 */
+.custom-dropdown-list.open.animated {
+    animation: slideDown 0.3s ease forwards;
+}
+
+/* ==========================================
+   加载状态（可选）
+   ========================================== */
+.dropdown-item.loading {
+    color: var(--text-light-gray);
+    cursor: wait;
+    text-align: center;
+    padding: 20px;
+}
+
+.dropdown-item.loading::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    border: 2px solid var(--text-light-gray);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================
+   下拉框指示器（可选）
+   ========================================== */
+.searchable-input-wrapper {
+    position: relative;
+}
+
+/* 下拉箭头图标 */
+.searchable-input-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--text-light-gray);
+    transition: transform 0.3s ease, border-top-color 0.3s ease;
+    pointer-events: none;
+}
+
+/* 聚焦时箭头旋转 */
+.searchable-input-wrapper:has(.searchable-input:focus)::after {
+    transform: translateY(-50%) rotate(180deg);
+    border-top-color: var(--primary-color);
+}
+
+/* 禁用时箭头隐藏 */
+.searchable-input-wrapper:has(.searchable-input:disabled)::after {
+    display: none;
+}

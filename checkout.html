@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Furniro</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Header component styles -->
+    <link rel="stylesheet" href="css/header-base.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/cart-wishlist.css">
+
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/banner.css">
+    <link rel="stylesheet" href="css/feature-banner.css">
+    <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="css/searchable-dropdown.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
+            rel="stylesheet">
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<div id="banner-placeholder"></div>
+
+<!--账单表单区-->
+<div class="checkout-container">
+    <form id="checkoutForm" class="checkout-form" novalidate>
+        <section class="billing-section">
+            <div class="billing-header">
+                <h1>Billing details</h1>
+                <p class="required-note"><span class="required">*</span> indicates required field</p>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name<span class="required">*</span></label>
+                    <input type="text"
+                            id="firstName"
+                            name="firstName"
+                            required
+                            pattern="^[A-Za-z\s\-']{2,50}$"
+                            data-error="First name must be 2-50 letters only">
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name<span class="required">*</span></label>
+                    <input type="text"
+                            id="lastName"
+                            name="lastName"
+                            required
+                            pattern="^[A-Za-z\s\-']{2,50}$"
+                            data-error="Last name must be 2-50 letters only">
+                    <span class="error-message"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text"
+                        id="companyName"
+                        name="companyName"
+                        pattern="^[A-Za-z0-9\s\-.,&()]{2,100}$"
+                        data-error="Company name contains invalid characters">
+                <span class="error-message"></span>
+            </div>
+
+            <!-- 国家输入框 -->
+            <div class="form-group">
+                <label for="country">Country / Region<span class="required">*</span></label>
+                <input type="text"
+                        id="country"
+                        name="country"
+                        class="searchable-input"
+                        required>
+                <span class="error-message"></span>
+            </div>
+
+            <!-- 省份输入框 -->
+            <div class="form-group">
+                <label for="province">Province / State<span class="required">*</span></label>
+                <input type="text"
+                        id="province"
+                        name="province"
+                        class="searchable-input"
+                        required
+                        disabled>
+                <span class="error-message"></span>
+            </div>
+
+            <!-- 城市 -->
+            <div class="form-group">
+                <label for="city">Town / City<span class="required">*</span></label>
+                <input type="text"
+                        id="city"
+                        name="city"
+                        required
+                        pattern="^[A-Za-z\s\-']{2,50}$"
+                        data-error="City name must be 2-50 letters only">
+                <span class="error-message"></span>
+            </div>
+
+            <!-- 街道 -->
+            <div class="form-group">
+                <label for="streetAddress">Street Address<span class="required">*</span></label>
+                <input type="text"
+                        id="streetAddress"
+                        name="streetAddress"
+                        required
+                        minlength="5"
+                        pattern="^[A-Za-z0-9\s\-.,#/]{5,100}$"
+                        data-error="Street address must be 5-100 characters (letters, numbers, spaces, and -.,#/ allowed)">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="zipCode">ZIP code<span class="required">*</span></label>
+                <input type="text"
+                        id="zipCode"
+                        name="zipCode"
+                        required
+                        pattern="^[A-Za-z0-9\s\-]{3,10}$"
+                        data-error="ZIP code must be 3-10 alphanumeric characters">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone<span class="required">*</span></label>
+                <input type="tel"
+                        id="phone"
+                        name="phone"
+                        required
+                        pattern="^[\+]?[0-9\s\-\(\)]{8,20}$"
+                        data-error="Phone must be 8-20 characters (numbers, +, -, spaces, and parentheses allowed)">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address<span class="required">*</span></label>
+                <input type="email"
+                        id="email"
+                        name="email"
+                        required
+                        pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+                        data-error="Please enter a valid email address">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="additionalInfo">Additional information</label>
+                <textarea id="additionalInfo"
+                        name="additionalInfo"
+                        maxlength="500"
+                        placeholder="Notes about your order (max 500 characters)"></textarea>
+            </div>
+        </section>
+
+        <aside class="order-summary">
+            <div class="summary-header">
+                <h2>Product</h2>
+                <h2>Subtotal</h2>
+            </div>
+
+            <div class="product-item">
+                <p class="product-name">Asgaard sofa <span class="quantity">X 1</span></p>
+                <p class="product-price">Rs. 250,000.00</p>
+            </div>
+
+            <div class="summary-row">
+                <p>Subtotal</p>
+                <p>Rs. 250,000.00</p>
+            </div>
+
+            <div class="summary-row total">
+                <p>Total</p>
+                <p class="total-price">Rs. 250,000.00</p>
+            </div>
+
+            <hr>
+
+            <div class="payment-methods">
+                <!-- 银行转账选项 -->
+                <div class="payment-option">
+                    <input type="radio" id="bankTransfer" name="paymentMethod" value="bank-transfer" checked>
+                    <label for="bankTransfer">Direct Bank Transfer</label>
+                </div>
+
+                <!-- 银行转账说明 -->
+                <p class="payment-description bank-description">
+                    Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                </p>
+
+                <!-- 货到付款选项 -->
+                <div class="payment-option">
+                    <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cash-on-delivery">
+                    <label for="cashOnDelivery">Cash On Delivery</label>
+                </div>
+
+                <!-- 货到付款说明 -->
+                <p class="payment-description cash-description">
+                    Pay with cash upon delivery. Please prepare exact change if possible. Our delivery person will provide you with a receipt.
+                </p>
+            </div>
+
+            <p class="privacy-notice">
+                Your personal data will be used to support your experience throughout this website,
+                to manage access to your account, and for other purposes described in our
+                <strong>privacy policy.</strong>
+            </p>
+
+            <button type="submit" class="place-order-btn">Place order</button>
+        </aside>
+    </form>
+</div>
+
+<div id="feature-banner-placeholder"></div>
+
+<div id="footer-placeholder"></div>
+
+<!-- Core utilities -->
+<script src="js/component-loader.js"></script>
+<script src="js/toast.js"></script>
+<!-- Header components -->
+<script src="js/navigate.js"></script>
+<script src="js/search.js"></script>
+<script src="js/cart-dropdown-renderer.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist-dropdown-renderer.js"></script>
+<script src="js/wishlist.js"></script>
+<!--Specific-->
+
+<!-- Main controller -->
+<script src="js/main.js"></script>
+
+<script>
+    // Load page banner and feature banner components, then initialize checkout page
+    document.addEventListener('DOMContentLoaded', async () => {
+        await ComponentLoader.loadComponents([
+            {
+                name: 'page-banner',
+                target: '#banner-placeholder',
+                params: {
+                    'banner-title': 'Checkout',
+                    'banner-breadcrumb': 'Checkout'
+                }
+            },
+            {
+                name: 'feature-banner',
+                target: '#feature-banner-placeholder'
+            }
+        ]);
+    });
+</script>
+
+<script type="module">
+    import { CheckoutManager } from './js/checkout-manager.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const manager = new CheckoutManager('checkoutForm');
+            await manager.initialize();
+            console.log('Checkout page loaded successfully');
+        } catch (error) {
+            console.error('Failed to initialize checkout:', error);
+            alert('Failed to load form. Please refresh the page.');
+        }
+    });
+</script>
+
+</body>
+</html>
