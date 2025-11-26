@@ -3,45 +3,150 @@
 /* --- FEATURES BANNER --- */
 .features-banner {
     background: #FAF3EA;
-    padding: 100px 0;
+    padding: 80px 0;
+    width: 100%;
 }
 
 .features-container {
     display: flex;
     justify-content: space-between;
-    max-width: 1240px;
+    align-items: center;
+    max-width: 2560px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 100px;
 }
 
 .feature-item {
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
+    flex-shrink: 0;
 }
 
 .feature-icon {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
 }
 
 /* Define icons via CSS */
-.icon-trophy { background-image: url('../images/icons/trophy.png'); }
-.icon-guarantee { background-image: url('../images/icons/guarantee.png'); }
-.icon-shipping { background-image: url('../images/icons/shipping.png'); }
-.icon-support { background-image: url('../images/icons/customer-support.png'); }
+.icon-trophy { background-image: url('/201-project/images/icons/trophy.png'); }
+.icon-guarantee { background-image: url('/201-project/images/icons/guarantee.png'); }
+.icon-shipping { background-image: url('/201-project/images/icons/shipping.png'); }
+.icon-support { background-image: url('/201-project/images/icons/customer-support.png'); }
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: max-content;
+}
 
 .feature-title {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 600;
     color: #242424;
-    margin-bottom: 5px;
+    line-height: 1.5;
+    white-space: nowrap;
 }
 
 .feature-desc {
-    font-size: 18px;
+    font-size: 20px;
     color: #898989;
     font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .features-container {
+        padding: 0 60px;
+    }
+
+    .feature-item {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .features-container {
+        padding: 0 40px;
+    }
+
+    .feature-title {
+        font-size: 22px;
+    }
+
+    .feature-desc {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 992px) {
+    .features-banner {
+        padding: 60px 0;
+    }
+
+    .features-container {
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 0 30px;
+        row-gap: 40px;
+    }
+
+    .feature-item {
+        flex-basis: calc(50% - 40px);
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .features-container {
+        padding: 0 20px;
+    }
+
+    .feature-title {
+        font-size: 20px;
+    }
+
+    .feature-desc {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .features-banner {
+        padding: 40px 0;
+    }
+
+    .features-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 20px;
+        gap: 30px;
+    }
+
+    .feature-item {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .feature-title {
+        font-size: 18px;
+        white-space: nowrap;
+    }
+
+    .feature-desc {
+        font-size: 14px;
+        white-space: nowrap;
+    }
 }
