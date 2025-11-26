@@ -1,15 +1,11 @@
 /**
  * Cart Manager
- * Handles cart content management, quantity updates, and dropdown interactions
+ * Handles cart business logic - data management, storage, and state
  */
 class CartManager {
     constructor() {
         this.cart = [];
-        this.icon = null;
-        this.dropdown = null;
-        this.badge = null;
-        this.hoverTimer = null;
-        this.hoverDelay = 500; // 0.5s hover delay
+        this.dropdownRenderer = null;
         this.isInitialized = false;
     }
 
@@ -17,12 +13,11 @@ class CartManager {
         if (this.isInitialized) return;
 
         this.loadCart();
-        this.cacheDOM();
-        this.createDropdown();
-        this.createBadge();
-        this.bindEvents();
         this.setupEventListeners();
-        this.updateBadge();
+
+        // Initialize dropdown renderer
+        this.dropdownRenderer = new CartDropdownRenderer(this);
+        this.dropdownRenderer.init();
 
         this.isInitialized = true;
     }
@@ -36,111 +31,6 @@ class CartManager {
     }
 
     /**
-     * Cache DOM elements
-     */
-    cacheDOM() {
-        this.icon = document.querySelector('#icon-cart');
-        this.dropdown = document.getElementById('cart-dropdown');
-        this.badge = document.getElementById('cart-badge');
-    }
-
-    /**
-     * Create dropdown structure if not exists
-     */
-    createDropdown() {
-        if (!this.dropdown) {
-            const headerContainer = document.querySelector('.header-container');
-            if (headerContainer) {
-                const cartDrop = document.createElement('div');
-                cartDrop.id = 'cart-dropdown';
-                cartDrop.className = 'header-dropdown cart-dropdown';
-                cartDrop.innerHTML = '<div class="cart-items"></div>';
-                headerContainer.appendChild(cartDrop);
-                this.dropdown = cartDrop;
-            }
-        }
-    }
-
-    /**
-     * Create badge element
-     */
-    createBadge() {
-        if (!this.badge && this.icon) {
-            const badge = document.createElement('div');
-            badge.className = 'icon-badge';
-            badge.id = 'cart-badge';
-            badge.style.display = 'none';
-            this.icon.appendChild(badge);
-            this.badge = badge;
-        }
-    }
-
-    /**
-     * Bind event listeners for hover and click
-     */
-    bindEvents() {
-        if (!this.icon || !this.dropdown) {
-            console.warn('Cart elements not found');
-            return;
-        }
-
-        // Click to show immediately
-        this.icon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.showDropdown();
-        });
-
-        // Double-click to navigate to cart page
-        this.icon.addEventListener('dblclick', (e) => {
-            e.stopPropagation();
-            window.location.href = '/201-project/cart.html';
-        });
-
-        // Hover to show (0.5s delay)
-        this.icon.addEventListener('mouseenter', () => {
-            this.hoverTimer = setTimeout(() => {
-                this.showDropdown();
-            }, this.hoverDelay);
-        });
-
-        // Cancel timer if mouse leaves before delay
-        this.icon.addEventListener('mouseleave', () => {
-            if (this.hoverTimer) {
-                clearTimeout(this.hoverTimer);
-                this.hoverTimer = null;
-            }
-        });
-
-        // Keep dropdown open when hovering over it
-        this.dropdown.addEventListener('mouseenter', () => {
-            this.dropdown.classList.add('active');
-        });
-
-        this.dropdown.addEventListener('mouseleave', () => {
-            this.dropdown.classList.remove('active');
-        });
-
-        // Close dropdown when mouse leaves both icon and dropdown
-        const hideDropdown = () => {
-            setTimeout(() => {
-                if (!this.icon.matches(':hover') && !this.dropdown.matches(':hover')) {
-                    this.dropdown.classList.remove('active');
-                }
-            }, 100);
-        };
-
-        this.icon.addEventListener('mouseleave', hideDropdown);
-        this.dropdown.addEventListener('mouseleave', hideDropdown);
-
-        // Close on outside click
-        document.addEventListener('click', (e) => {
-            if (!this.dropdown.contains(e.target) && !this.icon.contains(e.target)) {
-                this.dropdown.classList.remove('active');
-            }
-        });
-    }
-
-    /**
      * Setup global event listeners
      */
     setupEventListeners() {
@@ -149,26 +39,6 @@ class CartManager {
         });
     }
 
-    /**
-     * Show dropdown
-     */
-    showDropdown() {
-        this.closeOtherDropdowns();
-        this.render();
-        this.dropdown.classList.add('active');
-    }
-
-    /**
-     * Close other dropdowns (wishlist, etc)
-     */
-    closeOtherDropdowns() {
-        const dropdowns = document.querySelectorAll('.header-dropdown');
-        dropdowns.forEach(d => {
-            if (d !== this.dropdown) {
-                d.classList.remove('active');
-            }
-        });
-    }
 
     /**
      * Add product to cart
@@ -197,11 +67,16 @@ class CartManager {
         }
 
         this.saveCart();
-        this.updateBadge();
         this.showNotification(message, 'success');
 
-        // Auto-open dropdown after adding
-        this.showDropdown();
+        // Update renderer and play animation
+        if (this.dropdownRenderer) {
+            this.dropdownRenderer.updateBadge();
+            this.dropdownRenderer.playIconAnimation();
+        }
+
+        // Dispatch event for cart page to sync
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
     }
 
     /**
@@ -221,8 +96,11 @@ class CartManager {
 
             item.qty = newQty;
             this.saveCart();
-            this.render();
-            this.updateBadge();
+
+            // Update renderer
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.updateBadge();
+            }
 
             // Dispatch event for cart page to sync
             window.dispatchEvent(new CustomEvent('cartUpdated'));
@@ -234,10 +112,24 @@ class CartManager {
      * @param {string} variantId - Variant ID to remove
      */
     removeProduct(variantId) {
+        const item = this.cart.find(i => i.variantId === variantId);
+
         this.cart = this.cart.filter(i => i.variantId !== variantId);
         this.saveCart();
-        this.render();
-        this.updateBadge();
+
+        // Update renderer
+        if (this.dropdownRenderer) {
+            this.dropdownRenderer.updateBadge();
+            this.dropdownRenderer.render();
+        }
+
+        // Show notification
+        if (item) {
+            this.showNotification(`${item.name} removed from cart`, 'info');
+        }
+
+        // Dispatch event for cart page to sync
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
     }
 
     /**
@@ -246,8 +138,15 @@ class CartManager {
     clearCart() {
         this.cart = [];
         this.saveCart();
-        this.render();
-        this.updateBadge();
+
+        // Update renderer
+        if (this.dropdownRenderer) {
+            this.dropdownRenderer.updateBadge();
+            this.dropdownRenderer.render();
+        }
+
+        // Dispatch event for cart page to sync
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
     }
 
     /**
@@ -257,96 +156,6 @@ class CartManager {
         localStorage.setItem('furniro_cart', JSON.stringify(this.cart));
     }
 
-    /**
-     * Update badge display
-     */
-    updateBadge() {
-        if (!this.badge) return;
-
-        // Count unique variants (distinct name+color+size combinations), not total quantity
-        const count = this.cart.length;
-
-        if (count > 0) {
-            this.badge.style.display = 'flex';
-            this.badge.textContent = count > 99 ? '99+' : count;
-        } else {
-            this.badge.style.display = 'none';
-        }
-    }
-
-    /**
-     * Render cart items
-     */
-    render() {
-        const container = this.dropdown.querySelector('.cart-items');
-        if (!container) return;
-
-        container.innerHTML = '';
-
-        if (this.cart.length === 0) {
-            container.innerHTML = '<p style="text-align:center;padding:20px;color:#9F9F9F">Your cart is empty</p>';
-            return;
-        }
-
-        this.cart.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'cart-item';
-
-            // Get color display name
-            const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
-
-            el.innerHTML = `
-                <img src="${item.product_picture}" 
-                     class="cart-item-img" 
-                     alt="${item.name}"
-                     onerror="this.src='images/products/placeholder.jpg'">
-                <div class="cart-item-info">
-                    <span class="cart-item-title">${item.name}</span>
-                    <span class="cart-item-variant">${item.selectedSize} / ${colorDisplay}</span>
-                    <span class="cart-item-price">RM ${item.price.toLocaleString()}</span>
-                </div>
-                <div class="cart-controls">
-                    <button class="qty-btn minus" data-id="${item.variantId}" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
-                    <span>${item.qty}</span>
-                    <button class="qty-btn plus" data-id="${item.variantId}">+</button>
-                    <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
-                </div>
-            `;
-            container.appendChild(el);
-        });
-
-        // Bind quantity control buttons
-        container.querySelectorAll('.minus').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const variantId = btn.dataset.id;
-                const item = this.cart.find(i => i.variantId === variantId);
-                if (item && item.qty > 1) {
-                    this.updateQuantity(variantId, -1);
-                }
-            });
-        });
-
-        container.querySelectorAll('.plus').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.updateQuantity(btn.dataset.id, 1);
-            });
-        });
-
-        // Bind delete buttons
-        container.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const variantId = btn.dataset.id;
-                const item = this.cart.find(i => i.variantId === variantId);
-                if (item) {
-                    this.removeProduct(variantId);
-                    this.showNotification(`${item.name} removed from cart`, 'info');
-                }
-            });
-        });
-    }
 
     /**
      * Get cart items

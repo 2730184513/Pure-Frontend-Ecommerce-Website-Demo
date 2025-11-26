@@ -63,10 +63,11 @@
 .wishlist-item {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #F9F1E7;
+    min-height: fit-content;
 }
 
 .cart-item:last-child,
@@ -79,36 +80,54 @@
 .cart-item-img,
 .wishlist-item-img {
     width: 80px;
-    height: 80px;
+    height: 119px;
+    min-width: 80px;
     object-fit: cover;
     border-radius: 8px;
     background: var(--bg-light);
+    flex-shrink: 0;
+    align-self: center;
 }
 
 .cart-item-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
 }
 
 .cart-item-title {
     display: block;
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 600;
     color: black;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .cart-item-variant {
     display: block;
-    font-size: 14px;
-    color: black;
-    margin-bottom: 5px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.cart-item-price-row {
+    display: block;
+    margin-top: 2px;
 }
 
 .cart-item-price {
     display: block;
-    font-size: 14px;
+    font-size: 15px;
     color: #B88E2F;
-    font-weight: 500;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-bottom: 6px;
 }
 
 /* ========================================
@@ -118,14 +137,22 @@
 .cart-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 4px;
+}
+
+.cart-qty-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .qty-btn {
     background: transparent;
     border: 1px solid #9F9F9F;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -133,10 +160,12 @@
     justify-content: center;
     font-size: 14px;
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .qty-btn:hover {
     background: #F9F1E7;
+    border-color: #B88E2F;
 }
 
 .qty-btn:disabled {
@@ -144,18 +173,72 @@
     cursor: not-allowed;
 }
 
+.qty-btn:disabled:hover {
+    background: transparent;
+    border-color: #9F9F9F;
+}
+
+.qty-display {
+    min-width: 42px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: black;
+}
+
 .qty-btn.delete {
     width: auto;
     height: auto;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 12px;
-    border-color: #E97171;
-    color: #E97171;
+    border-radius: 0;
+    padding: 0;
+    font-size: 13px;
+    border: none;
+    color: #999;
+    text-decoration: underline;
+    background: transparent;
+    flex-shrink: 0;
 }
 
 .qty-btn.delete:hover {
-    background: #E97171;
-    color: white;
+    background: transparent;
+    color: #E97171;
+}
+
+/* ========================================
+   ICON ANIMATIONS
+   ======================================== */
+
+/* Cart icon animation - rotate and scale */
+@keyframes cartBounce {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(30deg) scale(1.3);
+    }
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+.cart-icon-animate {
+    animation: cartBounce 1s ease-in-out;
+}
+
+/* Wishlist icon animation - scale with heart swap */
+@keyframes wishlistPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.wishlist-icon-animate {
+    animation: wishlistPulse 1s ease-in-out;
 }
 
