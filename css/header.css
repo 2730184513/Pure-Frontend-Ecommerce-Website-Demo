@@ -1,9 +1,1 @@
-/* ========================================
-   HEADER - MAIN IMPORT FILE
-   Modular header styles - imports all header components
-   ======================================== */
 
-/* Import header modules */
-@import url('header-base.css');
-@import url('search.css');
-@import url('cart-wishlist.css');
