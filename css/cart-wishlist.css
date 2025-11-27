@@ -163,9 +163,29 @@
     flex-shrink: 0;
 }
 
-.qty-btn:hover {
-    background: #F9F1E7;
+/* Minus button - lighter color */
+.qty-btn.minus {
+    background: transparent;
+    border-color: #D9D9D9;
+    color: #999;
+}
+
+.qty-btn.minus:hover {
+    background: #F5F5F5;
+    border-color: #BDBDBD;
+}
+
+/* Plus button - darker color to encourage adding more */
+.qty-btn.plus {
+    background: #B88E2F;
     border-color: #B88E2F;
+    color: white;
+    font-weight: 600;
+}
+
+.qty-btn.plus:hover {
+    background: #9A7328;
+    border-color: #9A7328;
 }
 
 .qty-btn:disabled {
@@ -184,6 +204,26 @@
     font-size: 14px;
     font-weight: 500;
     color: black;
+}
+
+/* Quantity input field styling */
+.qty-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0;
+    -moz-appearance: textfield; /* Remove number input arrows in Firefox */
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Remove number input arrows in Chrome/Safari */
+    margin: 0;
+}
+
+.qty-input:focus {
+    background: #F9F1E7;
+    border-radius: 4px;
 }
 
 .qty-btn.delete {

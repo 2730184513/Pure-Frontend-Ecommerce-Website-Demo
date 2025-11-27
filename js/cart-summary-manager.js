@@ -167,8 +167,8 @@ class CartSummaryManager {
 
         if (itemCheckboxes.length === 0) {
             console.warn('No items selected for checkout');
-            if (window.Toast) {
-                Toast.show('Please select at least one item to checkout', 'info');
+            if (window.toast) {
+                window.toast.show('Please select at least one item to checkout', 'info');
             } else {
                 alert('Please select at least one item to checkout');
             }

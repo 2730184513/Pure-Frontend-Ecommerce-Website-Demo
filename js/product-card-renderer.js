@@ -19,92 +19,195 @@ class ProductCardRenderer {
      * @param {Object} product - Product data
      * @returns {HTMLElement} Product card element
      */
+    /**
+     * Render a single product card
+     * @param {Object} product - Product data
+     * @returns {HTMLElement} Product card element
+     */
     renderCard(product) {
         const article = document.createElement('article');
         article.className = 'product-card';
         article.dataset.productId = product.id;
 
-        // Product image section
+        // Compose card from independent sections
+        article.appendChild(this.createImageSection(product));
+        article.appendChild(this.createInfoSection(product));
+
+        // Attach interactive behavior
+        this.attachPopup(article, product);
+
+        return article;
+    }
+
+    /**
+     * Create product image section with badges
+     * @param {Object} product - Product data
+     * @returns {HTMLElement} Image section element
+     */
+    createImageSection(product) {
         const imageDiv = document.createElement('div');
         imageDiv.className = 'product-image';
 
+        const img = this.createProductImage(product);
+        imageDiv.appendChild(img);
+
+        const badges = this.createBadges(product);
+        if (badges) {
+            imageDiv.appendChild(badges);
+        }
+
+        return imageDiv;
+    }
+
+    /**
+     * Create product image element with error handling
+     * @param {Object} product - Product data
+     * @returns {HTMLImageElement} Image element
+     */
+    createProductImage(product) {
         const img = document.createElement('img');
         img.src = product.product_picture;
         img.alt = product.name;
         img.onerror = () => {
             img.src = '/201-project/images/products/placeholder.jpg';
         };
-        imageDiv.appendChild(img);
+        return img;
+    }
 
-        // Add badges (discount and/or new)
+    /**
+     * Create badge container with discount and new badges
+     * @param {Object} product - Product data
+     * @returns {HTMLElement|null} Badge container or null if no badges
+     */
+    createBadges(product) {
         const hasDiscount = product.discount && product.discount !== '0';
         const isNew = this.isNewProduct(product.launch_time);
 
-        if (hasDiscount || isNew) {
-            const badgeContainer = document.createElement('div');
-            badgeContainer.className = 'badge-container';
-
-            // Add discount badge first (top)
-            if (hasDiscount) {
-                const discountBadge = document.createElement('span');
-                discountBadge.className = 'badge badge-discount';
-                discountBadge.textContent = product.discount;
-                badgeContainer.appendChild(discountBadge);
-            }
-
-            // Add new badge second (bottom)
-            if (isNew) {
-                const newBadge = document.createElement('span');
-                newBadge.className = 'badge badge-new';
-                newBadge.textContent = 'New';
-                badgeContainer.appendChild(newBadge);
-            }
-
-            imageDiv.appendChild(badgeContainer);
+        if (!hasDiscount && !isNew) {
+            return null;
         }
 
-        article.appendChild(imageDiv);
+        const badgeContainer = document.createElement('div');
+        badgeContainer.className = 'badge-container';
 
-        // Product info section
+        if (hasDiscount) {
+            badgeContainer.appendChild(this.createDiscountBadge(product.discount));
+        }
+
+        if (isNew) {
+            badgeContainer.appendChild(this.createNewBadge());
+        }
+
+        return badgeContainer;
+    }
+
+    /**
+     * Create discount badge element
+     * @param {string} discount - Discount text
+     * @returns {HTMLElement} Discount badge
+     */
+    createDiscountBadge(discount) {
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-discount';
+        badge.textContent = discount;
+        return badge;
+    }
+
+    /**
+     * Create new product badge element
+     * @returns {HTMLElement} New badge
+     */
+    createNewBadge() {
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-new';
+        badge.textContent = 'New';
+        return badge;
+    }
+
+    /**
+     * Create product info section with name, description, and price
+     * @param {Object} product - Product data
+     * @returns {HTMLElement} Info section element
+     */
+    createInfoSection(product) {
         const infoDiv = document.createElement('div');
         infoDiv.className = 'product-info';
 
+        infoDiv.appendChild(this.createProductName(product.name));
+        infoDiv.appendChild(this.createProductDescription(product.brief));
+        infoDiv.appendChild(this.createPriceBox(product));
+
+        return infoDiv;
+    }
+
+    /**
+     * Create product name element
+     * @param {string} name - Product name
+     * @returns {HTMLElement} Name element
+     */
+    createProductName(name) {
         const nameSpan = document.createElement('span');
         nameSpan.className = 'product-name';
-        nameSpan.textContent = product.name;
-        infoDiv.appendChild(nameSpan);
+        nameSpan.textContent = name;
+        return nameSpan;
+    }
 
+    /**
+     * Create product description element
+     * @param {string} description - Product description
+     * @returns {HTMLElement} Description element
+     */
+    createProductDescription(description) {
         const descSpan = document.createElement('span');
         descSpan.className = 'product-desc';
-        descSpan.textContent = product.brief;
-        infoDiv.appendChild(descSpan);
+        descSpan.textContent = description;
+        return descSpan;
+    }
 
-        // Price section
+    /**
+     * Create price box with current and optional old price
+     * @param {Object} product - Product data
+     * @returns {HTMLElement} Price box element
+     */
+    createPriceBox(product) {
         const priceBox = document.createElement('div');
         priceBox.className = 'price-box';
 
         const currentPrice = this.calculateDiscountedPrice(product.price, product.discount);
-        const currentPriceSpan = document.createElement('span');
-        currentPriceSpan.className = 'current-price';
-        currentPriceSpan.textContent = this.formatPrice(currentPrice);
-        priceBox.appendChild(currentPriceSpan);
+        priceBox.appendChild(this.createCurrentPrice(currentPrice));
 
-        // Show old price if discounted
-        if (product.discount && product.discount !== '0') {
-            const oldPriceSpan = document.createElement('span');
-            oldPriceSpan.className = 'old-price';
-            oldPriceSpan.textContent = this.formatPrice(product.price);
-            priceBox.appendChild(oldPriceSpan);
+        const hasDiscount = product.discount && product.discount !== '0';
+        if (hasDiscount) {
+            priceBox.appendChild(this.createOldPrice(product.price));
         }
 
-        infoDiv.appendChild(priceBox);
-        article.appendChild(infoDiv);
-
-        // Add hover popup
-        this.attachPopup(article, product);
-
-        return article;
+        return priceBox;
     }
+
+    /**
+     * Create current price element
+     * @param {number} price - Current price value
+     * @returns {HTMLElement} Current price element
+     */
+    createCurrentPrice(price) {
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'current-price';
+        priceSpan.textContent = this.formatPrice(price);
+        return priceSpan;
+    }
+
+    /**
+     * Create old price element (strikethrough)
+     * @param {number} price - Original price value
+     * @returns {HTMLElement} Old price element
+     */
+    createOldPrice(price) {
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'old-price';
+        priceSpan.textContent = this.formatPrice(price);
+        return priceSpan;
+    }
+
 
     /**
      * Render multiple products

@@ -45,6 +45,11 @@ class CartPageManager {
         // Bind events
         this.bindEvents();
 
+        // Check if cart is empty
+        if (this.checkEmptyCart()) {
+            return; // Stop initialization if redirected
+        }
+
         // Initial render
         this.render();
 
@@ -55,6 +60,22 @@ class CartPageManager {
         this.checkOrderSuccess();
 
         console.log('✓ Cart Page initialized');
+    }
+
+    /**
+     * Check if cart is empty and redirect to shop page
+     * @returns {boolean} True if cart is empty and redirect happened
+     */
+    checkEmptyCart() {
+        const cart = this.cartManager.getCart();
+        if (!cart || cart.length === 0) {
+            console.log('Cart is empty, redirecting to shop...');
+            // Set flag for shop page to show message
+            sessionStorage.setItem('cart_empty_redirect', 'true');
+            window.location.href = 'shop.html';
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -95,6 +116,13 @@ class CartPageManager {
      */
     render() {
         if (!this.lineRenderer || !this.container) return;
+
+        // Check if cart became empty
+        const cart = this.cartManager.getCart();
+        if (!cart || cart.length === 0) {
+            this.checkEmptyCart();
+            return;
+        }
 
         this.lineRenderer.renderAll(this.container);
 

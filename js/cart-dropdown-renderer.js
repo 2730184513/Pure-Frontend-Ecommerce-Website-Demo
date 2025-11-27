@@ -211,6 +211,42 @@ class CartDropdownRenderer {
     }
 
     /**
+     * Handle quantity input field changes with validation
+     * @param {HTMLInputElement} input - The quantity input field
+     */
+    handleQuantityInputChange(input) {
+        const variantId = input.dataset.id;
+        const item = this.cartManager.getCart().find(i => i.variantId === variantId);
+        if (!item) return;
+
+        let value = parseInt(input.value);
+
+        // Validate input
+        if (isNaN(value) || value < 1) {
+            if (window.toast) {
+                window.toast.show('Quantity cannot be less than 1. Setting to minimum value.', 'warning');
+            }
+            value = 1;
+        } else if (value > 9999) {
+            if (window.toast) {
+                window.toast.show('Quantity cannot exceed 9999. Setting to maximum value.', 'warning');
+            }
+            value = 9999;
+        }
+
+        // Update quantity
+        const delta = value - item.qty;
+        if (delta !== 0) {
+            this.cartManager.updateQuantity(variantId, delta);
+            this.render();
+            this.updateBadge();
+        }
+    }
+
+    /**
+     * Render cart items in dropdown
+     */
+    /**
      * Render cart items in dropdown
      */
     render() {
@@ -222,83 +258,155 @@ class CartDropdownRenderer {
         const cart = this.cartManager.getCart();
 
         if (cart.length === 0) {
-            container.innerHTML = '<p style="text-align:center;padding:20px;color:#9F9F9F">Your cart is empty</p>';
+            container.innerHTML = '<p class="empty-cart-message">Your cart is empty</p>';
             return;
         }
 
         cart.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'cart-item';
-
-            // Get color display name
-            const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
-
-            // Use placeholder first for instant display
-            const placeholderSrc = '/201-project/images/products/placeholder.jpg';
-
-            el.innerHTML = `
-                <img src="${placeholderSrc}" 
-                     class="cart-item-img" 
-                     alt="${item.name}"
-                     data-src="${item.product_picture}">
-                <div class="cart-item-info">
-                    <span class="cart-item-title">${item.name}</span>
-                    <span class="cart-item-variant">${item.selectedSize} / ${colorDisplay}</span>
-                    <span class="cart-item-price">RM ${item.price.toLocaleString()}</span>
-                    <div class="cart-controls">
-                        <div class="cart-qty-group">
-                            <button class="qty-btn minus" data-id="${item.variantId}" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
-                            <span class="qty-display">${item.qty}</span>
-                            <button class="qty-btn plus" data-id="${item.variantId}">+</button>
-                        </div>
-                        <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
-                    </div>
-                </div>
-            `;
+            const el = this.createCartItemElement(item);
             container.appendChild(el);
         });
 
         // Lazy load actual images after render
         this.lazyLoadImages(container);
 
-        // Bind quantity control buttons
+        // Bind all event listeners
+        this.bindQuantityControls(container);
+        this.bindDeleteButtons(container);
+    }
+
+    /**
+     * Create cart item DOM element
+     */
+    createCartItemElement(item) {
+        const el = document.createElement('div');
+        el.className = 'cart-item';
+
+        const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
+        const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+
+        el.innerHTML = `
+        <img src="${placeholderSrc}" 
+             class="cart-item-img" 
+             alt="${item.name}"
+             data-src="${item.product_picture}">
+        <div class="cart-item-info">
+            <span class="cart-item-title">${item.name}</span>
+            <span class="cart-item-variant">${item.selectedSize} / ${colorDisplay}</span>
+            <span class="cart-item-price">RM ${item.price.toLocaleString()}</span>
+            <div class="cart-controls">
+                <div class="cart-qty-group">
+                    <button class="qty-btn minus" data-id="${item.variantId}">-</button>
+                    <input type="number" class="qty-display qty-input" value="${item.qty}" min="1" max="9999" data-id="${item.variantId}">
+                    <button class="qty-btn plus" data-id="${item.variantId}">+</button>
+                </div>
+                <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
+            </div>
+        </div>
+    `;
+
+        return el;
+    }
+
+    /**
+     * Bind quantity control event listeners
+     */
+    bindQuantityControls(container) {
+        // Minus button handlers
         container.querySelectorAll('.minus').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const variantId = btn.dataset.id;
-                const item = this.cartManager.getCart().find(i => i.variantId === variantId);
-                if (item && item.qty > 1) {
-                    this.cartManager.updateQuantity(variantId, -1);
-                    this.render();
-                    this.updateBadge();
-                }
+                this.handleDecreaseQuantity(btn.dataset.id);
             });
         });
 
+        // Plus button handlers
         container.querySelectorAll('.plus').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this.cartManager.updateQuantity(btn.dataset.id, 1);
-                this.render();
-                this.updateBadge();
+                this.handleIncreaseQuantity(btn.dataset.id);
             });
         });
 
-        // Bind delete buttons
-        container.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // Quantity input handlers
+        container.querySelectorAll('.qty-input').forEach(input => {
+            input.addEventListener('change', (e) => {
                 e.stopPropagation();
-                const variantId = btn.dataset.id;
-                const item = this.cartManager.getCart().find(i => i.variantId === variantId);
-                if (item) {
-                    this.cartManager.removeProduct(variantId);
-                    this.cartManager.showNotification(`${item.name} removed from cart`, 'info');
-                    this.render();
-                    this.updateBadge();
-                }
+                this.handleQuantityInputChange(input);
+            });
+
+            input.addEventListener('blur', (e) => {
+                e.stopPropagation();
+                this.handleQuantityInputChange(input);
             });
         });
     }
+
+    /**
+     * Bind delete button event listeners
+     */
+    bindDeleteButtons(container) {
+        container.querySelectorAll('.delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.handleDeleteItem(btn.dataset.id);
+            });
+        });
+    }
+
+    /**
+     * Handle decrease quantity button click
+     */
+    handleDecreaseQuantity(variantId) {
+        const item = this.cartManager.getCart().find(i => i.variantId === variantId);
+        if (!item) return;
+
+        const newQty = item.qty - 1;
+        if (newQty < 1) {
+            if (window.toast) {
+                window.toast.show('Quantity cannot be less than 1', 'warning');
+            }
+            return;
+        }
+
+        this.cartManager.updateQuantity(variantId, -1);
+        this.render();
+        this.updateBadge();
+    }
+
+    /**
+     * Handle increase quantity button click
+     */
+    handleIncreaseQuantity(variantId) {
+        const item = this.cartManager.getCart().find(i => i.variantId === variantId);
+        if (!item) return;
+
+        const newQty = item.qty + 1;
+        if (newQty > 9999) {
+            if (window.toast) {
+                window.toast.show('Quantity cannot exceed 9999', 'warning');
+            }
+            return;
+        }
+
+        this.cartManager.updateQuantity(variantId, 1);
+        this.render();
+        this.updateBadge();
+    }
+
+    /**
+     * Handle delete item button click
+     */
+    handleDeleteItem(variantId) {
+        const item = this.cartManager.getCart().find(i => i.variantId === variantId);
+        if (!item) return;
+
+        this.cartManager.removeProduct(variantId);
+        this.cartManager.showNotification(`${item.name} removed from cart`, 'info');
+        this.render();
+        this.updateBadge();
+    }
+
 }
 
 if (typeof window !== 'undefined') {

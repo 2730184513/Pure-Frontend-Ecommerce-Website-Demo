@@ -87,8 +87,8 @@ class CartProductLineRenderer {
             </div>
             
             <div class="quantity-controls">
-                <button class="quantity-btn decrease" ${item.qty === 1 ? 'disabled' : ''}>-</button>
-                <input type="number" class="quantity-input" value="${item.qty}" min="1" readonly>
+                <button class="quantity-btn decrease">-</button>
+                <input type="number" class="quantity-input" value="${item.qty}" min="1" max="9999" data-variant-id="${item.variantId}">
                 <button class="quantity-btn increase">+</button>
             </div>
             
@@ -115,11 +115,34 @@ class CartProductLineRenderer {
         const quantityInput = cartItem.querySelector('.quantity-input');
 
         decreaseBtn.addEventListener('click', () => {
+            const currentQty = parseInt(quantityInput.value) || item.qty;
+            if (currentQty <= 1) {
+                if (window.toast) {
+                    window.toast.show('Quantity cannot be less than 1', 'warning');
+                }
+                return;
+            }
             this.handleQuantityChange(item.variantId, -1);
         });
 
         increaseBtn.addEventListener('click', () => {
+            const currentQty = parseInt(quantityInput.value) || item.qty;
+            if (currentQty >= 9999) {
+                if (window.toast) {
+                    window.toast.show('Quantity cannot exceed 9999', 'warning');
+                }
+                return;
+            }
             this.handleQuantityChange(item.variantId, 1);
+        });
+
+        // Bind quantity input field
+        quantityInput.addEventListener('change', () => {
+            this.handleQuantityInputChange(quantityInput, item.variantId);
+        });
+
+        quantityInput.addEventListener('blur', () => {
+            this.handleQuantityInputChange(quantityInput, item.variantId);
         });
 
         // Checkbox change
@@ -153,6 +176,41 @@ class CartProductLineRenderer {
 
         // Trigger re-render
         window.dispatchEvent(new CustomEvent('cartUpdated'));
+    }
+
+    /**
+     * Handle quantity input field changes with validation
+     * @param {HTMLInputElement} input - The quantity input field
+     * @param {string} variantId - The variant ID
+     */
+    handleQuantityInputChange(input, variantId) {
+        const item = this.cartManager.getCart().find(i => i.variantId === variantId);
+        if (!item) return;
+
+        let value = parseInt(input.value);
+
+        // Validate input
+        if (isNaN(value) || value < 1) {
+            if (window.toast) {
+                window.toast.show('Quantity cannot be less than 1. Setting to minimum value.', 'warning');
+            }
+            value = 1;
+            input.value = value;
+        } else if (value > 9999) {
+            if (window.toast) {
+                window.toast.show('Quantity cannot exceed 9999. Setting to maximum value.', 'warning');
+            }
+            value = 9999;
+            input.value = value;
+        }
+
+        // Update quantity
+        const delta = value - item.qty;
+        if (delta !== 0) {
+            this.cartManager.updateQuantity(variantId, delta);
+            // Trigger re-render
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
+        }
     }
 
     /**

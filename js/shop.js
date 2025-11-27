@@ -68,6 +68,22 @@ class ShopManager {
 
         this.isInitialized = true;
         console.log('✓ Shop Manager initialized');
+
+        // Check if redirected from empty cart
+        this.checkEmptyCartRedirect();
+    }
+
+    /**
+     * Check if redirected from empty cart and show welcome message
+     */
+    checkEmptyCartRedirect() {
+        const redirectFlag = sessionStorage.getItem('cart_empty_redirect');
+        if (redirectFlag === 'true') {
+            sessionStorage.removeItem('cart_empty_redirect');
+            if (window.toast) {
+                window.toast.show('Your cart is empty. Pick your favorite products and add them to cart. Have a great shopping experience! 🛒', 'info', 5000);
+            }
+        }
     }
 
 
