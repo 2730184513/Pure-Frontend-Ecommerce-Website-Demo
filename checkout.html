@@ -5,24 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Furniro</title>
 
-    <link rel="stylesheet" href="css/layout/main.css">
+    <link rel="stylesheet" href="/201-project/css/layout/main.css">
 
+    <!-- Header component styles (hidden but needed for cart manager) -->
+    <link rel="stylesheet" href="/201-project/css/layout/header.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/search.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/cart-wishlist.css">
 
-    <link rel="stylesheet" href="css/layout/footer.css">
-    <link rel="stylesheet" href="css/core/toast.css">
-    <link rel="stylesheet" href="css/components/banners/page-banner.css">
-    <link rel="stylesheet" href="css/components/banners/feature-banner.css">
+    <link rel="stylesheet" href="/201-project/css/layout/footer.css">
+    <link rel="stylesheet" href="/201-project/css/core/toast.css">
+    <link rel="stylesheet" href="/201-project/css/components/banners/page-banner.css">
+    <link rel="stylesheet" href="/201-project/css/components/banners/feature-banner.css">
 
     <!-- Checkout page styles -->
-    <link rel="stylesheet" href="css/layout/checkout.css">
-    <link rel="stylesheet" href="css/components/forms/form-billing.css">
-    <link rel="stylesheet" href="css/pages/checkout/checkout-summary.css">
-    <link rel="stylesheet" href="css/components/forms/searchable-dropdown.css">
+    <link rel="stylesheet" href="/201-project/css/layout/checkout.css">
+    <link rel="stylesheet" href="/201-project/css/components/forms/form-billing.css">
+    <link rel="stylesheet" href="/201-project/css/pages/checkout/checkout-summary.css">
+    <link rel="stylesheet" href="/201-project/css/components/forms/searchable-dropdown.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
             rel="stylesheet">
 </head>
 <body>
+
+<!-- Header placeholder (hidden but needed for cart manager) -->
+<div id="header-placeholder"></div>
 
 <div id="banner-placeholder"></div>
 
@@ -32,7 +39,7 @@
         <section class="billing-section">
             <div class="billing-header">
                 <button type="button" class="back-button" title="Back to Cart">
-                    <img src="images/icons/arrow-left.png" alt="Back">
+                    <img src="/201-project/images/icons/arrow-left.png" alt="Back">
                 </button>
                 <div class="billing-header-content">
                     <h1>Billing details</h1>
@@ -232,54 +239,83 @@
 <div id="footer-placeholder"></div>
 
 <!-- Core utilities -->
-<script src="js/component/component-loader.js"></script>
-<script src="js/core/page-utility.js"></script>
-<script src="js/core/toast.js"></script>
-<script src="js/core/navigation-state-manager.js"></script>
+<script src="/201-project/js/component/component-loader.js"></script>
+<script src="/201-project/js/core/page-utility.js"></script>
+<script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/navigation-state-manager.js"></script>
 
 <!-- Data layer -->
-<script src="js/core/product-data-loader.js"></script>
-<script src="js/core/product-repository.js"></script>
+<script src="/201-project/js/core/product-data-loader.js"></script>
+<script src="/201-project/js/core/product-repository.js"></script>
 
 <!-- Header components (required for cart manager) -->
-<script src="js/core/navigate.js"></script>
-<script src="js/component/header/search.js"></script>
-<script src="js/component/header/cart-dropdown-renderer.js"></script>
-<script src="js/component/header/wishlist-dropdown-renderer.js"></script>
-<script src="js/component/header/wishlist.js"></script>
+<script src="/201-project/js/core/navigate.js"></script>
+<script src="/201-project/js/component/header/search.js"></script>
+<script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist.js"></script>
 
 <!-- Cart manager (needed for checkout) -->
-<script src="js/component/header/cart.js"></script>
+<script src="/201-project/js/component/header/cart.js"></script>
 
 <!-- Checkout page dependencies -->
-<script src="js/pages/checkout/location-data-service.js"></script>
-<script src="js/component/form/searchable-dropdown.js"></script>
-<script src="js/component/form/field-validator.js"></script>
-<script src="js/component/form/form-renderer.js"></script>
+<script src="/201-project/js/pages/checkout/location-data-service.js"></script>
+<script src="/201-project/js/component/form/searchable-dropdown.js"></script>
+<script src="/201-project/js/component/form/field-validator.js"></script>
+<script src="/201-project/js/component/form/form-renderer.js"></script>
 
-<!-- Checkout page managers -->
-<script src="js/pages/checkout/form-manager.js"></script>
-<script src="js/pages/checkout/checkout-summary-manager.js"></script>
+<!-- Checkout managers -->
+<script src="/201-project/js/pages/checkout/form-manager.js"></script>
+<script src="/201-project/js/pages/checkout/checkout-summary-renderer.js"></script>
+<script src="/201-project/js/pages/checkout/checkout-summary-manager.js"></script>
 
 <!-- Page managers -->
-<script src="js/manager/header-manager.js"></script>
-<script src="js/manager/checkout-manager.js"></script>
+<script src="/201-project/js/manager/header-manager.js"></script>
+<script src="/201-project/js/manager/checkout-manager.js"></script>
 
 <!-- Main controller (initializes all page managers) -->
-<script src="js/manager/main.js"></script>
+<script src="/201-project/js/manager/main.js"></script>
 
 <script>
-    // Load page banner with multi-level breadcrumb
-    document.addEventListener('DOMContentLoaded', async () => {
-        // Get dynamic breadcrumb based on referrer
-        const breadcrumb = window.FurniroApp && typeof FurniroApp.getDynamicBreadcrumb === 'function'
+    // Initialize checkout page after main app initialization
+    (async function() {
+        // Wait for main app initialization
+        const waitForApp = () => {
+            return new Promise((resolve) => {
+                const checkInit = () => window.FurniroApp && window.FurniroApp.isInitialized === true;
+
+                if (checkInit()) {
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (checkInit()) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 50);
+
+                    // Timeout after 10 seconds
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.error('Timeout: Main app not initialized');
+                        resolve();
+                    }, 10000);
+                }
+            });
+        };
+
+        await waitForApp();
+
+        // Get dynamic breadcrumb
+        const breadcrumb = typeof FurniroApp.getDynamicBreadcrumb === 'function'
             ? FurniroApp.getDynamicBreadcrumb()
             : [
-                { text: 'Home', href: 'index.html' },
-                { text: 'Cart', href: 'cart.html' },
+                { text: 'Home', href: '/201-project/index.html' },
+                { text: 'Cart', href: '/201-project/cart.html' },
                 { text: 'Checkout' }
             ];
 
+        // Load page-specific components (banner and feature-banner)
         await ComponentLoader.loadComponents([
             {
                 name: 'page-banner',
@@ -295,38 +331,28 @@
             }
         ]);
 
-        // Wait for main app to fully initialize (especially cart manager)
+        // Wait for cart manager to be fully initialized
         let attempts = 0;
-        const maxAttempts = 20;
-
-        const checkAndInit = async () => {
+        while (!window.cartManagerInstance && attempts < 20) {
+            await new Promise(resolve => setTimeout(resolve, 100));
             attempts++;
+        }
 
-            // Check if all required components are ready
-            const cartReady = window.cartManagerInstance !== undefined;
-            const managerReady = window.CheckoutManager !== undefined;
-            const formManagerReady = window.FormManager !== undefined;
-            const summaryManagerReady = window.CheckoutSummaryManager !== undefined;
+        if (!window.cartManagerInstance) {
+            console.error('Cart manager not available after waiting');
+            alert('Failed to initialize checkout: Cart manager not available');
+            return;
+        }
 
-            if (cartReady && managerReady && formManagerReady && summaryManagerReady) {
-                try {
-                    const manager = new CheckoutManager('checkoutForm');
-                    await manager.initialize();
-                } catch (error) {
-                    console.error('Failed to initialize checkout:', error);
-                    alert('Failed to load checkout page: ' + error.message);
-                }
-            } else if (attempts < maxAttempts) {
-                setTimeout(checkAndInit, 200);
-            } else {
-                console.error('Timeout: Required components not ready');
-                alert('Failed to initialize page. Please refresh.');
-            }
-        };
-
-        // Start checking after a short delay
-        setTimeout(checkAndInit, 300);
-    });
+        // Initialize checkout manager
+        try {
+            const manager = new CheckoutManager('checkoutForm');
+            await manager.initialize();
+        } catch (error) {
+            console.error('Failed to initialize checkout:', error);
+            alert('Failed to load checkout page: ' + error.message);
+        }
+    })();
 </script>
 
 </body>

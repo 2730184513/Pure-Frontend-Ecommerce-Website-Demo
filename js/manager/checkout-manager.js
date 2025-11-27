@@ -30,7 +30,7 @@ class CheckoutManager {
                 window.toast.show('Please access checkout from your cart', 'info');
             }
             setTimeout(() => {
-                window.location.href = 'cart.html';
+                window.location.href = '/201-project/cart.html';
             }, 1000);
             return;
         }
@@ -82,7 +82,7 @@ class CheckoutManager {
                 // Set flag to indicate user is returning from incomplete checkout
                 sessionStorage.setItem('returning_from_checkout', 'true');
 
-                window.location.href = 'cart.html';
+                window.location.href = '/201-project/cart.html';
             });
         }
     }
@@ -127,7 +127,7 @@ class CheckoutManager {
         sessionStorage.setItem('order_placed_success', 'true');
 
         // Redirect to cart page immediately
-        window.location.href = 'cart.html';
+        window.location.href = '/201-project/cart.html';
     }
 }
 

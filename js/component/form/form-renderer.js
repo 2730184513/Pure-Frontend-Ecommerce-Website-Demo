@@ -75,24 +75,6 @@ class FormRenderer {
         });
     }
 
-    /**
-     * 更新付款方式描述
-     */
-    renderPaymentDescriptions(bankElement, cashElement, showBank) {
-        this.queueRender(() => {
-            if (showBank) {
-                bankElement.classList.add('visible');
-                bankElement.classList.remove('hidden');
-                cashElement.classList.add('hidden');
-                cashElement.classList.remove('visible');
-            } else {
-                bankElement.classList.add('hidden');
-                bankElement.classList.remove('visible');
-                cashElement.classList.add('visible');
-                cashElement.classList.remove('hidden');
-            }
-        });
-    }
 
     /**
      * 启用字段

@@ -67,7 +67,7 @@ class NavigationStateManager {
             'checkout.html': 'Checkout'
         };
 
-        let breadcrumb = [{text: 'Home', href: 'index.html'}];
+        let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
 
         // For cart page
         if (currentPage === 'cart.html') {
@@ -84,14 +84,14 @@ class NavigationStateManager {
                 } else {
                     // Fallback: build from referrer
                     if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && referrerPage !== 'checkout.html' && pageNames[referrerPage]) {
-                        breadcrumb.push({text: pageNames[referrerPage], href: referrerPage});
+                        breadcrumb.push({text: pageNames[referrerPage], href: `/201-project/${referrerPage}`});
                     }
                     breadcrumb.push({text: 'Cart'});
                 }
             } else {
                 // Normal navigation to cart
                 if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && referrerPage !== 'checkout.html' && pageNames[referrerPage]) {
-                    breadcrumb.push({text: pageNames[referrerPage], href: referrerPage});
+                    breadcrumb.push({text: pageNames[referrerPage], href: `/201-project/${referrerPage}`});
                 }
                 breadcrumb.push({text: 'Cart'});
             }
@@ -109,11 +109,11 @@ class NavigationStateManager {
                 // Make cart clickable
                 const lastItem = breadcrumb[breadcrumb.length - 1];
                 if (lastItem && lastItem.text === 'Cart') {
-                    lastItem.href = 'cart.html';
+                    lastItem.href = '/201-project/cart.html';
                 }
             } else {
                 // Fallback
-                breadcrumb = [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}];
+                breadcrumb = [{text: 'Home', href: '/201-project/index.html'}, {text: 'Cart', href: '/201-project/cart.html'}];
             }
 
             breadcrumb.push({text: 'Checkout'});

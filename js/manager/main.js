@@ -60,7 +60,7 @@ class FurniroApp {
             // 1. Load required components (header/footer) for current page
             await this._loadPageComponents();
 
-            // 2. Initialize header manager (if header is loaded)
+            // 2. Initialize header manager (which initializes cart manager)
             this._initHeaderManager();
 
             // 3. Dispatch page-specific logic
@@ -104,15 +104,17 @@ class FurniroApp {
      * @private
      */
     _getComponentsForPage(pageId) {
-        // Checkout page doesn't need header
+        // Checkout page loads header but hides it (needed for cart manager)
         if (pageId === PageUtility.PAGE_IDS.CHECKOUT) {
+            this._ensureContainer('header-placeholder');
             this._ensureContainer('footer-placeholder');
             return [
+                { name: 'header', target: '#header-placeholder' },
                 { name: 'footer', target: '#footer-placeholder' }
             ];
         }
 
-        // All other pages load header and footer
+        // All other pages load header and footer normally
         this._ensureContainer('header-placeholder');
         this._ensureContainer('footer-placeholder');
 
@@ -149,17 +151,43 @@ class FurniroApp {
      * @private
      */
     _initHeaderManager() {
-        // Don't initialize header on checkout page
-        if (PageUtility.isCheckoutPage()) {
-            return;
-        }
-
         if (window.HeaderManager) {
             this.managers.header = new HeaderManager();
             this.managers.header.init();
+
+            // Hide header on checkout page (but keep it in DOM for cart manager access)
+            if (PageUtility.isCheckoutPage()) {
+                this._hideHeaderOnCheckout();
+            }
         } else {
             console.warn('HeaderManager not found');
         }
+    }
+
+    /**
+     * Hide header on checkout page while keeping it in DOM
+     * @private
+     */
+    _hideHeaderOnCheckout() {
+        const header = document.querySelector('.header');
+        if (header) {
+            header.style.height = '0';
+            header.style.minHeight = '0';
+            header.style.overflow = 'hidden';
+            header.style.border = 'none';
+            header.style.visibility = 'hidden';
+            header.style.position = 'absolute';
+        }
+
+        // Also hide search overlay
+        const searchOverlay = document.getElementById('search-overlay');
+        if (searchOverlay) {
+            searchOverlay.style.display = 'none';
+            searchOverlay.style.visibility = 'hidden';
+        }
+
+        // Remove body padding-top to align banner with page top
+        document.body.style.paddingTop = '0';
     }
 
     /**

@@ -108,7 +108,7 @@ class ComponentLoader {
      * @private
      */
     static async _fetchComponentHTML(componentName) {
-        const response = await fetch(`components/${componentName}.html`);
+        const response = await fetch(`/201-project/components/${componentName}.html`);
 
         if (!response.ok) {
             throw new Error(`Failed to load component: ${componentName}`);
@@ -194,7 +194,7 @@ class ComponentLoader {
                 e.preventDefault();
                 // Set flag to restore selection when returning to cart
                 sessionStorage.setItem('returning_from_checkout', 'true');
-                window.location.href = 'cart.html';
+                window.location.href = '/201-project/cart.html';
             });
         }
     }

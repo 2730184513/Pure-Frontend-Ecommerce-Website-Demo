@@ -82,13 +82,18 @@ class HeaderManager {
      * @private
      */
     _initCart() {
-        if (window.CartManager) {
-            this.components.cart = new CartManager();
-            this.components.cart.init();
-            // Save to window for checkout page to access
-            window.cartManagerInstance = this.components.cart;
+        // Create global cart manager instance if it doesn't exist
+        if (!window.cartManagerInstance && window.CartManager) {
+            window.cartManagerInstance = new CartManager();
+            window.cartManagerInstance.init();
+            console.log('✓ Global cart manager initialized');
+        }
+
+        // Use the global cart manager instance
+        if (window.cartManagerInstance) {
+            this.components.cart = window.cartManagerInstance;
         } else {
-            console.warn('CartManager not found');
+            console.warn('Cart manager could not be initialized');
         }
     }
 
