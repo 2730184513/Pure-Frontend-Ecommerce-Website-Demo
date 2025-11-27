@@ -232,37 +232,37 @@
 <div id="footer-placeholder"></div>
 
 <!-- Core utilities -->
-<script src="js/component-loader.js"></script>
-<script src="js/toast.js"></script>
-<script src="js/navigation-state-manager.js"></script>
+<script src="js/component/component-loader.js"></script>
+<script src="js/core/toast.js"></script>
+<script src="js/core/navigation-state-manager.js"></script>
 
 <!-- Data layer -->
-<script src="js/product-data-loader.js"></script>
-<script src="js/product-repository.js"></script>
+<script src="js/core/product-data-loader.js"></script>
+<script src="js/core/product-repository.js"></script>
 
 <!-- Header components (required for cart manager) -->
-<script src="js/navigate.js"></script>
-<script src="js/search.js"></script>
-<script src="js/cart-dropdown-renderer.js"></script>
-<script src="js/wishlist-dropdown-renderer.js"></script>
-<script src="js/wishlist.js"></script>
+<script src="js/core/navigate.js"></script>
+<script src="js/component/header/search.js"></script>
+<script src="js/component/header/cart-dropdown-renderer.js"></script>
+<script src="js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="js/component/header/wishlist.js"></script>
 
 <!-- Cart manager (needed for checkout) -->
-<script src="js/cart.js"></script>
+<script src="js/component/header/cart.js"></script>
 
 <!-- Checkout page dependencies -->
-<script src="js/location-data-service.js"></script>
-<script src="js/searchable-dropdown.js"></script>
-<script src="js/field-validator.js"></script>
-<script src="js/form-renderer.js"></script>
+<script src="js/pages/checkout/location-data-service.js"></script>
+<script src="js/component/form/searchable-dropdown.js"></script>
+<script src="js/component/form/field-validator.js"></script>
+<script src="js/component/form/form-renderer.js"></script>
 
 <!-- Checkout page managers -->
-<script src="js/form-manager.js"></script>
-<script src="js/checkout-summary-manager.js"></script>
-<script src="js/checkout-manager.js"></script>
+<script src="js/pages/checkout/form-manager.js"></script>
+<script src="js/pages/checkout/checkout-summary-manager.js"></script>
+<script src="js/page-manager/checkout-manager.js"></script>
 
 <!-- Main controller (initializes all page managers) -->
-<script src="js/main.js"></script>
+<script src="js/page-manager/main.js"></script>
 
 <script>
     // Load page banner with multi-level breadcrumb

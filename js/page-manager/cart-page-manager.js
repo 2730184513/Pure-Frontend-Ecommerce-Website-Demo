@@ -117,7 +117,7 @@ class CartPageManager {
 
                 // Show toast notification
                 if (window.toast && restoredCount > 0) {
-                    window.toast.show(`Restored ${restoredCount} selected item${restoredCount > 1 ? 's' : ''} from checkout`, 'info', 2000);
+                    window.toast.show(`Restored ${restoredCount} selected item${restoredCount > 1 ? 's' : ''} from checkout`, 'success', 2000);
                 } else if (window.toast && notFoundIds.length === selectedVariantIds.length) {
                     window.toast.show('Previously selected items are no longer in cart', 'warning', 2000);
                 }

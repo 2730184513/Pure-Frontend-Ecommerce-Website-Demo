@@ -81,7 +81,7 @@ class CartDropdownRenderer {
         // Double-click to navigate to cart page
         this.icon.addEventListener('dblclick', (e) => {
             e.stopPropagation();
-            window.location.href = '/201-project/cart.html';
+            window.location.href = '../../../cart.html';
         });
 
         // Hover to show (0.5s delay)
