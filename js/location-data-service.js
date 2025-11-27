@@ -42,7 +42,6 @@ class LocationDataService {
             });
 
             this.initialized = true;
-            console.log(`Loaded ${countries.length} countries, ${states.length} states`);
         } catch (error) {
             console.error('Failed to load data:', error);
             throw error;

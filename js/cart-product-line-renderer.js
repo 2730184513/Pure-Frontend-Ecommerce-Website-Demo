@@ -229,12 +229,15 @@ class CartProductLineRenderer {
      * @param {string} variantId - Variant ID to delete
      */
     handleDelete(variantId) {
-        // Show confirmation with toast
-        if (window.toast) {
-            window.toast.show('Item removed from cart', 'success');
-        }
+        const item = this.cartManager.getCart().find(i => i.variantId === variantId);
 
-        this.cartManager.removeProduct(variantId);
+        // Use silent mode to prevent duplicate notifications
+        this.cartManager.removeProduct(variantId, true);
+
+        // Show single success notification only
+        if (window.toast && item) {
+            window.toast.show(`${item.name} removed from cart`, 'success');
+        }
 
         // Trigger re-render
         window.dispatchEvent(new CustomEvent('cartUpdated'));

@@ -24,8 +24,6 @@ class FormManager {
 
         // Bind events
         this.bindEvents();
-
-        console.log('✓ Form manager initialized');
     }
 
     /**

@@ -22,6 +22,7 @@ class FurniroApp {
 
     /**
      * Get dynamic breadcrumb for current page based on referrer
+     * Supports multi-level breadcrumb inheritance (e.g., Home > Shop > Cart > Checkout)
      * @returns {Array} Breadcrumb array [{text: 'Home', href: 'index.html'}, ...]
      */
     static getDynamicBreadcrumb() {
@@ -38,8 +39,6 @@ class FurniroApp {
             }
         }
 
-        console.log('Current page:', currentPage, '| Referrer page:', referrerPage);
-
         // Define page names
         const pageNames = {
             'index.html': 'Home',
@@ -49,19 +48,37 @@ class FurniroApp {
         };
 
         // Build breadcrumb based on current page
-        const breadcrumb = [{text: 'Home', href: 'index.html'}];
+        let breadcrumb = [{text: 'Home', href: 'index.html'}];
 
         // For cart page, add referrer if it's not home
         if (currentPage === 'cart.html') {
-            if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && pageNames[referrerPage]) {
+            // Don't add checkout to breadcrumb when returning from checkout
+            if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && referrerPage !== 'checkout.html' && pageNames[referrerPage]) {
                 breadcrumb.push({text: pageNames[referrerPage], href: referrerPage});
             }
             breadcrumb.push({text: 'Cart'});
+
+            // Save cart breadcrumb to sessionStorage for checkout to inherit
+            sessionStorage.setItem('cart_breadcrumb', JSON.stringify(breadcrumb));
         }
-        // For checkout page, build from cart
+        // For checkout page, inherit full breadcrumb from cart
         else if (currentPage === 'checkout.html') {
-            if (referrerPage === 'cart.html') {
-                breadcrumb.push({text: 'Cart', href: 'cart.html'});
+            // Try to get saved breadcrumb from cart page
+            const savedBreadcrumb = sessionStorage.getItem('cart_breadcrumb');
+            if (savedBreadcrumb && referrerPage === 'cart.html') {
+                try {
+                    breadcrumb = JSON.parse(savedBreadcrumb);
+                    // Remove the last item (Cart) and make it clickable
+                    if (breadcrumb.length > 0 && breadcrumb[breadcrumb.length - 1].text === 'Cart') {
+                        breadcrumb[breadcrumb.length - 1].href = 'cart.html';
+                    }
+                } catch (e) {
+                    console.warn('Could not parse saved breadcrumb:', e);
+                    breadcrumb = [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}];
+                }
+            } else {
+                // Fallback: simple breadcrumb
+                breadcrumb = [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}];
             }
             breadcrumb.push({text: 'Checkout'});
         }
@@ -104,6 +121,30 @@ class FurniroApp {
         // 确保 ComponentLoader 已加载
         if (window.ComponentLoader) {
             await ComponentLoader.initCommonComponents();
+
+            // Hide header and search overlay on checkout page (keep in DOM but invisible)
+            const isCheckoutPage = document.getElementById('checkoutForm');
+            if (isCheckoutPage) {
+                const header = document.querySelector('.header');
+                if (header) {
+                    header.style.height = '0';
+                    header.style.minHeight = '0';
+                    header.style.overflow = 'hidden';
+                    header.style.border = 'none';
+                    header.style.visibility = 'hidden';
+                    header.style.position = 'absolute';
+                }
+
+                // Also hide search overlay
+                const searchOverlay = document.getElementById('search-overlay');
+                if (searchOverlay) {
+                    searchOverlay.style.display = 'none';
+                    searchOverlay.style.visibility = 'hidden';
+                }
+
+                // Remove body padding-top to align banner with page top
+                document.body.style.paddingTop = '0';
+            }
         } else {
             console.error('ComponentLoader not found');
         }

@@ -12,60 +12,32 @@ class CheckoutSummaryManager {
      * Initialize the summary manager
      */
     initialize() {
-        console.log('=== CheckoutSummaryManager.initialize() ===');
-
-        console.log('Step 1: Loading selected items...');
         this.loadSelectedItems();
-        console.log('Selected items loaded:', this.selectedItems);
-
-        console.log('Step 2: Rendering products...');
         this.renderProducts();
-
-        console.log('Step 3: Rendering calculations...');
         this.renderCalculations();
-
-        console.log('Step 4: Initializing payment methods...');
         this.initializePaymentMethods();
-
-        console.log('✅ Checkout summary manager initialized');
     }
 
     /**
      * Load selected items from cart
      */
     loadSelectedItems() {
-        console.log('--- loadSelectedItems() ---');
-
         // Get selected items from localStorage (set by cart page)
         const rawData = localStorage.getItem('checkout_selected_items');
-        console.log('Raw localStorage data:', rawData);
-
         const selectedVariantIds = JSON.parse(rawData || '[]');
-        console.log('Parsed selectedVariantIds:', selectedVariantIds);
-
         const cart = this.cartManager.getCart();
-        console.log('Cart contents:', cart);
-
         this.selectedItems = cart.filter(item => selectedVariantIds.includes(item.variantId));
-        console.log('Filtered selectedItems:', this.selectedItems);
-
-        console.log(`✓ Loaded ${this.selectedItems.length} selected items for checkout`);
     }
 
     /**
      * Render products in summary section
      */
     renderProducts() {
-        console.log('--- renderProducts() ---');
-
         const container = document.querySelector('.summary-products');
         const itemCountSpan = document.querySelector('.summary-item-count');
 
-        console.log('Container element:', container);
-        console.log('Item count span:', itemCountSpan);
-
         if (!container) {
-            console.error('❌ .summary-products container not found!');
+            console.error('.summary-products container not found');
             return;
         }
 
@@ -73,28 +45,22 @@ class CheckoutSummaryManager {
         if (itemCountSpan) {
             const itemCount = this.selectedItems.length;
             itemCountSpan.textContent = `(${itemCount} item${itemCount !== 1 ? 's' : ''})`;
-            console.log(`✓ Updated item count: ${itemCount} product type(s)`);
         }
 
         // Clear container
         container.innerHTML = '';
-        console.log('✓ Container cleared');
 
         // If no items, show empty state
         if (this.selectedItems.length === 0) {
             container.innerHTML = '<div class="summary-empty">No items selected for checkout</div>';
-            console.log('⚠ No items to display - showing empty state');
             return;
         }
 
         // Render each product
-        console.log(`Rendering ${this.selectedItems.length} products...`);
-        this.selectedItems.forEach((item, index) => {
-            console.log(`Rendering product ${index + 1}:`, item.name);
+        this.selectedItems.forEach((item) => {
             const productEl = this.createProductElement(item);
             container.appendChild(productEl);
         });
-        console.log('✓ All products rendered');
 
         // Lazy load images
         this.lazyLoadImages(container);
@@ -183,26 +149,17 @@ class CheckoutSummaryManager {
      * Initialize payment methods
      */
     initializePaymentMethods() {
-        console.log('--- initializePaymentMethods() ---');
-
         const radios = document.querySelectorAll('input[name="paymentMethod"]');
         const bankDesc = document.querySelector('.bank-description');
         const cashDesc = document.querySelector('.cash-description');
 
-        console.log('Payment radios found:', radios.length);
-        console.log('Bank description element:', bankDesc);
-        console.log('Cash description element:', cashDesc);
-
         if (!bankDesc || !cashDesc) {
-            console.error('❌ Payment description elements not found!');
+            console.error('Payment description elements not found');
             return;
         }
 
-        radios.forEach((radio, index) => {
-            console.log(`Binding change event to radio ${index + 1} (${radio.value})`);
-
+        radios.forEach((radio) => {
             radio.addEventListener('change', (e) => {
-                console.log('Payment method changed to:', e.target.value);
                 const showBank = e.target.value === 'bank-transfer';
 
                 if (showBank) {
@@ -210,18 +167,14 @@ class CheckoutSummaryManager {
                     bankDesc.classList.add('visible');
                     cashDesc.classList.remove('visible');
                     cashDesc.classList.add('hidden');
-                    console.log('✓ Showing bank transfer description');
                 } else {
                     bankDesc.classList.remove('visible');
                     bankDesc.classList.add('hidden');
                     cashDesc.classList.remove('hidden');
                     cashDesc.classList.add('visible');
-                    console.log('✓ Showing cash on delivery description');
                 }
             });
         });
-
-        console.log('✓ Payment method listeners bound');
     }
 
     /**

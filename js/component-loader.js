@@ -87,6 +87,20 @@ class ComponentLoader {
                     link.href = item.href;
                     link.className = 'breadcrumb-link';
                     link.textContent = item.text;
+
+                    // Special handling for Cart link on checkout page
+                    if (item.text === 'Cart' && item.href === 'cart.html') {
+                        const isCheckoutPage = document.getElementById('checkoutForm');
+                        if (isCheckoutPage) {
+                            link.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                // Set flag to restore selection when returning to cart
+                                sessionStorage.setItem('returning_from_checkout', 'true');
+                                window.location.href = 'cart.html';
+                            });
+                        }
+                    }
+
                     breadcrumbContainer.appendChild(link);
                 } else {
                     const current = document.createElement('span');

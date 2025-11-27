@@ -54,6 +54,9 @@ class CartPageManager {
         // Check if redirected from successful order placement
         this.checkOrderSuccess();
 
+        // Check if returning from incomplete checkout and restore selection
+        this.restoreCheckoutSelection();
+
         console.log('✓ Cart Page initialized');
     }
 
@@ -85,6 +88,50 @@ class CartPageManager {
             // Show success toast
             if (window.toast) {
                 window.toast.show('Order placed successfully! Thank you for your purchase🎉', 'success', 3000);
+            }
+        }
+    }
+
+    /**
+     * Restore selected items when returning from incomplete checkout
+     */
+    restoreCheckoutSelection() {
+        const returningFromCheckout = sessionStorage.getItem('returning_from_checkout');
+
+        if (returningFromCheckout === 'true') {
+            console.log('🔄 Returning from incomplete checkout, restoring selection...');
+
+            // Clear the flag
+            sessionStorage.removeItem('returning_from_checkout');
+
+            // Get previously selected items from localStorage
+            const selectedItemsJson = localStorage.getItem('checkout_selected_items');
+
+            if (selectedItemsJson) {
+                try {
+                    const selectedVariantIds = JSON.parse(selectedItemsJson);
+                    console.log('Restoring selection for:', selectedVariantIds);
+
+                    // Wait for DOM to be ready, then restore checkboxes
+                    setTimeout(() => {
+                        selectedVariantIds.forEach(variantId => {
+                            const checkbox = document.querySelector(`.item-checkbox[data-variant-id="${variantId}"]`);
+                            if (checkbox) {
+                                checkbox.checked = true;
+                                console.log('✓ Restored checkbox for:', variantId);
+                            }
+                        });
+
+                        // Update summary after restoring selections
+                        if (this.summaryManager) {
+                            this.summaryManager.update();
+                        }
+
+                        console.log('✓ Selection restored successfully');
+                    }, 200);
+                } catch (e) {
+                    console.error('Failed to restore checkout selection:', e);
+                }
             }
         }
     }

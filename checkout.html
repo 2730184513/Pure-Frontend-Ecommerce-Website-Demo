@@ -7,10 +7,6 @@
 
     <link rel="stylesheet" href="css/main.css">
 
-    <!-- Header component styles -->
-    <link rel="stylesheet" href="css/header-base.css">
-    <link rel="stylesheet" href="css/search.css">
-    <link rel="stylesheet" href="css/cart-wishlist.css">
 
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/toast.css">
@@ -27,7 +23,6 @@
             rel="stylesheet">
 </head>
 <body>
-<div id="header-placeholder"></div>
 
 <div id="banner-placeholder"></div>
 
@@ -244,13 +239,15 @@
 <script src="js/product-data-loader.js"></script>
 <script src="js/product-repository.js"></script>
 
-<!-- Header components (registered in main.js) -->
+<!-- Header components (required for cart manager) -->
 <script src="js/navigate.js"></script>
 <script src="js/search.js"></script>
 <script src="js/cart-dropdown-renderer.js"></script>
-<script src="js/cart.js"></script>
 <script src="js/wishlist-dropdown-renderer.js"></script>
 <script src="js/wishlist.js"></script>
+
+<!-- Cart manager (needed for checkout) -->
+<script src="js/cart.js"></script>
 
 <!-- Checkout page dependencies -->
 <script src="js/location-data-service.js"></script>
@@ -269,8 +266,6 @@
 <script>
     // Load page banner with multi-level breadcrumb
     document.addEventListener('DOMContentLoaded', async () => {
-        console.log('=== Checkout Page DOMContentLoaded ===');
-
         // Get dynamic breadcrumb based on referrer
         const breadcrumb = window.FurniroApp && typeof FurniroApp.getDynamicBreadcrumb === 'function'
             ? FurniroApp.getDynamicBreadcrumb()
@@ -294,7 +289,6 @@
                 target: '#feature-banner-placeholder'
             }
         ]);
-        console.log('✓ Banner components loaded');
 
         // Wait for main app to fully initialize (especially cart manager)
         let attempts = 0;
@@ -302,7 +296,6 @@
 
         const checkAndInit = async () => {
             attempts++;
-            console.log(`Initialization attempt ${attempts}/${maxAttempts}`);
 
             // Check if all required components are ready
             const cartReady = window.cartManagerInstance !== undefined;
@@ -310,26 +303,18 @@
             const formManagerReady = window.FormManager !== undefined;
             const summaryManagerReady = window.CheckoutSummaryManager !== undefined;
 
-            console.log('Cart manager ready:', cartReady);
-            console.log('CheckoutManager ready:', managerReady);
-            console.log('FormManager ready:', formManagerReady);
-            console.log('CheckoutSummaryManager ready:', summaryManagerReady);
-
             if (cartReady && managerReady && formManagerReady && summaryManagerReady) {
-                console.log('✅ All components ready, initializing checkout...');
                 try {
                     const manager = new CheckoutManager('checkoutForm');
                     await manager.initialize();
-                    console.log('🎉 Checkout page fully initialized!');
                 } catch (error) {
-                    console.error('❌ Failed to initialize checkout:', error);
+                    console.error('Failed to initialize checkout:', error);
                     alert('Failed to load checkout page: ' + error.message);
                 }
             } else if (attempts < maxAttempts) {
-                console.log(`⏳ Waiting for components... retrying in 200ms`);
                 setTimeout(checkAndInit, 200);
             } else {
-                console.error('❌ Timeout: Required components not ready after', maxAttempts, 'attempts');
+                console.error('Timeout: Required components not ready');
                 alert('Failed to initialize page. Please refresh.');
             }
         };

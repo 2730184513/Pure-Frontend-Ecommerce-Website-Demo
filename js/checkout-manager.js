@@ -11,50 +11,60 @@ class CheckoutManager {
     }
 
     async initialize() {
-        console.log('🛒 Initializing Checkout Page...');
+        // Check if accessed from cart page
+        const referrer = document.referrer;
+        let isFromCart = false;
+        if (referrer) {
+            try {
+                const referrerUrl = new URL(referrer);
+                const referrerPage = referrerUrl.pathname.split('/').pop() || 'index.html';
+                isFromCart = referrerPage === 'cart.html';
+            } catch (e) {
+                console.warn('Could not parse referrer:', e);
+            }
+        }
+
+        // If not from cart, redirect to cart
+        if (!isFromCart) {
+            if (window.toast) {
+                window.toast.show('Please access checkout from your cart', 'info');
+            }
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 1000);
+            return;
+        }
 
         // Get cart manager instance
         this.cartManager = window.cartManagerInstance;
         if (!this.cartManager) {
-            console.error('❌ Cart manager not found');
+            console.error('Cart manager not found');
             alert('Cart manager not initialized. Please refresh the page.');
             return;
         }
-        console.log('✓ Cart manager found:', this.cartManager);
 
         // Check if form exists
         if (!this.form) {
-            console.error('❌ Form element not found');
+            console.error('Form element not found');
             return;
         }
-        console.log('✓ Form element found');
 
         try {
             // Initialize form manager (left side)
-            console.log('Initializing form manager...');
             this.formManager = new window.FormManager(this.form);
             await this.formManager.initialize();
-            console.log('✓ Form manager initialized');
 
             // Initialize summary manager (right side)
-            console.log('Initializing summary manager...');
             this.summaryManager = new window.CheckoutSummaryManager(this.cartManager);
             this.summaryManager.initialize();
-            console.log('✓ Summary manager initialized');
 
             // Bind form submit
-            console.log('Binding form submit...');
             this.bindFormSubmit();
-            console.log('✓ Form submit bound');
 
             // Bind back button
-            console.log('Binding back button...');
             this.bindBackButton();
-            console.log('✓ Back button bound');
-
-            console.log('✅ Checkout page fully initialized');
         } catch (error) {
-            console.error('❌ Error during initialization:', error);
+            console.error('Error during checkout initialization:', error);
             alert('Failed to initialize checkout page: ' + error.message);
         }
     }
@@ -64,17 +74,16 @@ class CheckoutManager {
      */
     bindBackButton() {
         const backBtn = document.querySelector('.back-button');
-        console.log('Back button element:', backBtn);
 
         if (backBtn) {
             backBtn.addEventListener('click', (e) => {
-                console.log('Back button clicked');
                 e.preventDefault();
+
+                // Set flag to indicate user is returning from incomplete checkout
+                sessionStorage.setItem('returning_from_checkout', 'true');
+
                 window.location.href = 'cart.html';
             });
-            console.log('✓ Back button click event bound');
-        } else {
-            console.warn('⚠ Back button not found in DOM');
         }
     }
 
@@ -103,12 +112,6 @@ class CheckoutManager {
         const selectedItems = this.summaryManager.getSelectedItems();
         const grandTotal = this.summaryManager.calculateGrandTotal();
 
-        // Log order details
-        console.log('=== Order Submitted Successfully ===');
-        console.log('Form Data:', formData);
-        console.log('Payment Method:', paymentMethod);
-        console.log('Items:', selectedItems);
-        console.log('Grand Total:', grandTotal);
 
         // Remove ordered items from cart (silent mode - no individual notifications)
         selectedItems.forEach(item => {
@@ -117,6 +120,9 @@ class CheckoutManager {
 
         // Clear checkout selection
         localStorage.removeItem('checkout_selected_items');
+
+        // Clear returning flag (order completed successfully)
+        sessionStorage.removeItem('returning_from_checkout');
 
         // Set a flag in sessionStorage to show success message after redirect
         sessionStorage.setItem('order_placed_success', 'true');

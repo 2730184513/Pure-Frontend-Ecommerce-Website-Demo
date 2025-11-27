@@ -401,8 +401,14 @@ class CartDropdownRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
-        this.cartManager.removeProduct(variantId);
-        this.cartManager.showNotification(`${item.name} removed from cart`, 'info');
+        // Use silent mode to prevent double notifications
+        this.cartManager.removeProduct(variantId, true);
+
+        // Show single success notification (consistent with cart page)
+        if (window.toast) {
+            window.toast.show(`${item.name} removed from cart`, 'success');
+        }
+
         this.render();
         this.updateBadge();
     }
