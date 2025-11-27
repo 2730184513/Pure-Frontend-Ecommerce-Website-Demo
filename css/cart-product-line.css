@@ -131,7 +131,7 @@ body {
 .quantity-btn.decrease {
     background: transparent;
     border-color: #E0E0E0;
-    color: #999;
+    color: var(--text-light-gray);
 }
 
 .quantity-btn.decrease:hover {
@@ -141,15 +141,15 @@ body {
 
 /* Plus button - darker color to encourage adding more */
 .quantity-btn.increase {
-    background: #B88E2F;
-    border-color: #B88E2F;
-    color: white;
+    background: transparent;
+    border-color: #E0E0E0;
+    color: var(--text-dark);
     font-weight: 600;
 }
 
 .quantity-btn.increase:hover {
-    background: #9A7328;
-    border-color: #9A7328;
+    background: #F5F5F5;
+    border-color: #D0D0D0;
 }
 
 .quantity-btn:disabled {

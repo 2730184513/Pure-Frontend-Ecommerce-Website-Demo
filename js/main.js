@@ -20,6 +20,59 @@ class FurniroApp {
         this.isInitialized = false;
     }
 
+    /**
+     * Get dynamic breadcrumb for current page based on referrer
+     * @returns {Array} Breadcrumb array [{text: 'Home', href: 'index.html'}, ...]
+     */
+    static getDynamicBreadcrumb() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const referrer = document.referrer;
+        let referrerPage = '';
+
+        if (referrer) {
+            try {
+                const referrerUrl = new URL(referrer);
+                referrerPage = referrerUrl.pathname.split('/').pop() || 'index.html';
+            } catch (e) {
+                console.warn('Could not parse referrer:', e);
+            }
+        }
+
+        console.log('Current page:', currentPage, '| Referrer page:', referrerPage);
+
+        // Define page names
+        const pageNames = {
+            'index.html': 'Home',
+            'shop.html': 'Shop',
+            'cart.html': 'Cart',
+            'checkout.html': 'Checkout'
+        };
+
+        // Build breadcrumb based on current page
+        const breadcrumb = [{text: 'Home', href: 'index.html'}];
+
+        // For cart page, add referrer if it's not home
+        if (currentPage === 'cart.html') {
+            if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && pageNames[referrerPage]) {
+                breadcrumb.push({text: pageNames[referrerPage], href: referrerPage});
+            }
+            breadcrumb.push({text: 'Cart'});
+        }
+        // For checkout page, build from cart
+        else if (currentPage === 'checkout.html') {
+            if (referrerPage === 'cart.html') {
+                breadcrumb.push({text: 'Cart', href: 'cart.html'});
+            }
+            breadcrumb.push({text: 'Checkout'});
+        }
+        // For other pages, simple breadcrumb
+        else if (pageNames[currentPage] && currentPage !== 'index.html') {
+            breadcrumb.push({text: pageNames[currentPage]});
+        }
+
+        return breadcrumb;
+    }
+
     async init() {
         if (this.isInitialized) {
             console.warn('Application already initialized');

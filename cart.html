@@ -113,13 +113,18 @@
 <script>
     // Load page banner and feature banner components, then initialize cart page
     document.addEventListener('DOMContentLoaded', async () => {
+        // Get dynamic breadcrumb based on referrer
+        const breadcrumb = window.FurniroApp && typeof FurniroApp.getDynamicBreadcrumb === 'function'
+            ? FurniroApp.getDynamicBreadcrumb()
+            : [{text: 'Home', href: 'index.html'}, {text: 'Cart'}];
+
         await ComponentLoader.loadComponents([
             {
                 name: 'page-banner',
                 target: '#banner-placeholder',
                 params: {
                     'banner-title': 'Cart',
-                    'banner-breadcrumb': 'Cart'
+                    'banner-breadcrumb': breadcrumb
                 }
             },
             {

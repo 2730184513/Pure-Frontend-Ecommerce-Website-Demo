@@ -167,7 +167,7 @@
 .qty-btn.minus {
     background: transparent;
     border-color: #D9D9D9;
-    color: #999;
+    color: var(--text-light-gray);
 }
 
 .qty-btn.minus:hover {
@@ -177,15 +177,15 @@
 
 /* Plus button - darker color to encourage adding more */
 .qty-btn.plus {
-    background: #B88E2F;
-    border-color: #B88E2F;
-    color: white;
+    background: transparent;
+    border-color: #D9D9D9;
+    color: var(--text-dark);
     font-weight: 600;
 }
 
 .qty-btn.plus:hover {
-    background: #9A7328;
-    border-color: #9A7328;
+    background: #F5F5F5;
+    border-color: #BDBDBD;
 }
 
 .qty-btn:disabled {

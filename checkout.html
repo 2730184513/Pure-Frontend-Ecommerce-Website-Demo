@@ -271,17 +271,22 @@
     document.addEventListener('DOMContentLoaded', async () => {
         console.log('=== Checkout Page DOMContentLoaded ===');
 
+        // Get dynamic breadcrumb based on referrer
+        const breadcrumb = window.FurniroApp && typeof FurniroApp.getDynamicBreadcrumb === 'function'
+            ? FurniroApp.getDynamicBreadcrumb()
+            : [
+                { text: 'Home', href: 'index.html' },
+                { text: 'Cart', href: 'cart.html' },
+                { text: 'Checkout' }
+            ];
+
         await ComponentLoader.loadComponents([
             {
                 name: 'page-banner',
                 target: '#banner-placeholder',
                 params: {
                     'banner-title': 'Checkout',
-                    'banner-breadcrumb': [
-                        { text: 'Home', href: 'index.html' },
-                        { text: 'Cart', href: 'cart.html' },
-                        { text: 'Checkout' }
-                    ]
+                    'banner-breadcrumb': breadcrumb
                 }
             },
             {

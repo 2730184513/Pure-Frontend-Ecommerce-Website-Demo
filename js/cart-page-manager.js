@@ -45,12 +45,7 @@ class CartPageManager {
         // Bind events
         this.bindEvents();
 
-        // Check if cart is empty
-        if (this.checkEmptyCart()) {
-            return; // Stop initialization if redirected
-        }
-
-        // Initial render
+        // Initial render (don't check empty cart here - only check on checkout)
         this.render();
 
         // Initialize summary
@@ -117,12 +112,6 @@ class CartPageManager {
     render() {
         if (!this.lineRenderer || !this.container) return;
 
-        // Check if cart became empty
-        const cart = this.cartManager.getCart();
-        if (!cart || cart.length === 0) {
-            this.checkEmptyCart();
-            return;
-        }
 
         this.lineRenderer.renderAll(this.container);
 

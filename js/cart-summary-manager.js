@@ -162,13 +162,23 @@ class CartSummaryManager {
     handleCheckout() {
         console.log('=== handleCheckout() called ===');
 
+        // Check if cart is empty first
+        const cart = this.cartManager.getCart();
+        if (!cart || cart.length === 0) {
+            console.warn('Cart is empty, redirecting to shop...');
+            // Set flag for shop page to show message
+            sessionStorage.setItem('cart_empty_redirect', 'true');
+            window.location.href = 'shop.html';
+            return;
+        }
+
         const itemCheckboxes = document.querySelectorAll('.item-checkbox:checked');
         console.log('Selected checkboxes:', itemCheckboxes.length);
 
         if (itemCheckboxes.length === 0) {
             console.warn('No items selected for checkout');
             if (window.toast) {
-                window.toast.show('Please select at least one item to checkout', 'info');
+                window.toast.show('Please select at least one item to checkout', 'warning');
             } else {
                 alert('Please select at least one item to checkout');
             }
