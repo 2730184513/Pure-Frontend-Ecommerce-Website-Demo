@@ -1,8 +1,7 @@
-/* shop-toolbar.css - Shop page toolbar (filter, sort, show controls) */
+/* toolbar.css - Shop page toolbar (filter, sort, show controls) */
 
 .shop-toolbar {
     /* Sticky Behavior Logic */
-    position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 100px; /* Stops exactly below the 100px fixed Header */
     z-index: 800;
