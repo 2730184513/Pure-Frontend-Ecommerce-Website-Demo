@@ -23,7 +23,10 @@ class ToolbarManager {
 
         // Initialize filter sidebar
         this.filterSidebar = new FilterSidebar({
-            onFilterChange: () => this.handleChange()
+            onFilterChange: () => {
+                this.updateFilterCount();
+                this.handleChange();
+            }
         });
 
         // Initialize product filter
@@ -32,6 +35,9 @@ class ToolbarManager {
         // Initialize show-sort
         this.showSort = new ShowSortManager();
         this.showSort.init(() => this.handleChange());
+
+        // Initialize filter count display
+        this.updateFilterCount();
 
         this.isInitialized = true;
         console.log('✓ Toolbar Manager initialized');
@@ -210,6 +216,26 @@ class ToolbarManager {
      */
     getSortMode() {
         return this.showSort.getSortMode();
+    }
+
+    /**
+     * Update filter count display in the toolbar
+     * Shows filter count like "Filter (3)" if there are active filters
+     */
+    updateFilterCount() {
+        if (!this.filterSidebar) return;
+
+        const count = this.filterSidebar.getActiveFilterCount();
+        const filterBtn = document.getElementById('filter-toggle-btn');
+        const filterSpan = filterBtn ? filterBtn.querySelector('.filter-span') : null;
+
+        if (filterSpan) {
+            if (count > 0) {
+                filterSpan.textContent = `Filter (${count})`;
+            } else {
+                filterSpan.textContent = 'Filter';
+            }
+        }
     }
 
     /**

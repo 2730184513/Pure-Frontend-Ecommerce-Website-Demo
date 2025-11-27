@@ -289,6 +289,21 @@ class ShowSortManager {
             this.updateSortVisuals(key, this.sortState[key], element);
         }
     }
+
+    /**
+     * Reset all settings to defaults (for Clear All functionality)
+     * Resets itemsPerPage to 16 and sort to default
+     */
+    resetToDefaults() {
+        // Reset items per page to default (16)
+        this.setItemsPerPage(16);
+
+        // Reset sort to default
+        this.resetSort();
+
+        // Trigger change to update display
+        this.triggerChange();
+    }
 }
 
 if (typeof window !== 'undefined') {

@@ -91,6 +91,11 @@ class ShopManager {
         this.isInitialized = true;
         console.log('✓ Shop Manager initialized');
 
+        // Listen for Clear All event from filter sidebar
+        document.addEventListener('filterClearAll', () => {
+            this.handleClearAll();
+        });
+
         // Check if redirected from empty cart
         this.checkEmptyCartRedirect();
 
@@ -118,6 +123,11 @@ class ShopManager {
             };
 
             this.navStateManager.saveShopState(state);
+
+            // Update filter count display
+            if (this.toolbar) {
+                this.toolbar.updateFilterCount();
+            }
         } catch (e) {
             console.warn('Failed to save shop state:', e);
         }
@@ -178,6 +188,16 @@ class ShopManager {
             this.shouldResetPage = false;
             this.executePipeline();
 
+            // Update filter count display
+            if (this.toolbar) {
+                this.toolbar.updateFilterCount();
+            }
+
+            // Show success toast
+            if (window.toast) {
+                window.toast.show('Previous shop state restored successfully!', 'success', 3000);
+            }
+
             console.log('✓ Shop state restored successfully');
         } catch (e) {
             console.error('Failed to restore shop state:', e);
@@ -199,7 +219,30 @@ class ShopManager {
         }
     }
 
+    /**
+     * Handle Clear All button click
+     * Resets filters, show settings, sort, and search keyword to defaults
+     */
+    handleClearAll() {
+        // Clear search keyword
+        this.searchKeyword = '';
+        this.toolbar.setSearchKeyword('');
+        this.highlighting.setKeyword('');
 
+        // Reset show/sort settings
+        if (this.toolbar.getShowSort()) {
+            this.toolbar.getShowSort().resetToDefaults();
+        }
+
+        // Reset page to 1
+        this.shouldResetPage = true;
+
+        // Execute pipeline to refresh display
+        this.executePipeline();
+
+        // Save cleared state
+        this.saveCurrentState();
+    }
 
     /**
      * Execute filter → sort → render pipeline

@@ -20,6 +20,7 @@ class FilterSidebar {
         this.bindCategoryEvents();
         this.initSliders();
         this.initDatePickers();
+        this.bindClearAllButton();
     }
 
     cacheDOM() {
@@ -116,15 +117,62 @@ class FilterSidebar {
     initDatePickers() {
         const fromInput = document.getElementById('date-from');
         const toInput = document.getElementById('date-to');
-        const handleFocus = (e) => { e.target.type = 'date'; e.target.showPicker && e.target.showPicker(); };
-        const handleBlur = (e) => { if (!e.target.value) e.target.type = 'text'; };
+
+        const handleFocus = (e) => {
+            e.stopPropagation();
+            e.target.type = 'date';
+            // Small delay to ensure type change is applied before opening picker
+            setTimeout(() => {
+                if (e.target.showPicker) {
+                    try {
+                        e.target.showPicker();
+                    } catch (err) {
+                        // showPicker may fail in some browsers
+                    }
+                }
+            }, 0);
+        };
+
+        const handleBlur = (e) => {
+            if (!e.target.value) {
+                e.target.type = 'text';
+            }
+        };
+
+        const handleClick = (e) => {
+            e.stopPropagation();
+            // Prevent the click from triggering on other elements
+        };
+
+        const handleMouseDown = (e) => {
+            e.stopPropagation();
+        };
 
         [fromInput, toInput].forEach(input => {
             if(!input) return;
             input.type = 'text';
-            input.addEventListener('focus', handleFocus);
-            input.addEventListener('blur', handleBlur);
-            input.addEventListener('change', () => this.triggerChange());
+
+            // Remove any existing listeners to prevent duplicates
+            const newInput = input.cloneNode(true);
+            input.parentNode.replaceChild(newInput, input);
+
+            newInput.addEventListener('focus', handleFocus, true);
+            newInput.addEventListener('blur', handleBlur, true);
+            newInput.addEventListener('click', handleClick, true);
+            newInput.addEventListener('mousedown', handleMouseDown, true);
+            newInput.addEventListener('change', () => this.triggerChange());
+        });
+
+        // Prevent date field containers from triggering date picker
+        const dateFields = document.querySelectorAll('.date-field');
+        dateFields.forEach(field => {
+            field.addEventListener('click', (e) => {
+                // Only trigger if clicking directly on the input
+                if (e.target.classList.contains('date-picker')) {
+                    return;
+                }
+                e.stopPropagation();
+            });
         });
     }
 
@@ -239,6 +287,107 @@ class FilterSidebar {
             toInput.type = 'date';
             toInput.value = to;
         }
+    }
+
+    /**
+     * Get count of active filters
+     * Returns count based on:
+     * - Each selected category = 1 filter
+     * - Price min != 0 = 1 filter
+     * - Price max != 10000 = 1 filter
+     * - Rating min != 0 = 1 filter
+     * - Rating max != 5 = 1 filter
+     * - Date from set = 1 filter
+     * - Date to set = 1 filter
+     * Max possible: 4 + 2 + 2 + 2 = 10
+     * @returns {number} Active filter count
+     */
+    getActiveFilterCount() {
+        let count = 0;
+
+        // Count selected categories
+        const checkedCats = this.sidebar.querySelectorAll('.category-options input:checked');
+        count += checkedCats.length;
+
+        // Count price filters
+        const priceMin = parseFloat(document.getElementById('price-min-input').value) || 0;
+        const priceMax = parseFloat(document.getElementById('price-max-input').value) || 10000;
+        if (priceMin > 0) count++;
+        if (priceMax < 10000) count++;
+
+        // Count rating filters
+        const rateMin = parseFloat(document.getElementById('rate-min-input').value) || 0;
+        const rateMax = parseFloat(document.getElementById('rate-max-input').value) || 5;
+        if (rateMin > 0) count++;
+        if (rateMax < 5) count++;
+
+        // Count date filters
+        const dateFrom = document.getElementById('date-from').value;
+        const dateTo = document.getElementById('date-to').value;
+        if (dateFrom) count++;
+        if (dateTo) count++;
+
+        return count;
+    }
+
+    /**
+     * Bind Clear All button event
+     */
+    bindClearAllButton() {
+        const clearBtn = document.getElementById('clear-all-filters-btn');
+        if (!clearBtn) return;
+
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.clearAll();
+        });
+    }
+
+    /**
+     * Clear all filters and reset to default state
+     * This includes categories, price, rating, dates, and also clears show/sort/keyword
+     */
+    clearAll() {
+        // Clear categories
+        const checkboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = false);
+
+        // Reset price range
+        this.restorePriceRange(0, 10000);
+
+        // Reset rating range
+        this.restoreRatingRange(0, 5);
+
+        // Reset date range
+        const fromInput = document.getElementById('date-from');
+        const toInput = document.getElementById('date-to');
+        if (fromInput) {
+            fromInput.value = '';
+            fromInput.type = 'text';
+        }
+        if (toInput) {
+            toInput.value = '';
+            toInput.type = 'text';
+        }
+
+        // Clear search keyword
+        const searchInput = document.getElementById('global-search-input');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+
+        // Reset show and sort via event dispatch
+        // This will be handled by ShopManager
+        const clearEvent = new CustomEvent('filterClearAll');
+        document.dispatchEvent(clearEvent);
+
+        // Show success toast
+        if (window.toastManager) {
+            window.toastManager.show('All filters cleared', 'success', 3000);
+        }
+
+        // Trigger change to update the display
+        this.triggerChange();
     }
 
     triggerChange() { this.onFilterChange(); }

@@ -39,12 +39,31 @@
     margin-bottom: 30px;
     /* 移除 Header 下划线，因为每个模块都有分割线了 */
     padding-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .filter-title {
     font-size: 24px;
     font-weight: 700;
     color: #000;
+}
+
+.clear-all-btn {
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s;
+    font-family: var(--font-main);
+}
+
+.clear-all-btn:hover {
+    color: var(--primary-color);
 }
 
 /* Filter Groups & Separators */
@@ -228,11 +247,10 @@
 .date-picker::-webkit-inner-spin-button,
 .date-picker::-webkit-calendar-picker-indicator {
     opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
     cursor: pointer;
-    left: 0; top: 0;
+    z-index: 10;
+    /* Don't make it cover the entire input to prevent click issues */
+    position: relative;
 }
 
 .date-picker:focus {
