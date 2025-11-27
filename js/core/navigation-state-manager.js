@@ -76,7 +76,7 @@ class NavigationStateManager {
 
             if (returningFromCheckout) {
                 // Restore previous breadcrumb path (before checkout)
-                // NOTE: Do NOT remove the flag here - let cart-page-manager handle it after restoring selections
+                // NOTE: Do NOT remove the flag here - let cart-manager handle it after restoring selections
                 const savedPath = this.getBreadcrumbPath();
 
                 if (savedPath && savedPath.page === 'cart.html') {

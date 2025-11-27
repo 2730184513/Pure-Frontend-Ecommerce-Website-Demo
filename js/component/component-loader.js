@@ -1,9 +1,14 @@
 /**
  * Component Loader
  * Dynamically loads HTML components (header, footer, etc.)
+ * Follows Single Responsibility Principle: Only handles component loading and parameter application
  */
 
 class ComponentLoader {
+    // ============================================================================
+    // Core Loading Methods
+    // ============================================================================
+
     /**
      * Load a component from the components directory
      * @param {string} componentName - Name of the component file (without .html)
@@ -13,18 +18,8 @@ class ComponentLoader {
      */
     static async loadComponent(componentName, targetSelector, params = {}) {
         try {
-            const response = await fetch(`components/${componentName}.html`);
-
-            if (!response.ok) {
-                throw new Error(`Failed to load component: ${componentName}`);
-            }
-
-            const html = await response.text();
-            const targetElement = document.querySelector(targetSelector);
-
-            if (!targetElement) {
-                throw new Error(`Target element not found: ${targetSelector}`);
-            }
+            const html = await this._fetchComponentHTML(componentName);
+            const targetElement = this._getTargetElement(targetSelector);
 
             targetElement.innerHTML = html;
 
@@ -39,6 +34,23 @@ class ComponentLoader {
             throw error;
         }
     }
+
+    /**
+     * Load multiple components in parallel
+     * @param {Array<{name: string, target: string, params?: Object}>} components - Array of component configs
+     * @returns {Promise<void[]>}
+     */
+    static async loadComponents(components) {
+        const loadPromises = components.map(component =>
+            this.loadComponent(component.name, component.target, component.params || {})
+        );
+
+        return Promise.all(loadPromises);
+    }
+
+    // ============================================================================
+    // Parameter Application Methods
+    // ============================================================================
 
     /**
      * Apply parameters to elements in the loaded component
@@ -63,107 +75,155 @@ class ComponentLoader {
     /**
      * Apply multi-level breadcrumb structure
      * @param {HTMLElement} container - Container element
-     * @param {Array|Object} breadcrumbData - Breadcrumb structure
+     * @param {Array} breadcrumbData - Breadcrumb structure array
      * @private
      */
     static applyBreadcrumbStructure(container, breadcrumbData) {
         const breadcrumbContainer = container.querySelector('.breadcrumb');
-        if (!breadcrumbContainer) return;
+        if (!breadcrumbContainer || !Array.isArray(breadcrumbData)) return;
 
-        // Handle array format: [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}, {text: 'Checkout'}]
-        if (Array.isArray(breadcrumbData)) {
-            breadcrumbContainer.innerHTML = '';
+        breadcrumbContainer.innerHTML = '';
 
-            breadcrumbData.forEach((item, index) => {
-                if (index > 0) {
-                    const separator = document.createElement('span');
-                    separator.className = 'breadcrumb-separator';
-                    separator.textContent = '>';
-                    breadcrumbContainer.appendChild(separator);
-                }
+        breadcrumbData.forEach((item, index) => {
+            if (index > 0) {
+                this._appendBreadcrumbSeparator(breadcrumbContainer);
+            }
 
-                if (item.href) {
-                    const link = document.createElement('a');
-                    link.href = item.href;
-                    link.className = 'breadcrumb-link';
-                    link.textContent = item.text;
+            if (item.href) {
+                this._appendBreadcrumbLink(breadcrumbContainer, item);
+            } else {
+                this._appendBreadcrumbCurrent(breadcrumbContainer, item);
+            }
+        });
+    }
 
-                    // Special handling for Cart link on checkout page
-                    if (item.text === 'Cart' && item.href === 'cart.html') {
-                        const isCheckoutPage = document.getElementById('checkoutForm');
-                        if (isCheckoutPage) {
-                            link.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                // Set flag to restore selection when returning to cart
-                                sessionStorage.setItem('returning_from_checkout', 'true');
-                                window.location.href = 'cart.html';
-                            });
-                        }
-                    }
+    // ============================================================================
+    // Private Helper Methods
+    // ============================================================================
 
-                    // Mark shop navigation for state restoration
-                    if (item.href === 'shop.html') {
-                        link.addEventListener('click', () => {
-                            const navStateManager = new NavigationStateManager();
-                            navStateManager.markShopNavigation();
-                        });
-                    }
+    /**
+     * Fetch component HTML from server
+     * @param {string} componentName - Component file name
+     * @returns {Promise<string>} HTML content
+     * @private
+     */
+    static async _fetchComponentHTML(componentName) {
+        const response = await fetch(`components/${componentName}.html`);
 
-                    breadcrumbContainer.appendChild(link);
-                } else {
-                    const current = document.createElement('span');
-                    current.className = 'breadcrumb-current';
-                    current.textContent = item.text;
-                    breadcrumbContainer.appendChild(current);
-                }
+        if (!response.ok) {
+            throw new Error(`Failed to load component: ${componentName}`);
+        }
+
+        return response.text();
+    }
+
+    /**
+     * Get target element by selector
+     * @param {string} targetSelector - CSS selector
+     * @returns {HTMLElement}
+     * @throws {Error} If element not found
+     * @private
+     */
+    static _getTargetElement(targetSelector) {
+        const element = document.querySelector(targetSelector);
+
+        if (!element) {
+            throw new Error(`Target element not found: ${targetSelector}`);
+        }
+
+        return element;
+    }
+
+    /**
+     * Append breadcrumb separator
+     * @param {HTMLElement} container - Breadcrumb container
+     * @private
+     */
+    static _appendBreadcrumbSeparator(container) {
+        const separator = document.createElement('span');
+        separator.className = 'breadcrumb-separator';
+        separator.textContent = '>';
+        container.appendChild(separator);
+    }
+
+    /**
+     * Append breadcrumb link element
+     * @param {HTMLElement} container - Breadcrumb container
+     * @param {Object} item - Breadcrumb item {text, href}
+     * @private
+     */
+    static _appendBreadcrumbLink(container, item) {
+        const link = document.createElement('a');
+        link.href = item.href;
+        link.className = 'breadcrumb-link';
+        link.textContent = item.text;
+
+        // Apply special click handlers
+        this._attachBreadcrumbLinkHandlers(link, item);
+
+        container.appendChild(link);
+    }
+
+    /**
+     * Attach special event handlers to breadcrumb links
+     * @param {HTMLElement} link - Link element
+     * @param {Object} item - Breadcrumb item
+     * @private
+     */
+    static _attachBreadcrumbLinkHandlers(link, item) {
+        // Special handling for Cart link on checkout page
+        if (item.text === 'Cart' && item.href === 'cart.html') {
+            this._attachCartLinkHandler(link);
+        }
+
+        // Mark shop navigation for state restoration
+        if (item.href === 'shop.html') {
+            this._attachShopLinkHandler(link);
+        }
+    }
+
+    /**
+     * Attach cart link handler for checkout page
+     * @param {HTMLElement} link - Link element
+     * @private
+     */
+    static _attachCartLinkHandler(link) {
+        const isCheckoutPage = document.getElementById('checkoutForm');
+        if (isCheckoutPage) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Set flag to restore selection when returning to cart
+                sessionStorage.setItem('returning_from_checkout', 'true');
+                window.location.href = 'cart.html';
             });
         }
     }
 
     /**
-     * Load multiple components in parallel
-     * @param {Array<{name: string, target: string, params?: Object}>} components - Array of component configs
-     * @returns {Promise<void[]>}
-     */
-    static async loadComponents(components) {
-        const loadPromises = components.map(component =>
-            this.loadComponent(component.name, component.target, component.params || {})
-        );
-
-        return Promise.all(loadPromises);
-    }
-
-    /**
-     * Initialize common components (header and footer)
-     * @returns {Promise<void>}
-     */
-    static async initCommonComponents() {
-        // Create placeholder containers if they don't exist
-        this.ensureContainer('header-placeholder');
-        this.ensureContainer('footer-placeholder');
-
-        await this.loadComponents([
-            { name: 'header', target: '#header-placeholder' },
-            { name: 'footer', target: '#footer-placeholder' }
-        ]);
-    }
-
-    /**
-     * Ensure a container element exists
-     * @param {string} id - Element ID
+     * Attach shop link handler for state restoration
+     * @param {HTMLElement} link - Link element
      * @private
      */
-    static ensureContainer(id) {
-        if (!document.getElementById(id)) {
-            const container = document.createElement('div');
-            container.id = id;
-
-            if (id === 'header-placeholder') {
-                document.body.insertBefore(container, document.body.firstChild);
-            } else if (id === 'footer-placeholder') {
-                document.body.appendChild(container);
+    static _attachShopLinkHandler(link) {
+        link.addEventListener('click', () => {
+            if (window.NavigationStateManager) {
+                const navStateManager = new NavigationStateManager();
+                navStateManager.markShopNavigation();
             }
-        }
+        });
+    }
+
+    /**
+     * Append current breadcrumb item (non-clickable)
+     * @param {HTMLElement} container - Breadcrumb container
+     * @param {Object} item - Breadcrumb item {text}
+     * @private
+     */
+    static _appendBreadcrumbCurrent(container, item) {
+        const current = document.createElement('span');
+        current.className = 'breadcrumb-current';
+        current.textContent = item.text;
+        container.appendChild(current);
     }
 }
 

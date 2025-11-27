@@ -17,19 +17,19 @@ class CartPageManager {
     async init() {
         console.log('🛒 Initializing Cart Page...');
 
-        // Wait for cart manager to be available
+        // Wait for cart manager to be available (CartManager from header/cart.js)
         if (!window.CartManager) {
             console.error('CartManager not found');
             return;
         }
 
-        // Get the existing cart manager instance or create new one
-        this.cartManager = window.cartManagerInstance || new CartManager();
-
+        // Get the existing cart manager instance (created by HeaderManager)
         if (!window.cartManagerInstance) {
-            this.cartManager.init();
-            window.cartManagerInstance = this.cartManager;
+            console.error('CartManager instance not found. HeaderManager should have initialized it.');
+            return;
         }
+
+        this.cartManager = window.cartManagerInstance;
 
         // Cache DOM
         this.container = document.getElementById('cart-items-container');

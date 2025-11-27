@@ -326,7 +326,7 @@ Browser Loads HTML
 │ • highlighting.js   │
 │ • paging.js         │
 │ • toolbar.js        │ ──→ Aggregates filter, sort
-│ • shop.js           │ ──→ Aggregates all shop modules
+│ • shop-manager.js           │ ──→ Aggregates all shop modules
 └─────────────────────┘
         ↓
 ┌─────────────────────┐

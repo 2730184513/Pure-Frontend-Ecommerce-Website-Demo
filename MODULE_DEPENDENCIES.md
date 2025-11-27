@@ -11,7 +11,7 @@
         ┌───────────────────┼───────────────────┐
         ↓                   ↓                   ↓
 ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│  header.js   │    │   shop.js    │    │  index page  │
+│  header.js   │    │   shop-manager.js    │    │  index page  │
 │ (Aggregator) │    │ (Aggregator) │    │   modules    │
 └──────────────┘    └──────────────┘    └──────────────┘
         │                   │                   │
@@ -107,7 +107,7 @@ toolbar.js
 
 ### Level 4: 页面控制器层
 ```
-shop.js
+shop-manager.js
     ├─ 依赖: toolbar.js
     ├─ 依赖: highlighting.js
     ├─ 依赖: paging.js
@@ -120,7 +120,7 @@ shop.js
 main.js
     ├─ 依赖: component-loader.js
     ├─ 依赖: header.js
-    ├─ 依赖: shop.js
+    ├─ 依赖: shop-manager.js
     ├─ 依赖: carousel.js (仅 index)
     ├─ 依赖: browse-range.js (仅 index)
     └─ 依赖: product-repository.js (仅 index)
@@ -188,7 +188,7 @@ HeaderManager → Wishlist.init()
 14. highlighting.js            (高亮管理)
 15. paging.js                  (分页管理)
 16. toolbar.js                 (Toolbar 聚合器)
-17. shop.js                    (Shop 页面控制器)
+17. shop-manager.js                    (Shop 页面控制器)
     ↓
 18. main.js                    (全局控制器)
 ```
