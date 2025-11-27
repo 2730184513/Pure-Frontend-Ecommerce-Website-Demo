@@ -118,10 +118,9 @@ class CheckoutManager {
             this.cartManager.removeProduct(item.variantId, true);
         });
 
-        // Clear checkout selection
-        localStorage.removeItem('checkout_selected_items');
-
-        // Clear returning flag (order completed successfully)
+        // Clear checkout selections and returning flag (order completed successfully)
+        const navStateManager = new NavigationStateManager();
+        navStateManager.clearCartSelections();
         sessionStorage.removeItem('returning_from_checkout');
 
         // Set a flag in sessionStorage to show success message after redirect

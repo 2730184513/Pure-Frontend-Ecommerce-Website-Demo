@@ -8,6 +8,7 @@ class CartPageManager {
         this.lineRenderer = null;
         this.summaryManager = null;
         this.container = null;
+        this.navStateManager = new NavigationStateManager();
     }
 
     /**
@@ -45,17 +46,26 @@ class CartPageManager {
         // Bind events
         this.bindEvents();
 
+        // Check if returning from incomplete checkout BEFORE rendering
+        const shouldRestore = sessionStorage.getItem('returning_from_checkout') === 'true';
+        const selectedVariantIds = shouldRestore ? this.navStateManager.getCartSelections() : null;
+
         // Initial render (don't check empty cart here - only check on checkout)
         this.render();
 
-        // Initialize summary
+        // Initialize summary (this will call update() once)
         this.summaryManager.init();
 
         // Check if redirected from successful order placement
         this.checkOrderSuccess();
 
-        // Check if returning from incomplete checkout and restore selection
-        this.restoreCheckoutSelection();
+        // Restore selection after render and summary init complete
+        if (shouldRestore && selectedVariantIds && selectedVariantIds.length > 0) {
+            this.restoreCheckoutSelection(selectedVariantIds);
+        } else if (shouldRestore) {
+            // Clear flag even if no selections to restore
+            sessionStorage.removeItem('returning_from_checkout');
+        }
 
         console.log('✓ Cart Page initialized');
     }
@@ -94,46 +104,46 @@ class CartPageManager {
 
     /**
      * Restore selected items when returning from incomplete checkout
+     * @param {Array} selectedVariantIds - Array of variant IDs to restore
      */
-    restoreCheckoutSelection() {
-        const returningFromCheckout = sessionStorage.getItem('returning_from_checkout');
+    restoreCheckoutSelection(selectedVariantIds) {
+        console.log('🔄 Restoring checkout selections...');
 
-        if (returningFromCheckout === 'true') {
-            console.log('🔄 Returning from incomplete checkout, restoring selection...');
+        // Use requestAnimationFrame + setTimeout to ensure DOM is fully rendered
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                let restoredCount = 0;
+                const notFoundIds = [];
 
-            // Clear the flag
-            sessionStorage.removeItem('returning_from_checkout');
+                selectedVariantIds.forEach(variantId => {
+                    const checkbox = document.querySelector(`.item-checkbox[data-variant-id="${variantId}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        restoredCount++;
+                    } else {
+                        notFoundIds.push(variantId);
+                    }
+                });
 
-            // Get previously selected items from localStorage
-            const selectedItemsJson = localStorage.getItem('checkout_selected_items');
-
-            if (selectedItemsJson) {
-                try {
-                    const selectedVariantIds = JSON.parse(selectedItemsJson);
-                    console.log('Restoring selection for:', selectedVariantIds);
-
-                    // Wait for DOM to be ready, then restore checkboxes
-                    setTimeout(() => {
-                        selectedVariantIds.forEach(variantId => {
-                            const checkbox = document.querySelector(`.item-checkbox[data-variant-id="${variantId}"]`);
-                            if (checkbox) {
-                                checkbox.checked = true;
-                                console.log('✓ Restored checkbox for:', variantId);
-                            }
-                        });
-
-                        // Update summary after restoring selections
-                        if (this.summaryManager) {
-                            this.summaryManager.update();
-                        }
-
-                        console.log('✓ Selection restored successfully');
-                    }, 200);
-                } catch (e) {
-                    console.error('Failed to restore checkout selection:', e);
+                // Update summary after restoring selections
+                if (this.summaryManager) {
+                    this.summaryManager.update();
                 }
-            }
-        }
+
+                console.log(`✓ Restored ${restoredCount}/${selectedVariantIds.length} selections`);
+
+                // Show toast notification
+                if (window.toast && restoredCount > 0) {
+                    window.toast.show(`Restored ${restoredCount} selected item${restoredCount > 1 ? 's' : ''} from checkout`, 'info', 2000);
+                } else if (window.toast && notFoundIds.length === selectedVariantIds.length) {
+                    window.toast.show('Previously selected items are no longer in cart', 'warning', 2000);
+                }
+
+                // Clear the flag and selections after restoration
+                sessionStorage.removeItem('returning_from_checkout');
+                this.navStateManager.clearCartSelections();
+            }, 150);
+        });
     }
 
     /**
@@ -159,15 +169,9 @@ class CartPageManager {
     render() {
         if (!this.lineRenderer || !this.container) return;
 
-
         this.lineRenderer.renderAll(this.container);
 
-        // Trigger summary update after render
-        setTimeout(() => {
-            if (this.summaryManager) {
-                this.summaryManager.update();
-            }
-        }, 0);
+        // Note: Summary will be updated after restoration completes or immediately if no restoration
     }
 }
 

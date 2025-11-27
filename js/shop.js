@@ -2,6 +2,7 @@
  * Shop Manager
  * Central controller for shop page
  * Aggregates toolbar, highlighting, and paging managers
+ * Supports state restoration when navigating back from cart/checkout
  */
 class ShopManager {
     constructor() {
@@ -15,12 +16,24 @@ class ShopManager {
         this.shouldResetPage = false; // Flag to control page reset
 
         this.isInitialized = false;
+
+        // Navigation state manager for state restoration
+        this.navStateManager = new NavigationStateManager();
     }
 
     async init() {
         if (this.isInitialized) return;
 
-        // Get search keyword and category from localStorage
+        // Check if we should restore previous shop state
+        const shouldRestore = this.navStateManager.shouldRestoreShopState() ||
+                             this.navStateManager.checkShopNavigationMarker();
+
+        let savedState = null;
+        if (shouldRestore) {
+            savedState = this.navStateManager.getShopState();
+        }
+
+        // Get search keyword and category (legacy support)
         this.searchKeyword = localStorage.getItem('shop_search_query') || '';
         this.initialCategory = localStorage.getItem('shop_filter_category') || null;
 
@@ -36,32 +49,41 @@ class ShopManager {
         this.toolbar.init(() => {
             this.shouldResetPage = true; // Reset page when filter/sort changes
             this.executePipeline();
+            // Save state after any change
+            this.saveCurrentState();
         });
 
         // 3. Initialize highlighting manager
         this.highlighting = new HighlightingManager();
-        if (this.searchKeyword) {
-            this.highlighting.setKeyword(this.searchKeyword);
-        }
 
         // 4. Initialize paging manager
         this.paging = new PagingManager();
         this.paging.init(() => {
             this.shouldResetPage = false; // Don't reset page when user clicks page button
             this.executePipeline();
+            // Save state after page change
+            this.saveCurrentState();
         });
 
-        // 5. Restore initial state
-        if (this.searchKeyword) {
-            this.toolbar.setSearchKeyword(this.searchKeyword);
-            const searchInput = document.getElementById('global-search-input');
-            if (searchInput) {
-                searchInput.value = this.searchKeyword;
+        // 5. Restore state or apply initial filters
+        if (savedState) {
+            await this.restoreState(savedState);
+        } else if (this.searchKeyword || this.initialCategory) {
+            // Legacy restoration
+            if (this.searchKeyword) {
+                this.highlighting.setKeyword(this.searchKeyword);
+                this.toolbar.setSearchKeyword(this.searchKeyword);
+                const searchInput = document.getElementById('global-search-input');
+                if (searchInput) {
+                    searchInput.value = this.searchKeyword;
+                }
             }
-        }
 
-        if (this.initialCategory) {
-            this.toolbar.setCategory(this.initialCategory);
+            if (this.initialCategory) {
+                this.toolbar.setCategory(this.initialCategory);
+            } else {
+                this.executePipeline();
+            }
         } else {
             this.executePipeline();
         }
@@ -71,6 +93,97 @@ class ShopManager {
 
         // Check if redirected from empty cart
         this.checkEmptyCartRedirect();
+
+        // Save initial state
+        this.saveCurrentState();
+    }
+
+    /**
+     * Save current shop state to session storage
+     */
+    saveCurrentState() {
+        try {
+            const filterConfig = this.toolbar.getFilterConfig();
+            const showSortConfig = this.toolbar.getShowSortConfig();
+
+            const state = {
+                searchKeyword: this.searchKeyword,
+                categories: filterConfig.categories,
+                priceRange: filterConfig.priceRange,
+                ratingRange: filterConfig.ratingRange,
+                dateRange: filterConfig.dateRange,
+                itemsPerPage: showSortConfig.itemsPerPage,
+                sorting: showSortConfig.sorting,
+                currentPage: this.paging.getCurrentPage()
+            };
+
+            this.navStateManager.saveShopState(state);
+        } catch (e) {
+            console.warn('Failed to save shop state:', e);
+        }
+    }
+
+    /**
+     * Restore shop state from saved data
+     * @param {Object} state - Saved state object
+     */
+    async restoreState(state) {
+        console.log('🔄 Restoring shop state...');
+
+        try {
+            // Restore search keyword
+            if (state.searchKeyword) {
+                this.searchKeyword = state.searchKeyword;
+                this.highlighting.setKeyword(state.searchKeyword);
+                this.toolbar.setSearchKeyword(state.searchKeyword);
+
+                const searchInput = document.getElementById('global-search-input');
+                if (searchInput) {
+                    searchInput.value = state.searchKeyword;
+                }
+            }
+
+            // Restore filters
+            if (state.categories && state.categories.length > 0) {
+                this.toolbar.getFilterSidebar().restoreCategories(state.categories);
+            }
+
+            if (state.priceRange) {
+                this.toolbar.getFilterSidebar().restorePriceRange(state.priceRange.min, state.priceRange.max);
+            }
+
+            if (state.ratingRange) {
+                this.toolbar.getFilterSidebar().restoreRatingRange(state.ratingRange.min, state.ratingRange.max);
+            }
+
+            if (state.dateRange && (state.dateRange.from || state.dateRange.to)) {
+                this.toolbar.getFilterSidebar().restoreDateRange(state.dateRange.from, state.dateRange.to);
+            }
+
+            // Restore show/sort settings
+            if (state.itemsPerPage) {
+                this.toolbar.getShowSort().setItemsPerPage(state.itemsPerPage);
+            }
+
+            if (state.sorting && state.sorting.key) {
+                this.toolbar.getShowSort().setSorting(state.sorting.key, state.sorting.order);
+            }
+
+            // Set current page (will be used in render)
+            if (state.currentPage) {
+                this.paging.setCurrentPage(state.currentPage);
+            }
+
+            // Execute pipeline without resetting page
+            this.shouldResetPage = false;
+            this.executePipeline();
+
+            console.log('✓ Shop state restored successfully');
+        } catch (e) {
+            console.error('Failed to restore shop state:', e);
+            // Fallback to default execution
+            this.executePipeline();
+        }
     }
 
     /**

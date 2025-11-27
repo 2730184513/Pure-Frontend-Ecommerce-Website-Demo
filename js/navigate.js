@@ -11,7 +11,28 @@ class NavigationManager {
         if (this.isInitialized) return;
 
         this.setActiveNavLink();
+        this.bindNavigationEvents();
         this.isInitialized = true;
+    }
+
+    /**
+     * Bind navigation click events to mark shop navigation
+     */
+    bindNavigationEvents() {
+        const navStateManager = new NavigationStateManager();
+        const links = document.querySelectorAll('.nav-links a');
+
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+
+            // Only intercept shop navigation
+            if (href === 'shop.html') {
+                link.addEventListener('click', () => {
+                    // Mark navigation to shop for state restoration
+                    navStateManager.markShopNavigation();
+                });
+            }
+        });
     }
 
     /**

@@ -18,76 +18,22 @@ class FurniroApp {
             loadMoreCount: 8
         };
         this.isInitialized = false;
+
+        // Initialize navigation state manager
+        this.navStateManager = new NavigationStateManager();
     }
 
     /**
      * Get dynamic breadcrumb for current page based on referrer
-     * Supports multi-level breadcrumb inheritance (e.g., Home > Shop > Cart > Checkout)
+     * Uses NavigationStateManager for proper breadcrumb preservation
      * @returns {Array} Breadcrumb array [{text: 'Home', href: 'index.html'}, ...]
      */
     static getDynamicBreadcrumb() {
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        const referrer = document.referrer;
-        let referrerPage = '';
+        const navManager = new NavigationStateManager();
+        const currentPage = navManager.getCurrentPage();
+        const referrerPage = navManager.getReferrerPage();
 
-        if (referrer) {
-            try {
-                const referrerUrl = new URL(referrer);
-                referrerPage = referrerUrl.pathname.split('/').pop() || 'index.html';
-            } catch (e) {
-                console.warn('Could not parse referrer:', e);
-            }
-        }
-
-        // Define page names
-        const pageNames = {
-            'index.html': 'Home',
-            'shop.html': 'Shop',
-            'cart.html': 'Cart',
-            'checkout.html': 'Checkout'
-        };
-
-        // Build breadcrumb based on current page
-        let breadcrumb = [{text: 'Home', href: 'index.html'}];
-
-        // For cart page, add referrer if it's not home
-        if (currentPage === 'cart.html') {
-            // Don't add checkout to breadcrumb when returning from checkout
-            if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && referrerPage !== 'checkout.html' && pageNames[referrerPage]) {
-                breadcrumb.push({text: pageNames[referrerPage], href: referrerPage});
-            }
-            breadcrumb.push({text: 'Cart'});
-
-            // Save cart breadcrumb to sessionStorage for checkout to inherit
-            sessionStorage.setItem('cart_breadcrumb', JSON.stringify(breadcrumb));
-        }
-        // For checkout page, inherit full breadcrumb from cart
-        else if (currentPage === 'checkout.html') {
-            // Try to get saved breadcrumb from cart page
-            const savedBreadcrumb = sessionStorage.getItem('cart_breadcrumb');
-            if (savedBreadcrumb && referrerPage === 'cart.html') {
-                try {
-                    breadcrumb = JSON.parse(savedBreadcrumb);
-                    // Remove the last item (Cart) and make it clickable
-                    if (breadcrumb.length > 0 && breadcrumb[breadcrumb.length - 1].text === 'Cart') {
-                        breadcrumb[breadcrumb.length - 1].href = 'cart.html';
-                    }
-                } catch (e) {
-                    console.warn('Could not parse saved breadcrumb:', e);
-                    breadcrumb = [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}];
-                }
-            } else {
-                // Fallback: simple breadcrumb
-                breadcrumb = [{text: 'Home', href: 'index.html'}, {text: 'Cart', href: 'cart.html'}];
-            }
-            breadcrumb.push({text: 'Checkout'});
-        }
-        // For other pages, simple breadcrumb
-        else if (pageNames[currentPage] && currentPage !== 'index.html') {
-            breadcrumb.push({text: pageNames[currentPage]});
-        }
-
-        return breadcrumb;
+        return navManager.buildDynamicBreadcrumb(currentPage, referrerPage);
     }
 
     async init() {

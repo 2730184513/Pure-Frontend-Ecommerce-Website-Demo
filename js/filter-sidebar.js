@@ -153,6 +153,94 @@ class FilterSidebar {
         }
     }
 
+    /**
+     * Restore category selections (for state restoration)
+     * @param {Array} categories - Array of category values to check
+     */
+    restoreCategories(categories) {
+        // First uncheck all
+        const allCheckboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
+        allCheckboxes.forEach(cb => cb.checked = false);
+
+        // Then check the selected ones
+        categories.forEach(category => {
+            const cb = this.sidebar.querySelector(`.category-options input[value="${category}"]`);
+            if (cb) {
+                cb.checked = true;
+            }
+        });
+    }
+
+    /**
+     * Restore price range (for state restoration)
+     * @param {number} min - Minimum price
+     * @param {number} max - Maximum price
+     */
+    restorePriceRange(min, max) {
+        const minRange = document.getElementById('price-min-range');
+        const maxRange = document.getElementById('price-max-range');
+        const minInput = document.getElementById('price-min-input');
+        const maxInput = document.getElementById('price-max-input');
+        const track = document.getElementById('price-track');
+
+        if (minRange && maxRange && minInput && maxInput && track) {
+            minRange.value = min;
+            maxRange.value = max;
+            minInput.value = min;
+            maxInput.value = max;
+
+            // Update track visual
+            const percent1 = (min / 10000) * 100;
+            const percent2 = (max / 10000) * 100;
+            track.style.background = `linear-gradient(to right, #ddd ${percent1}%, var(--primary-color) ${percent1}%, var(--primary-color) ${percent2}%, #ddd ${percent2}%)`;
+        }
+    }
+
+    /**
+     * Restore rating range (for state restoration)
+     * @param {number} min - Minimum rating
+     * @param {number} max - Maximum rating
+     */
+    restoreRatingRange(min, max) {
+        const minRange = document.getElementById('rate-min-range');
+        const maxRange = document.getElementById('rate-max-range');
+        const minInput = document.getElementById('rate-min-input');
+        const maxInput = document.getElementById('rate-max-input');
+        const track = document.getElementById('rate-track');
+
+        if (minRange && maxRange && minInput && maxInput && track) {
+            minRange.value = min;
+            maxRange.value = max;
+            minInput.value = min;
+            maxInput.value = max;
+
+            // Update track visual
+            const percent1 = (min / 5) * 100;
+            const percent2 = (max / 5) * 100;
+            track.style.background = `linear-gradient(to right, #ddd ${percent1}%, var(--primary-color) ${percent1}%, var(--primary-color) ${percent2}%, #ddd ${percent2}%)`;
+        }
+    }
+
+    /**
+     * Restore date range (for state restoration)
+     * @param {string} from - From date (yyyy-mm-dd)
+     * @param {string} to - To date (yyyy-mm-dd)
+     */
+    restoreDateRange(from, to) {
+        const fromInput = document.getElementById('date-from');
+        const toInput = document.getElementById('date-to');
+
+        if (fromInput && from) {
+            fromInput.type = 'date';
+            fromInput.value = from;
+        }
+
+        if (toInput && to) {
+            toInput.type = 'date';
+            toInput.value = to;
+        }
+    }
+
     triggerChange() { this.onFilterChange(); }
 }
 

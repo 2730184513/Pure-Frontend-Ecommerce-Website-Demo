@@ -160,8 +160,6 @@ class CartSummaryManager {
      * Handle checkout button click
      */
     handleCheckout() {
-        console.log('=== handleCheckout() called ===');
-
         // Check if cart is empty first
         const cart = this.cartManager.getCart();
         if (!cart || cart.length === 0) {
@@ -173,7 +171,6 @@ class CartSummaryManager {
         }
 
         const itemCheckboxes = document.querySelectorAll('.item-checkbox:checked');
-        console.log('Selected checkboxes:', itemCheckboxes.length);
 
         if (itemCheckboxes.length === 0) {
             console.warn('No items selected for checkout');
@@ -190,22 +187,14 @@ class CartSummaryManager {
         itemCheckboxes.forEach(checkbox => {
             const cartItem = checkbox.closest('.cart-item');
             const variantId = cartItem.dataset.variantId;
-            console.log('Adding variantId:', variantId);
             selectedVariantIds.push(variantId);
         });
 
-        console.log('Selected variant IDs:', selectedVariantIds);
-
-        // Save to localStorage for checkout page
-        localStorage.setItem('checkout_selected_items', JSON.stringify(selectedVariantIds));
-        console.log('✓ Saved to localStorage');
-
-        // Verify
-        const saved = localStorage.getItem('checkout_selected_items');
-        console.log('Verification:', saved);
+        // Save selections using NavigationStateManager
+        const navStateManager = new NavigationStateManager();
+        navStateManager.saveCartSelections(selectedVariantIds);
 
         // Navigate to checkout
-        console.log('Navigating to checkout...');
         window.location.href = 'checkout.html';
     }
 

@@ -101,6 +101,14 @@ class ComponentLoader {
                         }
                     }
 
+                    // Mark shop navigation for state restoration
+                    if (item.href === 'shop.html') {
+                        link.addEventListener('click', () => {
+                            const navStateManager = new NavigationStateManager();
+                            navStateManager.markShopNavigation();
+                        });
+                    }
+
                     breadcrumbContainer.appendChild(link);
                 } else {
                     const current = document.createElement('span');

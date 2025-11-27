@@ -99,7 +99,22 @@ class ToolbarManager {
      * @returns {Object} Show-sort configuration
      */
     getShowSortConfig() {
-        return this.showSort.getConfig();
+        const config = this.showSort.getConfig();
+
+        // Parse sorting info for easier state restoration
+        let sorting = { key: null, order: null };
+        if (config.sortMode && config.sortMode !== 'default') {
+            const parts = config.sortMode.split('-');
+            sorting = {
+                key: parts[0],
+                order: parts[1]
+            };
+        }
+
+        return {
+            itemsPerPage: config.itemsPerPage,
+            sorting: sorting
+        };
     }
 
     /**

@@ -218,18 +218,6 @@ class ShowSortManager {
     }
 
     /**
-     * Set items per page
-     * @param {number} count - Items per page
-     */
-    setItemsPerPage(count) {
-        this.itemsPerPage = count;
-        const select = document.getElementById('items-per-page');
-        if (select) {
-            select.value = count;
-        }
-    }
-
-    /**
      * Reset sort to default
      */
     resetSort() {
@@ -247,6 +235,59 @@ class ShowSortManager {
             itemsPerPage: this.itemsPerPage,
             sortMode: this.sortMode
         };
+    }
+
+    /**
+     * Set items per page programmatically (for state restoration)
+     * @param {number} value - Items per page value
+     */
+    setItemsPerPage(value) {
+        this.itemsPerPage = value;
+
+        // Update UI
+        const label = document.getElementById('current-show-label');
+        if (label) {
+            label.textContent = value;
+        }
+
+        // Update active state
+        const items = document.querySelectorAll('#show-dropdown .dropdown-item');
+        items.forEach(item => {
+            if (parseInt(item.dataset.value) === value) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    /**
+     * Set sorting programmatically (for state restoration)
+     * @param {string} key - Sort key (name, price, rate)
+     * @param {string} order - Sort order ('asc' or 'desc')
+     */
+    setSorting(key, order) {
+        if (!key || !order) {
+            this.resetSort();
+            return;
+        }
+
+        // Reset all states
+        Object.keys(this.sortState).forEach(k => {
+            this.sortState[k] = 0;
+        });
+
+        // Set state for key: 1 for asc, 2 for desc
+        this.sortState[key] = order === 'asc' ? 1 : 2;
+
+        // Find the element
+        const sortDropdown = document.getElementById('sort-dropdown');
+        if (!sortDropdown) return;
+
+        const element = sortDropdown.querySelector(`.dropdown-item[data-key="${key}"]`);
+        if (element) {
+            this.updateSortVisuals(key, this.sortState[key], element);
+        }
     }
 }
 
