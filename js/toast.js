@@ -6,6 +6,8 @@ class ToastManager {
     constructor() {
         this.container = null;
         this.toasts = [];
+        this.timers = new Map(); // Store timers and remaining time for each toast
+        this.isHovering = false;
         this.init();
     }
 
@@ -32,15 +34,23 @@ class ToastManager {
         this.container.insertBefore(toast, this.container.firstChild);
         this.toasts.unshift(toast);
 
+        // Setup hover listeners
+        this.setupHoverListeners(toast);
+
         // Trigger animation
         setTimeout(() => {
             toast.classList.add('show');
         }, 10);
 
-        // Auto dismiss
-        setTimeout(() => {
-            this.dismiss(toast);
-        }, duration);
+        // Store timer info for this toast
+        this.timers.set(toast, {
+            remainingTime: duration,
+            startTime: Date.now(),
+            timerId: null
+        });
+
+        // Start auto dismiss timer
+        this.startTimer(toast);
 
         return toast;
     }
@@ -85,11 +95,87 @@ class ToastManager {
     }
 
     /**
+     * Setup hover listeners for a toast
+     * @param {HTMLElement} toast - Toast element
+     * @private
+     */
+    setupHoverListeners(toast) {
+        toast.addEventListener('mouseenter', () => {
+            this.pauseAllTimers();
+        });
+
+        toast.addEventListener('mouseleave', () => {
+            this.resumeAllTimers();
+        });
+    }
+
+    /**
+     * Start timer for a toast
+     * @param {HTMLElement} toast - Toast element
+     * @private
+     */
+    startTimer(toast) {
+        const timerInfo = this.timers.get(toast);
+        if (!timerInfo) return;
+
+        timerInfo.startTime = Date.now();
+        timerInfo.timerId = setTimeout(() => {
+            this.dismiss(toast);
+        }, timerInfo.remainingTime);
+    }
+
+    /**
+     * Pause all timers when hovering
+     * @private
+     */
+    pauseAllTimers() {
+        if (this.isHovering) return;
+        this.isHovering = true;
+
+        this.toasts.forEach(toast => {
+            const timerInfo = this.timers.get(toast);
+            if (!timerInfo || !timerInfo.timerId) return;
+
+            // Clear the timer
+            clearTimeout(timerInfo.timerId);
+
+            // Calculate remaining time
+            const elapsed = Date.now() - timerInfo.startTime;
+            timerInfo.remainingTime = Math.max(0, timerInfo.remainingTime - elapsed);
+            timerInfo.timerId = null;
+        });
+    }
+
+    /**
+     * Resume all timers when mouse leaves
+     * @private
+     */
+    resumeAllTimers() {
+        if (!this.isHovering) return;
+        this.isHovering = false;
+
+        this.toasts.forEach(toast => {
+            const timerInfo = this.timers.get(toast);
+            if (!timerInfo || timerInfo.remainingTime <= 0) return;
+
+            // Restart the timer with remaining time
+            this.startTimer(toast);
+        });
+    }
+
+    /**
      * Dismiss a toast
      * @param {HTMLElement} toast - Toast element to dismiss
      */
     dismiss(toast) {
         if (!toast || !toast.parentNode) return;
+
+        // Clear timer if exists
+        const timerInfo = this.timers.get(toast);
+        if (timerInfo && timerInfo.timerId) {
+            clearTimeout(timerInfo.timerId);
+        }
+        this.timers.delete(toast);
 
         // Add dismiss animation
         toast.classList.add('dismissing');
@@ -108,6 +194,7 @@ class ToastManager {
     clearAll() {
         this.toasts.forEach(toast => this.dismiss(toast));
         this.toasts = [];
+        this.timers.clear();
     }
 
     /**

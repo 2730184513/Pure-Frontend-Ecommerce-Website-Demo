@@ -69,23 +69,6 @@ class CartPageManager {
 
         console.log('✓ Cart Page initialized');
     }
-
-    /**
-     * Check if cart is empty and redirect to shop page
-     * @returns {boolean} True if cart is empty and redirect happened
-     */
-    checkEmptyCart() {
-        const cart = this.cartManager.getCart();
-        if (!cart || cart.length === 0) {
-            console.log('Cart is empty, redirecting to shop...');
-            // Set flag for shop page to show message
-            sessionStorage.setItem('cart_empty_redirect', 'true');
-            window.location.href = 'shop.html';
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Check if order was successfully placed and show notification
      */

@@ -214,7 +214,7 @@ class ShopManager {
         if (redirectFlag === 'true') {
             sessionStorage.removeItem('cart_empty_redirect');
             if (window.toast) {
-                window.toast.show('Your cart is empty. Pick your favorite products and add them to cart. Have a great shopping experience! 🛒', 'info', 5000);
+                window.toast.show('Your cart is empty. Pick your favorite products and add them to cart. Have a great shopping experience! 🛒', 'info', 3000);
             }
         }
     }
