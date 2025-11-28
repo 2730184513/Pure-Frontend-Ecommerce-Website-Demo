@@ -1,6 +1,7 @@
 /**
  * Show Sort Manager
  * Manages items-per-page dropdown and sort dropdown in toolbar
+ * 依赖: SortStateStrategy (需要先加载 SortStrategy.js)
  */
 class ShowSortManager {
     constructor() {
@@ -35,18 +36,15 @@ class ShowSortManager {
             return;
         }
 
-        // Toggle dropdown open/close
         showDropdown.addEventListener('click', (e) => {
             e.stopPropagation();
             showDropdown.classList.toggle('open');
         });
 
-        // Close on click outside
         document.addEventListener('click', () => {
             showDropdown.classList.remove('open');
         });
 
-        // Handle item clicks
         showDropdown.querySelectorAll('.dropdown-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -64,15 +62,12 @@ class ShowSortManager {
     handleShowChange(value, element) {
         this.itemsPerPage = value;
 
-        // Update visuals
         const label = document.getElementById('current-show-label');
         const items = document.querySelectorAll('#show-dropdown .dropdown-item');
 
-        // Reset visual state of all items
         items.forEach(i => i.classList.remove('active'));
-
-        // Set active state
         element.classList.add('active');
+
         if (label) {
             label.textContent = value;
         }
@@ -90,18 +85,15 @@ class ShowSortManager {
             return;
         }
 
-        // Toggle dropdown open/close
         sortDropdown.addEventListener('click', (e) => {
             e.stopPropagation();
             sortDropdown.classList.toggle('open');
         });
 
-        // Close on click outside
         document.addEventListener('click', () => {
             sortDropdown.classList.remove('open');
         });
 
-        // Handle item clicks
         sortDropdown.querySelectorAll('.dropdown-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -117,33 +109,60 @@ class ShowSortManager {
      * @param {HTMLElement} element - Dropdown item element
      */
     handleCustomSort(key, element) {
-        // Reset other keys state
-        Object.keys(this.sortState).forEach(k => {
-            if (k !== key) this.sortState[k] = 0;
-        });
-
-        // Cycle state: 0 -> 1 (Asc) -> 2 (Desc) -> 0 (Default)
-        this.sortState[key] = (this.sortState[key] + 1) % 3;
-        const state = this.sortState[key];
-
-        // Update visuals
-        this.updateSortVisuals(key, state, element);
-
-        // Trigger change callback
+        this._resetOtherSortKeys(key);
+        this._cycleSortState(key);
+        this.updateSortVisuals(key, this.sortState[key], element);
         this.triggerChange();
     }
 
     /**
-     * Update sort dropdown visuals
+     * 重置其他排序键的状态
+     * @private
+     * @param {string} currentKey - 当前激活的键
+     */
+    _resetOtherSortKeys(currentKey) {
+        Object.keys(this.sortState).forEach(k => {
+            if (k !== currentKey) {
+                this.sortState[k] = 0;
+            }
+        });
+    }
+
+    /**
+     * 循环切换排序状态
+     * @private
+     * @param {string} key - 排序键
+     */
+    _cycleSortState(key) {
+        this.sortState[key] = (this.sortState[key] + 1) % 3;
+    }
+
+    /**
+     * Update sort dropdown visuals using Strategy Pattern
      * @param {string} key - Sort key
      * @param {number} state - Sort state (0, 1, 2)
      * @param {HTMLElement} element - Active element
      */
     updateSortVisuals(key, state, element) {
-        const label = document.getElementById('current-sort-label');
-        const items = document.querySelectorAll('.dropdown-item');
+        // 获取对应状态的策略
+        const strategy = window.SortStateStrategy.getStrategy(state);
 
-        // Reset visual state of all items
+        // 重置所有项的视觉状态
+        this._resetAllSortItemsVisuals();
+
+        // 使用策略更新排序模式
+        this.sortMode = state === 0 ? strategy.getSortMode() : strategy.getSortMode(key);
+
+        // 使用策略更新 UI
+        this._applySortStrategy(strategy, key, element);
+    }
+
+    /**
+     * 重置所有排序项的视觉状态
+     * @private
+     */
+    _resetAllSortItemsVisuals() {
+        const items = document.querySelectorAll('.dropdown-item');
         items.forEach(i => {
             i.classList.remove('active');
             const icon = i.querySelector('.sort-state-icon');
@@ -151,45 +170,31 @@ class ShowSortManager {
                 icon.textContent = '';
             }
         });
-
-        if (state === 1) {
-            // Ascending
-            this.sortMode = `${key}-asc`;
-            element.classList.add('active');
-            const icon = element.querySelector('.sort-state-icon');
-            if (icon) {
-                icon.textContent = '↑';
-            }
-            if (label) {
-                label.textContent = `${this.capitalize(key)} (Asc)`;
-            }
-        } else if (state === 2) {
-            // Descending
-            this.sortMode = `${key}-desc`;
-            element.classList.add('active');
-            const icon = element.querySelector('.sort-state-icon');
-            if (icon) {
-                icon.textContent = '↓';
-            }
-            if (label) {
-                label.textContent = `${this.capitalize(key)} (Desc)`;
-            }
-        } else {
-            // Default
-            this.sortMode = 'default';
-            if (label) {
-                label.textContent = 'Default';
-            }
-        }
     }
 
     /**
-     * Capitalize first letter of string
-     * @param {string} s - String to capitalize
-     * @returns {string} Capitalized string
+     * 应用策略来更新 UI
+     * @private
+     * @param {Object} strategy - 排序策略对象
+     * @param {string} key - 排序键
+     * @param {HTMLElement} element - 当前元素
      */
-    capitalize(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
+    _applySortStrategy(strategy, key, element) {
+        const label = document.getElementById('current-sort-label');
+
+        // 更新标签文本
+        if (label) {
+            label.textContent = strategy.getLabelText(key);
+        }
+
+        // 如果策略是激活状态，更新元素
+        if (strategy.isActive() && element) {
+            element.classList.add('active');
+            const icon = element.querySelector('.sort-state-icon');
+            if (icon) {
+                icon.textContent = strategy.getIconText();
+            }
+        }
     }
 
     /**
@@ -244,13 +249,11 @@ class ShowSortManager {
     setItemsPerPage(value) {
         this.itemsPerPage = value;
 
-        // Update UI
         const label = document.getElementById('current-show-label');
         if (label) {
             label.textContent = value;
         }
 
-        // Update active state
         const items = document.querySelectorAll('#show-dropdown .dropdown-item');
         items.forEach(item => {
             if (parseInt(item.dataset.value) === value) {
@@ -272,15 +275,12 @@ class ShowSortManager {
             return;
         }
 
-        // Reset all states
         Object.keys(this.sortState).forEach(k => {
             this.sortState[k] = 0;
         });
 
-        // Set state for key: 1 for asc, 2 for desc
         this.sortState[key] = order === 'asc' ? 1 : 2;
 
-        // Find the element
         const sortDropdown = document.getElementById('sort-dropdown');
         if (!sortDropdown) return;
 
@@ -292,21 +292,15 @@ class ShowSortManager {
 
     /**
      * Reset all settings to defaults (for Clear All functionality)
-     * Resets itemsPerPage to 16 and sort to default
      */
     resetToDefaults() {
-        // Reset items per page to default (16)
         this.setItemsPerPage(16);
-
-        // Reset sort to default
         this.resetSort();
-
-        // Trigger change to update display
         this.triggerChange();
     }
 }
 
+// 导出到全局命名空间（保持原接口名称）
 if (typeof window !== 'undefined') {
     window.ShowSortManager = ShowSortManager;
 }
-
