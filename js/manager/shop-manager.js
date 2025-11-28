@@ -1,8 +1,6 @@
 /**
  * Shop Manager
  * Central controller for shop page
- * Aggregates toolbar, highlighting, and paging managers
- * Supports state restoration when navigating back from cart/checkout
  */
 class ShopManager {
     constructor() {
@@ -13,98 +11,142 @@ class ShopManager {
 
         this.searchKeyword = '';
         this.initialCategory = null;
-        this.shouldResetPage = false; // Flag to control page reset
+        this.shouldResetPage = false;
 
         this.isInitialized = false;
-
-        // Navigation state manager for state restoration
         this.navStateManager = new NavigationStateManager();
     }
 
     async init() {
         if (this.isInitialized) return;
 
-        // Check if we should restore previous shop state
-        const shouldRestore = this.navStateManager.shouldRestoreShopState() ||
-                             this.navStateManager.checkShopNavigationMarker();
+        // 1. 检查和获取恢复状态
+        const savedState = this._checkAndGetSavedState();
 
-        let savedState = null;
-        if (shouldRestore) {
-            savedState = this.navStateManager.getShopState();
-        }
+        // 2. 获取传统的搜索和分类参数
+        this._loadLegacyParams();
 
-        // Get search keyword and category (legacy support)
-        this.searchKeyword = localStorage.getItem('shop_search_query') || '';
-        this.initialCategory = localStorage.getItem('shop_filter_category') || null;
+        // 3. 初始化核心组件
+        await this._initializeCoreComponents();
 
-        // Clear temporary storage
-        localStorage.removeItem('shop_search_query');
+        // 4. 恢复状态或应用初始过滤器
+        await this._applyInitialState(savedState);
 
-        // 1. Initialize repository and load data
-        this.repo = new ProductRepository();
-        await this.repo.getDataLoader().loadAll();
+        // 5. 绑定全局事件监听
+        this._bindGlobalEvents();
 
-        // 2. Initialize toolbar (aggregates filter-sidebar, product-filter, show-sort)
-        this.toolbar = new ToolbarManager();
-        this.toolbar.init(() => {
-            this.shouldResetPage = true; // Reset page when filter/sort changes
-            this.executePipeline();
-            // Save state after any change
-            this.saveCurrentState();
-        });
+        // 6. 检查购物车重定向
+        this.checkEmptyCartRedirect();
 
-        // 3. Initialize highlighting manager
-        this.highlighting = new HighlightingManager();
-
-        // 4. Initialize paging manager
-        this.paging = new PagingManager();
-        this.paging.init(() => {
-            this.shouldResetPage = false; // Don't reset page when user clicks page button
-            this.executePipeline();
-            // Save state after page change
-            this.saveCurrentState();
-        });
-
-        // 5. Restore state or apply initial filters
-        if (savedState) {
-            await this.restoreState(savedState);
-        } else if (this.searchKeyword || this.initialCategory) {
-            // Legacy restoration
-            if (this.searchKeyword) {
-                this.highlighting.setKeyword(this.searchKeyword);
-                this.toolbar.setSearchKeyword(this.searchKeyword);
-                const searchInput = document.getElementById('global-search-input');
-                if (searchInput) {
-                    searchInput.value = this.searchKeyword;
-                }
-            }
-
-            if (this.initialCategory) {
-                this.toolbar.setCategory(this.initialCategory);
-            } else {
-                this.executePipeline();
-            }
-        } else {
-            this.executePipeline();
-        }
+        // 7. 保存初始状态
+        this.saveCurrentState();
 
         this.isInitialized = true;
         console.log('✓ Shop Manager initialized');
-
-        // Listen for Clear All event from filter sidebar
-        document.addEventListener('filterClearAll', () => {
-            this.handleClearAll();
-        });
-
-        // Check if redirected from empty cart
-        this.checkEmptyCartRedirect();
-
-        // Save initial state
-        this.saveCurrentState();
     }
 
     /**
-     * Save current shop state to session storage
+     * 检查并获取保存的状态
+     * @private
+     * @returns {Object|null}
+     */
+    _checkAndGetSavedState() {
+        const shouldRestore = this.navStateManager.shouldRestoreShopState() ||
+            this.navStateManager.checkShopNavigationMarker();
+
+        return shouldRestore ? this.navStateManager.getShopState() : null;
+    }
+
+    /**
+     * 加载传统的 localStorage 参数（向后兼容）
+     * @private
+     */
+    _loadLegacyParams() {
+        this.searchKeyword = localStorage.getItem('shop_search_query') || '';
+        this.initialCategory = localStorage.getItem('shop_filter_category') || null;
+
+        // 清理临时存储
+        localStorage.removeItem('shop_search_query');
+    }
+
+    /**
+     * 初始化核心组件（仓库、工具栏、高亮、分页）
+     * @private
+     */
+    async _initializeCoreComponents() {
+        // 初始化产品仓库并加载数据
+        this.repo = new ProductRepository();
+        await this.repo.getDataLoader().loadAll();
+
+        // 初始化工具栏
+        this.toolbar = new ToolbarManager();
+        this.toolbar.init(() => {
+            this.shouldResetPage = true;
+            this.executePipeline();
+            this.saveCurrentState();
+        });
+
+        // 初始化高亮管理器
+        this.highlighting = new HighlightingManager();
+
+        // 初始化分页管理器
+        this.paging = new PagingManager();
+        this.paging.init(() => {
+            this.shouldResetPage = false;
+            this.executePipeline();
+            this.saveCurrentState();
+        });
+    }
+
+    /**
+     * 应用初始状态（恢复或使用传统参数）
+     * @private
+     * @param {Object|null} savedState
+     */
+    async _applyInitialState(savedState) {
+        if (savedState) {
+            await this.restoreState(savedState);
+        } else if (this.searchKeyword || this.initialCategory) {
+            this._applyLegacyFilters();
+        } else {
+            this.executePipeline();
+        }
+    }
+
+    /**
+     * 应用传统过滤器（搜索关键词和分类）
+     * @private
+     */
+    _applyLegacyFilters() {
+        if (this.searchKeyword) {
+            this.highlighting.setKeyword(this.searchKeyword);
+            this.toolbar.setSearchKeyword(this.searchKeyword);
+
+            const searchInput = document.getElementById('global-search-input');
+            if (searchInput) {
+                searchInput.value = this.searchKeyword;
+            }
+        }
+
+        if (this.initialCategory) {
+            this.toolbar.setCategory(this.initialCategory);
+        } else {
+            this.executePipeline();
+        }
+    }
+
+    /**
+     * 绑定全局事件监听器
+     * @private
+     */
+    _bindGlobalEvents() {
+        document.addEventListener('filterClearAll', () => {
+            this.handleClearAll();
+        });
+    }
+
+    /**
+     * 保存当前商店状态到 session storage
      */
     saveCurrentState() {
         try {
@@ -124,7 +166,6 @@ class ShopManager {
 
             this.navStateManager.saveShopState(state);
 
-            // Update filter count display
             if (this.toolbar) {
                 this.toolbar.updateFilterCount();
             }
@@ -134,80 +175,119 @@ class ShopManager {
     }
 
     /**
-     * Restore shop state from saved data
-     * @param {Object} state - Saved state object
+     * 从保存的数据恢复商店状态
+     * @param {Object} state - 保存的状态对象
      */
     async restoreState(state) {
         console.log('🔄 Restoring shop state...');
 
         try {
-            // Restore search keyword
-            if (state.searchKeyword) {
-                this.searchKeyword = state.searchKeyword;
-                this.highlighting.setKeyword(state.searchKeyword);
-                this.toolbar.setSearchKeyword(state.searchKeyword);
+            this._restoreSearchKeyword(state);
+            this._restoreFilters(state);
+            this._restoreShowSortSettings(state);
+            this._restoreCurrentPage(state);
 
-                const searchInput = document.getElementById('global-search-input');
-                if (searchInput) {
-                    searchInput.value = state.searchKeyword;
-                }
-            }
-
-            // Restore filters
-            if (state.categories && state.categories.length > 0) {
-                this.toolbar.getFilterSidebar().restoreCategories(state.categories);
-            }
-
-            if (state.priceRange) {
-                this.toolbar.getFilterSidebar().restorePriceRange(state.priceRange.min, state.priceRange.max);
-            }
-
-            if (state.ratingRange) {
-                this.toolbar.getFilterSidebar().restoreRatingRange(state.ratingRange.min, state.ratingRange.max);
-            }
-
-            if (state.dateRange && (state.dateRange.from || state.dateRange.to)) {
-                this.toolbar.getFilterSidebar().restoreDateRange(state.dateRange.from, state.dateRange.to);
-            }
-
-            // Restore show/sort settings
-            if (state.itemsPerPage) {
-                this.toolbar.getShowSort().setItemsPerPage(state.itemsPerPage);
-            }
-
-            if (state.sorting && state.sorting.key) {
-                this.toolbar.getShowSort().setSorting(state.sorting.key, state.sorting.order);
-            }
-
-            // Set current page (will be used in render)
-            if (state.currentPage) {
-                this.paging.setCurrentPage(state.currentPage);
-            }
-
-            // Execute pipeline without resetting page
+            // 执行管道，不重置页码
             this.shouldResetPage = false;
             this.executePipeline();
 
-            // Update filter count display
+            // 更新过滤器计数显示
             if (this.toolbar) {
                 this.toolbar.updateFilterCount();
             }
 
-            // Show success toast
-            if (window.toast) {
-                window.toast.show('Previous shop state restored successfully!', 'success', 3000);
-            }
+            this._showRestoreSuccessToast();
 
             console.log('✓ Shop state restored successfully');
         } catch (e) {
             console.error('Failed to restore shop state:', e);
-            // Fallback to default execution
-            this.executePipeline();
+            this.executePipeline(); // 降级处理
         }
     }
 
     /**
-     * Check if redirected from empty cart and show welcome message
+     * 恢复搜索关键词
+     * @private
+     * @param {Object} state
+     */
+    _restoreSearchKeyword(state) {
+        if (!state.searchKeyword) return;
+
+        this.searchKeyword = state.searchKeyword;
+        this.highlighting.setKeyword(state.searchKeyword);
+        this.toolbar.setSearchKeyword(state.searchKeyword);
+
+        const searchInput = document.getElementById('global-search-input');
+        if (searchInput) {
+            searchInput.value = state.searchKeyword;
+        }
+    }
+
+    /**
+     * 恢复过滤器（分类、价格、评分、日期范围）
+     * @private
+     * @param {Object} state
+     */
+    _restoreFilters(state) {
+        const filterSidebar = this.toolbar.getFilterSidebar();
+
+        if (state.categories && state.categories.length > 0) {
+            filterSidebar.restoreCategories(state.categories);
+        }
+
+        if (state.priceRange) {
+            filterSidebar.restorePriceRange(state.priceRange.min, state.priceRange.max);
+        }
+
+        if (state.ratingRange) {
+            filterSidebar.restoreRatingRange(state.ratingRange.min, state.ratingRange.max);
+        }
+
+        if (state.dateRange && (state.dateRange.from || state.dateRange.to)) {
+            filterSidebar.restoreDateRange(state.dateRange.from, state.dateRange.to);
+        }
+    }
+
+    /**
+     * 恢复显示和排序设置
+     * @private
+     * @param {Object} state
+     */
+    _restoreShowSortSettings(state) {
+        const showSort = this.toolbar.getShowSort();
+
+        if (state.itemsPerPage) {
+            showSort.setItemsPerPage(state.itemsPerPage);
+        }
+
+        if (state.sorting && state.sorting.key) {
+            showSort.setSorting(state.sorting.key, state.sorting.order);
+        }
+    }
+
+    /**
+     * 恢复当前页码
+     * @private
+     * @param {Object} state
+     */
+    _restoreCurrentPage(state) {
+        if (state.currentPage) {
+            this.paging.setCurrentPage(state.currentPage);
+        }
+    }
+
+    /**
+     * 显示恢复成功的提示
+     * @private
+     */
+    _showRestoreSuccessToast() {
+        if (window.toast) {
+            window.toast.show('Previous shop state restored successfully!', 'success', 3000);
+        }
+    }
+
+    /**
+     * 检查是否从空购物车重定向并显示欢迎消息
      */
     checkEmptyCartRedirect() {
         const redirectFlag = sessionStorage.getItem('cart_empty_redirect');
@@ -220,71 +300,53 @@ class ShopManager {
     }
 
     /**
-     * Handle Clear All button click
-     * Resets filters, show settings, sort, and search keyword to defaults
+     * 处理 Clear All 按钮点击
+     * 重置过滤器、显示设置、排序和搜索关键词为默认值
      */
     handleClearAll() {
-        // Clear search keyword
         this.searchKeyword = '';
         this.toolbar.setSearchKeyword('');
         this.highlighting.setKeyword('');
 
-        // Reset show/sort settings
         if (this.toolbar.getShowSort()) {
             this.toolbar.getShowSort().resetToDefaults();
         }
 
-        // Reset page to 1
         this.shouldResetPage = true;
-
-        // Execute pipeline to refresh display
         this.executePipeline();
-
-        // Save cleared state
         this.saveCurrentState();
     }
 
     /**
-     * Execute filter → sort → render pipeline
+     * 执行过滤 → 排序 → 渲染管道
      */
     executePipeline() {
         const allProducts = this.repo.getDataLoader().allProducts;
-
-        // Apply filters through toolbar
         const filtered = this.toolbar.applyFilters(allProducts);
-
-        // Apply sorting through toolbar
         const sorted = this.toolbar.applySorting(filtered);
-
-        // Render products
         this.render(sorted);
     }
 
-
     /**
-     * Render products with pagination and highlighting
-     * @param {Array} products - Filtered and sorted products
+     * 渲染产品（带分页和高亮）
+     * @param {Array} products - 已过滤和排序的产品
      */
     render(products) {
         const total = products.length;
         const itemsPerPage = this.toolbar.getItemsPerPage();
 
-        // Configure paging - reset to page 1 if filter/sort changed, otherwise preserve current page
         const currentPage = this.shouldResetPage ? 1 : this.paging.getCurrentPage();
         this.paging.setConfig(total, itemsPerPage, currentPage);
-        this.shouldResetPage = false; // Reset flag after use
+        this.shouldResetPage = false;
 
-        // Get page slice
         const { start, end } = this.paging.getPageSlice();
         const pageProducts = products.slice(start, end);
 
-        // Update results text
         const resultsText = document.getElementById('showing-results-text');
         if (resultsText) {
             resultsText.textContent = this.paging.getDisplayText();
         }
 
-        // Render product cards
         const container = document.getElementById('shop-product-grid');
         if (container) {
             container.innerHTML = '';
@@ -295,13 +357,11 @@ class ShopManager {
                 container.appendChild(card);
             });
 
-            // Apply highlighting if there's a search keyword
             if (this.searchKeyword) {
                 this.highlighting.highlightInContainer('#shop-product-grid');
             }
         }
 
-        // Render pagination controls
         this.paging.render('#pagination-container');
     }
 }
