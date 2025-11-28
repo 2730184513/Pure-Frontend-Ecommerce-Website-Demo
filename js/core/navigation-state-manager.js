@@ -69,60 +69,85 @@ class NavigationStateManager {
 
         let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
 
-        // For cart page
         if (currentPage === 'cart.html') {
-            // Check if returning from checkout
-            const returningFromCheckout = sessionStorage.getItem('returning_from_checkout') === 'true';
+            breadcrumb = this._buildCartBreadcrumb(referrerPage, pageNames);
+        } else if (currentPage === 'checkout.html') {
+            breadcrumb = this._buildCheckoutBreadcrumb(referrerPage, pageNames);
+        } else if (pageNames[currentPage] && currentPage !== 'index.html') {
+            breadcrumb.push({text: pageNames[currentPage]});
+        }
 
-            if (returningFromCheckout) {
-                // Restore previous breadcrumb path (before checkout)
-                // NOTE: Do NOT remove the flag here - let cart-manager handle it after restoring selections
-                const savedPath = this.getBreadcrumbPath();
+        return breadcrumb;
+    }
 
-                if (savedPath && savedPath.page === 'cart.html') {
-                    breadcrumb = savedPath.breadcrumb;
-                } else {
-                    // Fallback: build from referrer
-                    if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && referrerPage !== 'checkout.html' && pageNames[referrerPage]) {
-                        breadcrumb.push({text: pageNames[referrerPage], href: `/201-project/${referrerPage}`});
-                    }
-                    breadcrumb.push({text: 'Cart'});
-                }
+    /**
+     * 专门处理 Cart 页面的面包屑逻辑
+     * @private
+     * @param {string} referrerPage
+     * @param {Object} pageNames
+     * @returns {Array}
+     */
+    _buildCartBreadcrumb(referrerPage, pageNames) {
+        let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
+        const returningFromCheckout = sessionStorage.getItem('returning_from_checkout') === 'true';
+        if (returningFromCheckout) {
+            const savedPath = this.getBreadcrumbPath();
+            if (savedPath && savedPath.page === 'cart.html') {
+                breadcrumb = savedPath.breadcrumb;
             } else {
-                // Normal navigation to cart
-                if (referrerPage && referrerPage !== 'index.html' && referrerPage !== 'cart.html' && referrerPage !== 'checkout.html' && pageNames[referrerPage]) {
+                if (
+                    referrerPage &&
+                    referrerPage !== 'index.html' &&
+                    referrerPage !== 'cart.html' &&
+                    referrerPage !== 'checkout.html' &&
+                    pageNames[referrerPage]
+                ) {
                     breadcrumb.push({text: pageNames[referrerPage], href: `/201-project/${referrerPage}`});
                 }
                 breadcrumb.push({text: 'Cart'});
             }
-
-            // Save cart breadcrumb for checkout to inherit
-            this.saveBreadcrumbPath('cart.html', breadcrumb);
-        }
-        // For checkout page
-        else if (currentPage === 'checkout.html') {
-            const savedPath = this.getBreadcrumbPath();
-
-            if (savedPath && savedPath.page === 'cart.html' && referrerPage === 'cart.html') {
-                // Inherit full breadcrumb from cart
-                breadcrumb = JSON.parse(JSON.stringify(savedPath.breadcrumb));
-                // Make cart clickable
-                const lastItem = breadcrumb[breadcrumb.length - 1];
-                if (lastItem && lastItem.text === 'Cart') {
-                    lastItem.href = '/201-project/cart.html';
-                }
-            } else {
-                // Fallback
-                breadcrumb = [{text: 'Home', href: '/201-project/index.html'}, {text: 'Cart', href: '/201-project/cart.html'}];
+        } else {
+            if (
+                referrerPage &&
+                referrerPage !== 'index.html' &&
+                referrerPage !== 'cart.html' &&
+                referrerPage !== 'checkout.html' &&
+                pageNames[referrerPage]
+            ) {
+                breadcrumb.push({text: pageNames[referrerPage], href: `/201-project/${referrerPage}`});
             }
-
-            breadcrumb.push({text: 'Checkout'});
+            breadcrumb.push({text: 'Cart'});
         }
-        // For other pages
-        else if (pageNames[currentPage] && currentPage !== 'index.html') {
-            breadcrumb.push({text: pageNames[currentPage]});
-        }
+        // 保存以便 checkout 继承
+        this.saveBreadcrumbPath('cart.html', breadcrumb);
+        return breadcrumb;
+    }
 
+    /**
+     * 专门处理 Checkout 页面的面包屑逻辑
+     * @private
+     * @param {string} referrerPage
+     * @param {Object} pageNames
+     * @returns {Array}
+     */
+    _buildCheckoutBreadcrumb(referrerPage, pageNames) {
+        let breadcrumb = [];
+        const savedPath = this.getBreadcrumbPath();
+        if (savedPath && savedPath.page === 'cart.html' && referrerPage === 'cart.html') {
+            // 继承 Cart 页路径
+            breadcrumb = JSON.parse(JSON.stringify(savedPath.breadcrumb));
+            // 让 Cart 可点击
+            const lastItem = breadcrumb[breadcrumb.length - 1];
+            if (lastItem && lastItem.text === 'Cart') {
+                lastItem.href = '/201-project/cart.html';
+            }
+        } else {
+            breadcrumb = [
+                {text: 'Home', href: '/201-project/index.html'},
+                {text: 'Cart', href: '/201-project/cart.html'}
+            ];
+        }
+        breadcrumb.push({text: 'Checkout'});
         return breadcrumb;
     }
 
