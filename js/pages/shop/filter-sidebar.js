@@ -6,7 +6,8 @@ class FilterSidebar {
         this.containerId = 'filter-sidebar';
         this.toggleBtnId = 'filter-toggle-btn';
         this.layoutId = 'shop-layout';
-        this.onFilterChange = options.onFilterChange || (() => {});
+        this.onFilterChange = options.onFilterChange || (() => {
+        });
         this.init();
     }
 
@@ -39,8 +40,6 @@ class FilterSidebar {
             }
         });
     }
-    // ... (其余方法 Slider, Date Picker, getFilterValues 保持不变，见上一次回答) ...
-    // (务必保留 getFilterValues 和 initSliders 等核心逻辑)
 
     bindCategoryEvents() {
         const checkboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
@@ -64,56 +63,126 @@ class FilterSidebar {
         });
     }
 
+    /**
+     * 设置双向滑块（价格或评分范围）
+     * @param {Object} config - 滑块配置对象
+     */
     setupDualSlider(config) {
+        const elements = this._getDualSliderElements(config);
+        if (!elements) return;
+
+        const {minR, maxR, minI, maxI, track} = elements;
+        const minGap = config.maxVal * 0.05;
+
+        // 更新轨道视觉效果的函数
+        const updateTrack = () => this._updateSliderTrack(minR, maxR, track, config.maxVal);
+
+        // 绑定滑块输入事件
+        this._bindSliderRangeEvents(minR, maxR, minI, maxI, minGap, updateTrack);
+
+        // 绑定数字输入框事件
+        this._bindSliderInputEvents(minR, maxR, minI, maxI, minGap, config.maxVal, updateTrack);
+
+        // 初始化轨道显示
+        updateTrack();
+    }
+
+    /**
+     * 获取双向滑块的所有 DOM 元素
+     * @private
+     * @param {Object} config
+     * @returns {Object|null} 包含所有元素的对象或 null
+     */
+    _getDualSliderElements(config) {
         const minR = document.getElementById(config.minRangeId);
         const maxR = document.getElementById(config.maxRangeId);
         const minI = document.getElementById(config.minInputId);
         const maxI = document.getElementById(config.maxInputId);
         const track = document.getElementById(config.trackId);
-        const minGap = config.maxVal * 0.05;
 
-        if (!minR || !maxR || !minI || !maxI || !track) return;
+        if (!minR || !maxR || !minI || !maxI || !track) {
+            return null;
+        }
 
-        const updateTrack = () => {
-            const minV = parseFloat(minR.value);
-            const maxV = parseFloat(maxR.value);
-            const percent1 = (minV / config.maxVal) * 100;
-            const percent2 = (maxV / config.maxVal) * 100;
-            track.style.background = `linear-gradient(to right, #ddd ${percent1}%, var(--primary-color) ${percent1}%, var(--primary-color) ${percent2}%, #ddd ${percent2}%)`;
-        };
+        return {minR, maxR, minI, maxI, track};
+    }
 
+    /**
+     * 更新滑块轨道的视觉效果
+     * @private
+     */
+    _updateSliderTrack(minRange, maxRange, track, maxVal) {
+        const minV = parseFloat(minRange.value);
+        const maxV = parseFloat(maxRange.value);
+        const percent1 = (minV / maxVal) * 100;
+        const percent2 = (maxV / maxVal) * 100;
+        track.style.background = `linear-gradient(to right, #ddd ${percent1}%, var(--primary-color) ${percent1}%, var(--primary-color) ${percent2}%, #ddd ${percent2}%)`;
+    }
+
+    /**
+     * 绑定滑块范围输入事件（拖动滑块）
+     * @private
+     */
+    _bindSliderRangeEvents(minR, maxR, minI, maxI, minGap, updateTrack) {
         const onSliderInput = (isMin) => {
             let minV = parseFloat(minR.value);
             let maxV = parseFloat(maxR.value);
+
+            // 保持最小间隔
             if (maxV - minV <= minGap) {
-                if (isMin) minR.value = maxV - minGap;
-                else maxR.value = minV + minGap;
+                if (isMin) {
+                    minR.value = maxV - minGap;
+                } else {
+                    maxR.value = minV + minGap;
+                }
             }
+
+            // 同步输入框
             minI.value = minR.value;
             maxI.value = maxR.value;
+
             updateTrack();
             this.triggerChange();
         };
 
         minR.addEventListener('input', () => onSliderInput(true));
         maxR.addEventListener('input', () => onSliderInput(false));
+    }
 
+    /**
+     * 绑定滑块数字输入框事件
+     * @private
+     */
+    _bindSliderInputEvents(minR, maxR, minI, maxI, minGap, maxVal, updateTrack) {
         minI.addEventListener('change', () => {
             let val = parseFloat(minI.value);
             if (val < 0) val = 0;
-            if (val > parseFloat(maxR.value) - minGap) val = parseFloat(maxR.value) - minGap;
-            minR.value = val; minI.value = val; updateTrack(); this.triggerChange();
+            if (val > parseFloat(maxR.value) - minGap) {
+                val = parseFloat(maxR.value) - minGap;
+            }
+            minR.value = val;
+            minI.value = val;
+            updateTrack();
+            this.triggerChange();
         });
 
         maxI.addEventListener('change', () => {
             let val = parseFloat(maxI.value);
-            if (val > config.maxVal) val = config.maxVal;
-            if (val < parseFloat(minR.value) + minGap) val = parseFloat(minR.value) + minGap;
-            maxR.value = val; maxI.value = val; updateTrack(); this.triggerChange();
+            if (val > maxVal) val = maxVal;
+            if (val < parseFloat(minR.value) + minGap) {
+                val = parseFloat(minR.value) + minGap;
+            }
+            maxR.value = val;
+            maxI.value = val;
+            updateTrack();
+            this.triggerChange();
         });
-        updateTrack();
     }
 
+    /**
+     * 初始化日期选择器
+     * 注意：handle*** 函数依赖闭包捕获特定的 DOM 元素，保持内联以避免增加复杂度
+     */
     initDatePickers() {
         const fromInput = document.getElementById('date-from');
         const toInput = document.getElementById('date-to');
@@ -141,7 +210,6 @@ class FilterSidebar {
 
         const handleClick = (e) => {
             e.stopPropagation();
-            // Prevent the click from triggering on other elements
         };
 
         const handleMouseDown = (e) => {
@@ -149,7 +217,7 @@ class FilterSidebar {
         };
 
         [fromInput, toInput].forEach(input => {
-            if(!input) return;
+            if (!input) return;
             input.type = 'text';
 
             // Remove any existing listeners to prevent duplicates
@@ -187,9 +255,9 @@ class FilterSidebar {
 
         return {
             categories: checkedCats,
-            priceRange: { min: minP, max: maxP },
-            ratingRange: { min: minR, max: maxR },
-            dateRange: { from: dFrom, to: dTo }
+            priceRange: {min: minP, max: maxP},
+            ratingRange: {min: minR, max: maxR},
+            dateRange: {from: dFrom, to: dTo}
         };
     }
 
@@ -206,11 +274,9 @@ class FilterSidebar {
      * @param {Array} categories - Array of category values to check
      */
     restoreCategories(categories) {
-        // First uncheck all
         const allCheckboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
         allCheckboxes.forEach(cb => cb.checked = false);
 
-        // Then check the selected ones
         categories.forEach(category => {
             const cb = this.sidebar.querySelector(`.category-options input[value="${category}"]`);
             if (cb) {
@@ -237,7 +303,6 @@ class FilterSidebar {
             minInput.value = min;
             maxInput.value = max;
 
-            // Update track visual
             const percent1 = (min / 10000) * 100;
             const percent2 = (max / 10000) * 100;
             track.style.background = `linear-gradient(to right, #ddd ${percent1}%, var(--primary-color) ${percent1}%, var(--primary-color) ${percent2}%, #ddd ${percent2}%)`;
@@ -262,7 +327,6 @@ class FilterSidebar {
             minInput.value = min;
             maxInput.value = max;
 
-            // Update track visual
             const percent1 = (min / 5) * 100;
             const percent2 = (max / 5) * 100;
             track.style.background = `linear-gradient(to right, #ddd ${percent1}%, var(--primary-color) ${percent1}%, var(--primary-color) ${percent2}%, #ddd ${percent2}%)`;
@@ -291,37 +355,24 @@ class FilterSidebar {
 
     /**
      * Get count of active filters
-     * Returns count based on:
-     * - Each selected category = 1 filter
-     * - Price min != 0 = 1 filter
-     * - Price max != 10000 = 1 filter
-     * - Rating min != 0 = 1 filter
-     * - Rating max != 5 = 1 filter
-     * - Date from set = 1 filter
-     * - Date to set = 1 filter
-     * Max possible: 4 + 2 + 2 + 2 = 10
      * @returns {number} Active filter count
      */
     getActiveFilterCount() {
         let count = 0;
 
-        // Count selected categories
         const checkedCats = this.sidebar.querySelectorAll('.category-options input:checked');
         count += checkedCats.length;
 
-        // Count price filters
         const priceMin = parseFloat(document.getElementById('price-min-input').value) || 0;
         const priceMax = parseFloat(document.getElementById('price-max-input').value) || 10000;
         if (priceMin > 0) count++;
         if (priceMax < 10000) count++;
 
-        // Count rating filters
         const rateMin = parseFloat(document.getElementById('rate-min-input').value) || 0;
         const rateMax = parseFloat(document.getElementById('rate-max-input').value) || 5;
         if (rateMin > 0) count++;
         if (rateMax < 5) count++;
 
-        // Count date filters
         const dateFrom = document.getElementById('date-from').value;
         const dateTo = document.getElementById('date-to').value;
         if (dateFrom) count++;
@@ -345,20 +396,14 @@ class FilterSidebar {
 
     /**
      * Clear all filters and reset to default state
-     * This includes categories, price, rating, dates, and also clears show/sort/keyword
      */
     clearAll() {
-        // Clear categories
         const checkboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
         checkboxes.forEach(cb => cb.checked = false);
 
-        // Reset price range
         this.restorePriceRange(0, 10000);
-
-        // Reset rating range
         this.restoreRatingRange(0, 5);
 
-        // Reset date range
         const fromInput = document.getElementById('date-from');
         const toInput = document.getElementById('date-to');
         if (fromInput) {
@@ -370,27 +415,24 @@ class FilterSidebar {
             toInput.type = 'text';
         }
 
-        // Clear search keyword
         const searchInput = document.getElementById('global-search-input');
         if (searchInput) {
             searchInput.value = '';
         }
 
-        // Reset show and sort via event dispatch
-        // This will be handled by ShopManager
         const clearEvent = new CustomEvent('filterClearAll');
         document.dispatchEvent(clearEvent);
 
-        // Show success toast
         if (window.toastManager) {
             window.toastManager.show('All filters cleared', 'success', 3000);
         }
 
-        // Trigger change to update the display
         this.triggerChange();
     }
 
-    triggerChange() { this.onFilterChange(); }
+    triggerChange() {
+        this.onFilterChange();
+    }
 }
 
 if (typeof window !== 'undefined') window.FilterSidebar = FilterSidebar;
