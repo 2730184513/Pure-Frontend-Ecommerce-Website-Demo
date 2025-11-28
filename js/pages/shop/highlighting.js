@@ -14,15 +14,6 @@ class HighlightingManager {
     setKeyword(keyword) {
         this.keyword = (keyword || '').toLowerCase();
     }
-
-    /**
-     * Get current keyword
-     * @returns {string}
-     */
-    getKeyword() {
-        return this.keyword;
-    }
-
     /**
      * Highlight keyword in a single card
      * @param {HTMLElement} card - Product card element
@@ -97,19 +88,6 @@ class HighlightingManager {
         if (!cards || cards.length === 0) return;
         cards.forEach(card => this.removeHighlightFromCard(card));
     }
-
-    /**
-     * Remove all highlights from container
-     * @param {string} containerSelector - Container selector
-     */
-    removeHighlightsFromContainer(containerSelector) {
-        const container = document.querySelector(containerSelector);
-        if (!container) return;
-
-        const cards = container.querySelectorAll('.product-card');
-        this.removeHighlightsFromCards(Array.from(cards));
-    }
-
     /**
      * Clear keyword and remove all highlights
      */

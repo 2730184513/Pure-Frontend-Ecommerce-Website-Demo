@@ -7,7 +7,6 @@
 .billing-section {
     background: #fff;
     padding: 35px 75px;
-    border-radius: 8px;
 }
 
 .billing-header {
@@ -107,7 +106,7 @@
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(184, 142, 47, 0.1);
+    box-shadow: 0 0 0 3px rgba(175, 175, 175, 0.1);
 }
 
 .form-group input:disabled,

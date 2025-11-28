@@ -90,24 +90,6 @@ class SearchManager {
         localStorage.setItem('shop_search_query', term);
         window.location.href = 'shop.html';
     }
-
-    /**
-     * Get current search term
-     * @returns {string} Current search term
-     */
-    getSearchTerm() {
-        return this.input ? this.input.value.trim() : '';
-    }
-
-    /**
-     * Set search term
-     * @param {string} term - Search term to set
-     */
-    setSearchTerm(term) {
-        if (this.input) {
-            this.input.value = term;
-        }
-    }
 }
 
 if (typeof window !== 'undefined') {

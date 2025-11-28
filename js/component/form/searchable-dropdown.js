@@ -103,14 +103,6 @@ class SearchableDropdown {
         this.selectedValue = value;
         this.input.value = value;
     }
-
-    /**
-     * 获取选中值
-     */
-    getSelected() {
-        return this.selectedValue;
-    }
-
     /**
      * 重置
      */
@@ -131,20 +123,6 @@ class SearchableDropdown {
      */
     getInputElement() {
         return this.input;
-    }
-
-    /**
-     * 启用
-     */
-    enable() {
-        this.input.disabled = false;
-    }
-
-    /**
-     * 禁用
-     */
-    disable() {
-        this.input.disabled = true;
     }
 }
 

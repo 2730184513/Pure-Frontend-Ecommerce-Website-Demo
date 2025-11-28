@@ -132,24 +132,6 @@ class CartManager {
         // Dispatch event for cart page to sync
         window.dispatchEvent(new CustomEvent('cartUpdated'));
     }
-
-    /**
-     * Clear all cart items
-     */
-    clearCart() {
-        this.cart = [];
-        this.saveCart();
-
-        // Update renderer
-        if (this.dropdownRenderer) {
-            this.dropdownRenderer.updateBadge();
-            this.dropdownRenderer.render();
-        }
-
-        // Dispatch event for cart page to sync
-        window.dispatchEvent(new CustomEvent('cartUpdated'));
-    }
-
     /**
      * Save cart to localStorage
      */
@@ -173,15 +155,6 @@ class CartManager {
     getCount() {
         return this.cart.length;
     }
-
-    /**
-     * Get total quantity (sum of all quantities)
-     * @returns {number} Total quantity
-     */
-    getTotalQuantity() {
-        return this.cart.reduce((sum, item) => sum + item.qty, 0);
-    }
-
     /**
      * Show notification
      * @param {string} message - Message to display

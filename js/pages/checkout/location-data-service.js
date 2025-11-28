@@ -19,8 +19,8 @@ class LocationDataService {
 
         try {
             const [countries, states] = await Promise.all([
-                fetch('data/countries.json').then(r => r.json()),
-                fetch('data/states.json').then(r => r.json())
+                fetch('/201-project/data/countries.json').then(r => r.json()),
+                fetch('/201-project/data/states.json').then(r => r.json())
             ]);
 
             // 构建首字母索引（JSON已排序，无需再次排序）

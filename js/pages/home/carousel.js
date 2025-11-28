@@ -81,11 +81,11 @@ class InspirationsCarousel {
     constructor(config = {}) {
         this.config = {
             images: [
-                { url: 'images/room1.jpg', room: 'Bedroom', name: 'Inner Peace' },
-                { url: 'images/room2.jpg', room: 'Living Room', name: 'Modern Comfort' },
-                { url: 'images/room3.jpg', room: 'Dining Room', name: 'Elegant Space' },
-                { url: 'images/room4.jpg', room: 'Office', name: 'Productive Haven' },
-                { url: 'images/room5.jpg', room: 'Kitchen', name: 'Culinary Bliss' }
+                { url: '/201-project/images/room1.jpg', room: 'Bedroom', name: 'Inner Peace' },
+                { url: '/201-project/images/room2.jpg', room: 'Living Room', name: 'Modern Comfort' },
+                { url: '/201-project/images/room3.jpg', room: 'Dining Room', name: 'Elegant Space' },
+                { url: '/201-project/images/room4.jpg', room: 'Office', name: 'Productive Haven' },
+                { url: '/201-project/images/room5.jpg', room: 'Kitchen', name: 'Culinary Bliss' }
             ],
             visibleSlides: 4,
             ...config

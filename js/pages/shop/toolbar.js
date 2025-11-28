@@ -60,15 +60,6 @@ class ToolbarManager {
     getFilterSidebar() {
         return this.filterSidebar;
     }
-
-    /**
-     * Get product filter
-     * @returns {ProductFilter}
-     */
-    getProductFilter() {
-        return this.productFilter;
-    }
-
     /**
      * Get show-sort manager
      * @returns {ShowSortManager}
@@ -122,18 +113,6 @@ class ToolbarManager {
             sorting: sorting
         };
     }
-
-    /**
-     * Get complete toolbar configuration
-     * @returns {Object} Complete configuration including filters and sort
-     */
-    getCompleteConfig() {
-        return {
-            filter: this.getFilterConfig(),
-            showSort: this.getShowSortConfig()
-        };
-    }
-
     /**
      * Apply filters to products
      * @param {Array} products - Products to filter

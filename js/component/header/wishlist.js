@@ -73,28 +73,12 @@ class WishlistManager {
         this.wishlist = this.wishlist.filter(i => i.id !== productId);
         this.saveWishlist();
     }
-
-    /**
-     * Clear all wishlist items
-     */
-    clearWishlist() {
-        this.wishlist = [];
-        this.saveWishlist();
-
-        // Update renderer
-        if (this.dropdownRenderer) {
-            this.dropdownRenderer.updateBadge();
-            this.dropdownRenderer.render();
-        }
-    }
-
     /**
      * Save wishlist to localStorage
      */
     saveWishlist() {
         localStorage.setItem('furniro_wishlist', JSON.stringify(this.wishlist));
     }
-
 
     /**
      * Get wishlist items

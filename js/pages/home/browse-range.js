@@ -6,7 +6,7 @@ class CategoryRotator {
     constructor(config = {}) {
         this.config = {
             categories: ['dining', 'living', 'bedroom'],
-            imageBasePath: 'images/',
+            imageBasePath: '/201-project/images/',
             imageExtension: '.png',
             totalImagesPerCategory: 3,
             rotationInterval: 5000,

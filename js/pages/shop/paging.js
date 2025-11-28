@@ -53,25 +53,6 @@ class PagingManager {
             this.triggerPageChange();
         }
     }
-
-    /**
-     * Go to next page
-     */
-    nextPage() {
-        if (this.currentPage < this.totalPages) {
-            this.setCurrentPage(this.currentPage + 1);
-        }
-    }
-
-    /**
-     * Go to previous page
-     */
-    prevPage() {
-        if (this.currentPage > 1) {
-            this.setCurrentPage(this.currentPage - 1);
-        }
-    }
-
     /**
      * Get page slice indices
      * @returns {Object} Object with start and end indices
@@ -234,20 +215,6 @@ class PagingManager {
      */
     reset() {
         this.currentPage = 1;
-    }
-
-    /**
-     * Get paging info object
-     * @returns {Object}
-     */
-    getInfo() {
-        return {
-            currentPage: this.currentPage,
-            totalPages: this.totalPages,
-            totalItems: this.totalItems,
-            itemsPerPage: this.itemsPerPage,
-            displayText: this.getDisplayText()
-        };
     }
 }
 

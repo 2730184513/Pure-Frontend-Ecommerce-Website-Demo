@@ -139,14 +139,6 @@ class ProductPopup {
         }
         this.element = null;
     }
-
-    /**
-     * Get the popup element
-     * @returns {HTMLElement|null}
-     */
-    getElement() {
-        return this.element;
-    }
 }
 
 if (typeof window !== 'undefined') {

@@ -304,30 +304,6 @@ class ShopManager {
         // Render pagination controls
         this.paging.render('#pagination-container');
     }
-
-    /**
-     * Get toolbar manager
-     * @returns {ToolbarManager}
-     */
-    getToolbar() {
-        return this.toolbar;
-    }
-
-    /**
-     * Get highlighting manager
-     * @returns {HighlightingManager}
-     */
-    getHighlighting() {
-        return this.highlighting;
-    }
-
-    /**
-     * Get paging manager
-     * @returns {PagingManager}
-     */
-    getPaging() {
-        return this.paging;
-    }
 }
 
 if (typeof window !== 'undefined') {

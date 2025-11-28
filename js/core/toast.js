@@ -86,10 +86,10 @@ class ToastManager {
      */
     getIcon(type) {
         const icons = {
-            success: 'images/icons/success.png',
-            error: 'images/icons/error.png',
-            info: 'images/icons/info.png',
-            warning: 'images/icons/attention.png'
+            success: '/201-project/images/icons/success.png',
+            error: '/201-project/images/icons/error.png',
+            info: '/201-project/images/icons/info.png',
+            warning: '/201-project/images/icons/attention.png'
         };
         return icons[type] || icons.info;
     }
@@ -186,15 +186,6 @@ class ToastManager {
             }
             this.toasts = this.toasts.filter(t => t !== toast);
         }, 300); // Match CSS animation duration
-    }
-
-    /**
-     * Clear all toasts
-     */
-    clearAll() {
-        this.toasts.forEach(toast => this.dismiss(toast));
-        this.toasts = [];
-        this.timers.clear();
     }
 
     /**

@@ -120,12 +120,6 @@ class CartDropdownRenderer {
         this.icon.addEventListener('mouseleave', hideDropdown);
         this.dropdown.addEventListener('mouseleave', hideDropdown);
 
-        // Close on outside click
-        document.addEventListener('click', (e) => {
-            if (!this.dropdown.contains(e.target) && !this.icon.contains(e.target)) {
-                this.dropdown.classList.remove('active');
-            }
-        });
     }
 
     /**
