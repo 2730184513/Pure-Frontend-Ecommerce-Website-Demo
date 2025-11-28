@@ -315,14 +315,6 @@ class ProductCardRenderer {
         this.popups.forEach(popup => popup.destroy());
         this.popups.clear();
     }
-
-    /**
-     * Get container element
-     * @returns {HTMLElement|null} Container element
-     */
-    getContainer() {
-        return this.container;
-    }
 }
 
 // Export
