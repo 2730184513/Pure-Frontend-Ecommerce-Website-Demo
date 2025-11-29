@@ -27,21 +27,42 @@ class FurniroApp {
             [PageUtility.PAGE_IDS.CHECKOUT]: 'checkout'
         };
 
-        // Initialize navigation state manager
-        this.navStateManager = new NavigationStateManager();
+
+        // References to global singletons (will be initialized)
+        this.globalSingletons = {
+            productRepository: null,
+            locationRepository: null,
+            productFilter: null
+        };
     }
 
     /**
      * Get dynamic breadcrumb for current page based on referrer
-     * Uses NavigationStateManager for proper breadcrumb preservation
      * @returns {Array} Breadcrumb array [{text: 'Home', href: 'index.html'}, ...]
      */
     static getDynamicBreadcrumb() {
-        const navManager = new NavigationStateManager();
-        const currentPage = navManager.getCurrentPage();
-        const referrerPage = navManager.getReferrerPage();
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-        return navManager.buildDynamicBreadcrumb(currentPage, referrerPage);
+        // Simple breadcrumb logic without state management
+        const pageNames = {
+            'index.html': 'Home',
+            'shop.html': 'Shop',
+            'cart.html': 'Cart',
+            'checkout.html': 'Checkout'
+        };
+
+        let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
+
+        if (currentPage === 'cart.html') {
+            breadcrumb.push({text: 'Cart'});
+        } else if (currentPage === 'checkout.html') {
+            breadcrumb.push({text: 'Cart', href: '/201-project/cart.html'});
+            breadcrumb.push({text: 'Checkout'});
+        } else if (pageNames[currentPage] && currentPage !== 'index.html') {
+            breadcrumb.push({text: pageNames[currentPage]});
+        }
+
+        return breadcrumb;
     }
 
     /**
@@ -57,21 +78,30 @@ class FurniroApp {
         console.log('🚀 Initializing Furniro Application...');
 
         try {
-            // 1. Load required components (header/footer) for current page
+
+            // 1. Initialize global singletons and load data
+            await this._initializeGlobalSingletons();
+
+            // 2. Load required components (header/footer) for current page
             await this._loadPageComponents();
 
-            // 2. Initialize header manager (which initializes cart manager)
+            // 3. Initialize header manager (which initializes cart manager)
             this._initHeaderManager();
 
-            // 3. Dispatch page-specific logic
+            // 4. Dispatch page-specific logic
             await this._dispatchPageLogic();
+
+            // 5. Expose app instance globally
+            window.FurniroApp = this;
 
             this.isInitialized = true;
             console.log('✓ Furniro Application initialized successfully');
         } catch (error) {
             console.error('✗ Error initializing application:', error);
+            throw error;
         }
     }
+
 
     // ============================================================================
     // Component Loading Methods
@@ -268,6 +298,10 @@ class FurniroApp {
         if (window.ShopManager) {
             this.managers[managerKey] = new ShopManager();
             await this.managers[managerKey].init();
+
+            // Expose shop manager globally for SearchManager to access
+            window.shopManager = this.managers[managerKey];
+
             console.log(`✓ ${pageName} manager initialized`);
         } else {
             console.warn(`${pageName}Manager not found`);
@@ -281,6 +315,78 @@ class FurniroApp {
      */
     _logExternalManagerInit(pageName) {
         console.log(`✓ ${pageName} page detected - manager will be initialized by inline script`);
+    }
+
+    // ============================================================================
+    // Global Singletons Initialization
+    // ============================================================================
+
+    /**
+     * Initialize global singletons and pre-load essential data
+     * @private
+     */
+    async _initializeGlobalSingletons() {
+        console.log('🔧 Initializing global singletons...');
+
+        try {
+            // Verify global singletons are available
+            this._verifyGlobalSingletons();
+
+            // Pre-load data based on page requirements
+            await this._preloadData();
+
+            console.log('✓ Global singletons initialized');
+        } catch (error) {
+            console.error('✗ Error initializing global singletons:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Verify that all required global singletons are available
+     * @private
+     */
+    _verifyGlobalSingletons() {
+        // Check if global singletons exist
+        if (!window.productRepository) {
+            throw new Error('window.productRepository singleton not found');
+        }
+        if (!window.productFilter) {
+            throw new Error('window.productFilter singleton not found');
+        }
+
+        // Store references
+        this.globalSingletons.productRepository = window.productRepository;
+        this.globalSingletons.productFilter = window.productFilter;
+
+        // LocationRepository might not be needed on all pages
+        if (window.locationRepository) {
+            this.globalSingletons.locationRepository = window.locationRepository;
+        }
+
+        console.log('✓ Global singletons verified');
+    }
+
+    /**
+     * Pre-load data based on current page requirements
+     * @private
+     */
+    async _preloadData() {
+        const pageId = PageUtility.getCurrentPageId();
+
+        // Pre-load product data for home and shop pages
+        if (pageId === PageUtility.PAGE_IDS.HOME || pageId === PageUtility.PAGE_IDS.SHOP) {
+            await this.globalSingletons.productRepository.loadAll();
+            console.log('✓ Product data pre-loaded');
+        }
+
+        // Pre-load location data for checkout page
+        if (pageId === PageUtility.PAGE_IDS.CHECKOUT) {
+            if (this.globalSingletons.locationRepository) {
+                await this.globalSingletons.locationRepository.loadData();
+                console.log('✓ Location data pre-loaded');
+            }
+        }
     }
 
     // ============================================================================
@@ -303,6 +409,31 @@ class FurniroApp {
     getAllManagers() {
         return this.managers;
     }
+
+    /**
+     * Get global singleton by name
+     * @param {string} name - Singleton name (productRepository, locationRepository, productFilter)
+     * @returns {Object|null}
+     */
+    getGlobalSingleton(name) {
+        return this.globalSingletons[name] || null;
+    }
+
+    /**
+     * Get all global singletons
+     * @returns {Object}
+     */
+    getAllGlobalSingletons() {
+        return this.globalSingletons;
+    }
+
+    /**
+     * Check if application is fully initialized
+     * @returns {boolean}
+     */
+    isReady() {
+        return this.isInitialized;
+    }
 }
 
 // Bootstrap Application
@@ -316,3 +447,6 @@ if (document.readyState === 'loading') {
 
 // 暴露给全局，以便调试或其他脚本访问
 window.FurniroApp = app;
+
+// 确保可以访问静态方法
+window.FurniroApp.getDynamicBreadcrumb = FurniroApp.getDynamicBreadcrumb;

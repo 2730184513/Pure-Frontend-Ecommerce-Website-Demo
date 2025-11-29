@@ -16,23 +16,11 @@ class NavigationManager {
     }
 
     /**
-     * Bind navigation click events to mark shop navigation
+     * Bind navigation click events (simplified)
      */
     bindNavigationEvents() {
-        const navStateManager = new NavigationStateManager();
-        const links = document.querySelectorAll('.nav-links a');
-
-        links.forEach(link => {
-            const href = link.getAttribute('href');
-
-            // Only intercept shop navigation
-            if (href === 'shop.html') {
-                link.addEventListener('click', () => {
-                    // Mark navigation to shop for state restoration
-                    navStateManager.markShopNavigation();
-                });
-            }
-        });
+        // Navigation events can be handled here if needed in the future
+        // Currently no special handling required
     }
 
     /**

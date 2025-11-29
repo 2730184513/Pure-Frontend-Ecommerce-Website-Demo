@@ -200,17 +200,12 @@ class ComponentLoader {
     }
 
     /**
-     * Attach shop link handler for state restoration
+     * Attach shop link handler (simplified)
      * @param {HTMLElement} link - Link element
      * @private
      */
     static _attachShopLinkHandler(link) {
-        link.addEventListener('click', () => {
-            if (window.NavigationStateManager) {
-                const navStateManager = new NavigationStateManager();
-                navStateManager.markShopNavigation();
-            }
-        });
+        // Shop navigation handler (no state management needed)
     }
 
     /**
