@@ -1,226 +1,177 @@
 /**
- * Product Repository
- * Central data management hub for products
- * Coordinates DataLoader, Renderer, and Filter
+ * Product Repository - Global Singleton
+ * Pure data access layer for products
+ * Provides CRUD operations, query filtering, and sorting functionality
  */
 
 class ProductRepository {
     constructor() {
-        this.dataLoader = new ProductDataLoader();
-        this.filter = new ProductFilter();
-        this.renderer = null;
-        this.currentProducts = [];
-        this.displayedCount = 0;
+        this.products = [];
+        this.dataLoaded = false;
+        this.dataPath = 'data/';
+        this.categories = ['chair', 'lamp', 'sofa', 'table'];
     }
 
     /**
-     * Initialize the repository with a renderer
-     * @param {string} containerSelector - CSS selector for product container
-     */
-    initRenderer(containerSelector) {
-        this.renderer = new ProductCardRenderer(containerSelector);
-        console.log('✓ ProductRepository initialized');
-    }
-
-    /**
-     * Load and display initial products
-     * @param {number} initialCount - Number of products to load initially
+     * Load all product data from JSON files
      * @returns {Promise<void>}
      */
-    async loadInitialProducts(initialCount = 8) {
-        try {
-            const products = await this.dataLoader.loadWithLimit(initialCount, 0);
-            this.currentProducts = products;
-            this.displayedCount = products.length;
-
-            if (this.renderer) {
-                this.renderer.renderCards(products);
-            }
-
-            console.log(`✓ Loaded ${products.length} initial products`);
-        } catch (error) {
-            console.error('✗ Error loading initial products:', error);
+    async loadAll() {
+        if (this.dataLoaded) {
+            return;
         }
-    }
 
-    /**
-     * Load more products (pagination)
-     * @param {number} count - Number of additional products to load
-     * @returns {Promise<number>} Number of products loaded
-     */
-    async loadMore(count = 8) {
         try {
-            const allProducts = await this.dataLoader.loadAll();
-            const nextProducts = allProducts.slice(
-                this.displayedCount,
-                this.displayedCount + count
+            const loadPromises = this.categories.map(category =>
+                this.loadCategoryData(category)
             );
 
-            if (nextProducts.length === 0) {
-                console.log('✓ No more products to load');
-                return 0;
-            }
+            const results = await Promise.all(loadPromises);
+            this.products = results.flat();
+            this.dataLoaded = true;
 
-            this.currentProducts = [...this.currentProducts, ...nextProducts];
-            this.displayedCount += nextProducts.length;
-
-            if (this.renderer) {
-                this.renderer.appendCards(nextProducts);
-            }
-
-            console.log(`✓ Loaded ${nextProducts.length} more products`);
-            return nextProducts.length;
+            console.log(`✓ ProductRepository loaded ${this.products.length} products`);
         } catch (error) {
-            console.error('✗ Error loading more products:', error);
-            return 0;
+            console.error('✗ Error loading product data:', error);
+            throw error;
         }
     }
 
     /**
-     * Apply filters and display filtered products
-     * @returns {Promise<void>}
+     * Load products from a specific category JSON file
+     * @param {string} category - Category name (chair, lamp, sofa, table)
+     * @returns {Promise<Array>} Array of products
      */
-    async applyFilters() {
+    async loadCategoryData(category) {
         try {
-            const allProducts = await this.dataLoader.loadAll();
-            const filtered = this.filter.apply(allProducts);
-            this.currentProducts = filtered;
-            this.displayedCount = filtered.length;
+            const response = await fetch(`${this.dataPath}${category}.json`);
 
-            if (this.renderer) {
-                this.renderer.renderCards(filtered);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${category} data`);
             }
 
-            console.log(`✓ Applied filters, showing ${filtered.length} products`);
+            const data = await response.json();
+            const products = data.products || [];
+
+            // Add category info to each product and generate unique ID
+            return products.map((product, index) => ({
+                ...product,
+                id: `${category}-${index}`,
+                category: category
+            }));
         } catch (error) {
-            console.error('✗ Error applying filters:', error);
+            console.error(`✗ Error loading ${category}:`, error);
+            return [];
         }
     }
 
     /**
-     * Search products by query
-     * @param {string} query - Search query
-     * @returns {Promise<void>}
+     * Get all products (returns a copy to prevent external modification)
+     * @returns {Array} Array of all products
      */
-    async searchProducts(query) {
-        try {
-            const results = await this.dataLoader.searchProducts(query);
-            this.currentProducts = results;
-            this.displayedCount = results.length;
-
-            if (this.renderer) {
-                this.renderer.renderCards(results);
-            }
-
-            console.log(`✓ Search results: ${results.length} products found`);
-        } catch (error) {
-            console.error('✗ Error searching products:', error);
-        }
+    getAll() {
+        return [...this.products];
     }
 
     /**
-     * Load products by category
-     * @param {string} category - Category name
-     * @returns {Promise<void>}
-     */
-    async loadCategory(category) {
-        try {
-            const products = await this.dataLoader.getProductsByCategory(category);
-            this.currentProducts = products;
-            this.displayedCount = products.length;
-
-            if (this.renderer) {
-                this.renderer.renderCards(products);
-            }
-
-            console.log(`✓ Loaded ${products.length} products from ${category}`);
-        } catch (error) {
-            console.error(`✗ Error loading category ${category}:`, error);
-        }
-    }
-
-    /**
-     * Get a single product by ID
+     * Get product by ID
      * @param {string} id - Product ID
-     * @returns {Promise<Object|null>} Product object or null
+     * @returns {Object|null} Product object or null if not found
      */
-    async getProductById(id) {
-        return await this.dataLoader.getProductById(id);
+    getById(id) {
+        return this.products.find(product => product.id === id) || null;
     }
 
     /**
-     * Get filter instance for configuration
-     * @returns {ProductFilter} Filter instance
+     * Query products with filter function
+     * @param {Function} filterFn - Filter function (product) => boolean
+     * @returns {Array} Array of filtered products
      */
-    getFilter() {
-        return this.filter;
+    query(filterFn) {
+        if (typeof filterFn !== 'function') {
+            return this.getAll();
+        }
+        return this.products.filter(filterFn);
     }
 
     /**
-     * Get renderer instance
-     * @returns {ProductCardRenderer|null} Renderer instance
+     * Sort products array
+     * @param {Array} products - Products array to sort
+     * @param {Function} sortFn - Sort function (a, b) => number
+     * @returns {Array} New sorted array (does not modify original)
      */
-    getRenderer() {
-        return this.renderer;
+    sort(products, sortFn) {
+        if (typeof sortFn !== 'function' || !Array.isArray(products)) {
+            return [...products];
+        }
+        return [...products].sort(sortFn);
     }
 
     /**
-     * Get data loader instance
-     * @returns {ProductDataLoader} Data loader instance
+     * Add a product (for future extension)
+     * @param {Object} product - Product object to add
+     * @returns {Object} Added product with generated ID
      */
-    getDataLoader() {
-        return this.dataLoader;
-    }
-
-    /**
-     * Get current displayed products
-     * @returns {Array} Array of current products
-     */
-    getCurrentProducts() {
-        return [...this.currentProducts];
-    }
-
-    /**
-     * Get statistics
-     * @returns {Promise<Object>} Statistics object
-     */
-    async getStats() {
-        const total = await this.dataLoader.getCount();
-        return {
-            totalProducts: total,
-            displayedProducts: this.displayedCount,
-            remainingProducts: total - this.displayedCount
+    add(product) {
+        const newProduct = {
+            ...product,
+            id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
         };
+        this.products.push(newProduct);
+        return newProduct;
     }
 
     /**
-     * Reset to initial state
-     * @returns {Promise<void>}
+     * Update a product (for future extension)
+     * @param {string} id - Product ID
+     * @param {Object} updates - Updates to apply
+     * @returns {Object|null} Updated product or null if not found
      */
-    async reset() {
-        this.filter.reset();
-        this.currentProducts = [];
-        this.displayedCount = 0;
-
-        if (this.renderer) {
-            this.renderer.clear();
+    update(id, updates) {
+        const index = this.products.findIndex(product => product.id === id);
+        if (index === -1) {
+            return null;
         }
 
-        console.log('✓ Repository reset');
+        this.products[index] = { ...this.products[index], ...updates };
+        return this.products[index];
     }
 
     /**
-     * Check if there are more products to load
-     * @returns {Promise<boolean>} Whether more products are available
+     * Delete a product (for future extension)
+     * @param {string} id - Product ID
+     * @returns {boolean} True if deleted, false if not found
      */
-    async hasMore() {
-        const total = await this.dataLoader.getCount();
-        return this.displayedCount < total;
+    delete(id) {
+        const index = this.products.findIndex(product => product.id === id);
+        if (index === -1) {
+            return false;
+        }
+
+        this.products.splice(index, 1);
+        return true;
+    }
+
+    /**
+     * Get total count of products
+     * @returns {number} Total number of products
+     */
+    getCount() {
+        return this.products.length;
+    }
+
+    /**
+     * Clear all data (for testing/reset purposes)
+     */
+    clear() {
+        this.products = [];
+        this.dataLoaded = false;
     }
 }
 
-// Export
+// Create and expose global singleton instance
 if (typeof window !== 'undefined') {
     window.ProductRepository = ProductRepository;
+    window.productRepository = new ProductRepository();
 }
 
