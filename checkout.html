@@ -242,14 +242,13 @@
 <script src="/201-project/js/component/component-loader.js"></script>
 <script src="/201-project/js/core/page-utility.js"></script>
 <script src="/201-project/js/core/toast.js"></script>
-<script src="/201-project/js/core/navigation-state-manager.js"></script>
+
 
 <!-- Data layer -->
-<script src="/201-project/js/core/product-data-loader.js"></script>
 <script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/pages/shop/product-filter.js"></script>
 
 <!-- Header components (required for cart manager) -->
-<script src="/201-project/js/core/navigate.js"></script>
 <script src="/201-project/js/component/header/search.js"></script>
 <script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
 <script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
@@ -258,8 +257,8 @@
 <!-- Cart manager (needed for checkout) -->
 <script src="/201-project/js/component/header/cart.js"></script>
 
-<!-- Checkout page dependencies -->
-<script src="/201-project/js/pages/checkout/location-data-service.js"></script>
+<!-- Checkout page specific components -->
+<script src="/201-project/js/core/location-repository.js"></script>
 <script src="/201-project/js/component/form/searchable-dropdown.js"></script>
 <script src="/201-project/js/component/form/field-validator.js"></script>
 <script src="/201-project/js/component/form/form-renderer.js"></script>
@@ -306,14 +305,12 @@
 
         await waitForApp();
 
-        // Get dynamic breadcrumb
-        const breadcrumb = typeof FurniroApp.getDynamicBreadcrumb === 'function'
-            ? FurniroApp.getDynamicBreadcrumb()
-            : [
-                { text: 'Home', href: '/201-project/index.html' },
-                { text: 'Cart', href: '/201-project/cart.html' },
-                { text: 'Checkout' }
-            ];
+        // Simple breadcrumb for checkout page
+        const breadcrumb = [
+            { text: 'Home', href: '/201-project/index.html' },
+            { text: 'Cart', href: '/201-project/cart.html' },
+            { text: 'Checkout' }
+        ];
 
         // Load page-specific components (banner and feature-banner)
         await ComponentLoader.loadComponents([
