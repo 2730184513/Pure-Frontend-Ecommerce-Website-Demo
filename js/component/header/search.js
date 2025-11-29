@@ -82,11 +82,48 @@ class SearchManager {
     }
 
     /**
-     * Perform search and redirect to shop page
+     * Perform search
      */
     performSearch() {
-        // Allow empty string (means "All Products")
         const term = this.input.value.trim();
+
+        // Check if we're already on shop page
+        if (window.location.pathname.includes('shop.html')) {
+            // Direct search on shop page
+            this._performDirectSearch(term);
+        } else {
+            // Redirect to shop page with search term
+            this._redirectToShop(term);
+        }
+
+        this.closeSearch();
+    }
+
+    /**
+     * Perform direct search on current shop page
+     * @param {string} term - Search term
+     * @private
+     */
+    _performDirectSearch(term) {
+        if (window.productFilter) {
+            window.productFilter.setSearchKeyword(term);
+
+            // Trigger shop manager to re-render if available
+            if (window.shopManager && typeof window.shopManager.render === 'function') {
+                window.shopManager.render();
+            }
+        } else {
+            // Fallback to localStorage method
+            this._redirectToShop(term);
+        }
+    }
+
+    /**
+     * Redirect to shop page with search term
+     * @param {string} term - Search term
+     * @private
+     */
+    _redirectToShop(term) {
         localStorage.setItem('shop_search_query', term);
         window.location.href = 'shop.html';
     }

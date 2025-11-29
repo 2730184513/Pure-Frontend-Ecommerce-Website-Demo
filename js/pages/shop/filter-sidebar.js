@@ -4,20 +4,22 @@
 class FilterSidebar {
     constructor(options = {}) {
         this.containerId = 'filter-sidebar';
-        this.toggleBtnId = 'filter-toggle-btn';
-        this.layoutId = 'shop-layout';
         this.onFilterChange = options.onFilterChange || (() => {
         });
+
+        // Debounce timer for slider changes
+        this.sliderDebounceTimer = null;
+        this.sliderDebounceDelay = 500; // 500ms delay for better performance
+
         this.init();
     }
 
     init() {
         this.cacheDOM();
-        if (!this.sidebar || !this.toggleBtn) {
+        if (!this.sidebar) {
             console.warn('Filter Sidebar elements not found');
             return;
         }
-        this.bindToggleEvents();
         this.bindCategoryEvents();
         this.initSliders();
         this.initDatePickers();
@@ -26,20 +28,9 @@ class FilterSidebar {
 
     cacheDOM() {
         this.sidebar = document.getElementById(this.containerId);
-        this.toggleBtn = document.getElementById(this.toggleBtnId);
-        this.layoutWrapper = document.getElementById(this.layoutId);
-        this.toggleIcon = this.toggleBtn ? this.toggleBtn.querySelector('.icon-filter') : null;
     }
 
-    bindToggleEvents() {
-        this.toggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isOpen = this.layoutWrapper.classList.toggle('sidebar-open');
-            if (this.toggleIcon) {
-                this.toggleIcon.src = isOpen ? '/201-project/images/icons/arrow-left.png' : '/201-project/images/icons/filter.png';
-            }
-        });
-    }
+
 
     bindCategoryEvents() {
         const checkboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
@@ -142,7 +133,7 @@ class FilterSidebar {
             maxI.value = maxR.value;
 
             updateTrack();
-            this.triggerChange();
+            this.triggerChangeDebounced(); // Use debounced version for smooth dragging
         };
 
         minR.addEventListener('input', () => onSliderInput(true));
@@ -244,21 +235,28 @@ class FilterSidebar {
         });
     }
 
-    getFilterValues() {
+    /**
+     * Collect current filter values from UI and update productFilter
+     */
+    updateProductFilter() {
+        // Collect categories
         const checkedCats = Array.from(this.sidebar.querySelectorAll('.category-options input:checked')).map(cb => cb.value);
+        window.productFilter.setCategories(checkedCats);
+
+        // Collect price range
         const minP = parseFloat(document.getElementById('price-min-input').value) || 0;
         const maxP = parseFloat(document.getElementById('price-max-input').value) || 10000;
+        window.productFilter.setMinPrice(minP).setMaxPrice(maxP);
+
+        // Collect rating range
         const minR = parseFloat(document.getElementById('rate-min-input').value) || 0;
         const maxR = parseFloat(document.getElementById('rate-max-input').value) || 5;
+        window.productFilter.setMinRate(minR).setMaxRate(maxR);
+
+        // Collect date range
         const dFrom = document.getElementById('date-from').value;
         const dTo = document.getElementById('date-to').value;
-
-        return {
-            categories: checkedCats,
-            priceRange: {min: minP, max: maxP},
-            ratingRange: {min: minR, max: maxR},
-            dateRange: {from: dFrom, to: dTo}
-        };
+        window.productFilter.setFrom(dFrom || null).setTo(dTo || null);
     }
 
     setCategorySelection(category) {
@@ -353,33 +351,7 @@ class FilterSidebar {
         }
     }
 
-    /**
-     * Get count of active filters
-     * @returns {number} Active filter count
-     */
-    getActiveFilterCount() {
-        let count = 0;
 
-        const checkedCats = this.sidebar.querySelectorAll('.category-options input:checked');
-        count += checkedCats.length;
-
-        const priceMin = parseFloat(document.getElementById('price-min-input').value) || 0;
-        const priceMax = parseFloat(document.getElementById('price-max-input').value) || 10000;
-        if (priceMin > 0) count++;
-        if (priceMax < 10000) count++;
-
-        const rateMin = parseFloat(document.getElementById('rate-min-input').value) || 0;
-        const rateMax = parseFloat(document.getElementById('rate-max-input').value) || 5;
-        if (rateMin > 0) count++;
-        if (rateMax < 5) count++;
-
-        const dateFrom = document.getElementById('date-from').value;
-        const dateTo = document.getElementById('date-to').value;
-        if (dateFrom) count++;
-        if (dateTo) count++;
-
-        return count;
-    }
 
     /**
      * Bind Clear All button event
@@ -398,6 +370,10 @@ class FilterSidebar {
      * Clear all filters and reset to default state
      */
     clearAll() {
+        // Reset productFilter to defaults
+        window.productFilter.reset();
+
+        // Reset UI to reflect defaults
         const checkboxes = this.sidebar.querySelectorAll('.category-options input[type="checkbox"]');
         checkboxes.forEach(cb => cb.checked = false);
 
@@ -418,6 +394,8 @@ class FilterSidebar {
         const searchInput = document.getElementById('global-search-input');
         if (searchInput) {
             searchInput.value = '';
+            // Also update productFilter's searchKeyword
+            window.productFilter.setSearchKeyword('');
         }
 
         const clearEvent = new CustomEvent('filterClearAll');
@@ -427,11 +405,32 @@ class FilterSidebar {
             window.toastManager.show('All filters cleared', 'success', 3000);
         }
 
-        this.triggerChange();
+        // Notify shop-manager to refresh
+        this.onFilterChange();
     }
 
     triggerChange() {
+        // Update productFilter with current UI values
+        this.updateProductFilter();
+        // Notify shop-manager to refresh
         this.onFilterChange();
+    }
+
+    /**
+     * Trigger change with debounce for sliders
+     * Prevents excessive triggering during slider dragging
+     */
+    triggerChangeDebounced() {
+        // Clear existing timer
+        if (this.sliderDebounceTimer) {
+            clearTimeout(this.sliderDebounceTimer);
+        }
+
+        // Set new timer
+        this.sliderDebounceTimer = setTimeout(() => {
+            this.triggerChange();
+            this.sliderDebounceTimer = null;
+        }, this.sliderDebounceDelay);
     }
 }
 

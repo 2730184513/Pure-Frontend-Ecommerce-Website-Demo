@@ -1,128 +1,247 @@
 /**
- * Product Filter
- * Handles filtering logic for products based on various criteria
- * Pure Logic Class - No UI dependencies
+ * Product Filter - Global Singleton
+ * Pure business logic layer for managing filter conditions
+ * Provides complete getter/setter, persistence, and product matching functionality
  */
 
 class ProductFilter {
     constructor() {
-        this.reset(); // Initialize default state
+        this.storageKey = 'productFilter';
+        this.initializeDefaults();
+        this.loadFromStorage();
     }
 
-    reset() {
-        this.filters = {
-            keyword: '', // Name, Brief, Tags
+    /**
+     * Initialize default filter values
+     */
+    initializeDefaults() {
+        this.defaults = {
+            // Fields that count towards filter count (7 fields)
             categories: [],
-            priceRange: { min: 0, max: Infinity },
-            ratingRange: { min: 0, max: 5 },
-            dateRange: { from: null, to: null },
-            tags: [],
-            discount: false,
-            inStock: false
+            minPrice: 0,
+            maxPrice: 10000,
+            minRate: 0,
+            maxRate: 5,
+            from: null,
+            to: null,
+            // Fields that don't count towards filter count (4 fields)
+            searchKeyword: '',
+            itemsPerPage: 16,
+            sortKey: 'default',
+            sortOrder: null
         };
-        return this;
+
+        // Copy defaults to current values
+        this.resetToDefaults();
     }
 
-    // --- Setters ---
-
-    setKeyword(keyword) {
-        this.filters.keyword = (keyword || '').toLowerCase();
-        return this;
+    /**
+     * Reset all fields to default values
+     */
+    resetToDefaults() {
+        this.categories = [...this.defaults.categories];
+        this.minPrice = this.defaults.minPrice;
+        this.maxPrice = this.defaults.maxPrice;
+        this.minRate = this.defaults.minRate;
+        this.maxRate = this.defaults.maxRate;
+        this.from = this.defaults.from;
+        this.to = this.defaults.to;
+        this.searchKeyword = this.defaults.searchKeyword;
+        this.itemsPerPage = this.defaults.itemsPerPage;
+        this.sortKey = this.defaults.sortKey;
+        this.sortOrder = this.defaults.sortOrder;
     }
+
+    // === GETTERS ===
+
+    getCategories() { return [...this.categories]; }
+    getMinPrice() { return this.minPrice; }
+    getMaxPrice() { return this.maxPrice; }
+    getMinRate() { return this.minRate; }
+    getMaxRate() { return this.maxRate; }
+    getFrom() { return this.from; }
+    getTo() { return this.to; }
+    getSearchKeyword() { return this.searchKeyword; }
+    getItemsPerPage() { return this.itemsPerPage; }
+    getSortKey() { return this.sortKey; }
+    getSortOrder() { return this.sortOrder; }
+
+    // === SETTERS (with chain support and auto-save) ===
 
     setCategories(categories) {
-        this.filters.categories = Array.isArray(categories) ? categories : [categories];
+        this.categories = Array.isArray(categories) ? [...categories] : [];
+        this.saveToStorage();
         return this;
     }
 
-    setPriceRange(min, max) {
-        this.filters.priceRange = { min, max };
+    setMinPrice(minPrice) {
+        this.minPrice = typeof minPrice === 'number' ? minPrice : this.defaults.minPrice;
+        this.saveToStorage();
         return this;
     }
 
-    setRatingRange(min, max) {
-        this.filters.ratingRange = { min, max };
+    setMaxPrice(maxPrice) {
+        this.maxPrice = typeof maxPrice === 'number' ? maxPrice : this.defaults.maxPrice;
+        this.saveToStorage();
         return this;
     }
 
-    setDateRange(from, to) {
-        this.filters.dateRange = { from, to };
+    setMinRate(minRate) {
+        this.minRate = typeof minRate === 'number' ? minRate : this.defaults.minRate;
+        this.saveToStorage();
         return this;
     }
 
-    // --- Main Apply Method ---
-
-    apply(products) {
-        if (!products || products.length === 0) return [];
-
-        return products.filter(product => {
-            // 1. Keyword Filter
-            if (this.filters.keyword && !this._checkKeyword(product)) return false;
-
-            // 2. Category Filter
-            if (this.filters.categories.length > 0 && !this.filters.categories.includes(product.category)) return false;
-
-            // 3. Price Filter
-            if (!this._checkPrice(product)) return false;
-
-            // 4. Rating Filter
-            if (!this._checkRating(product)) return false;
-
-            // 5. Date Filter
-            if (!this._checkDate(product)) return false;
-
-            return true;
-        });
+    setMaxRate(maxRate) {
+        this.maxRate = typeof maxRate === 'number' ? maxRate : this.defaults.maxRate;
+        this.saveToStorage();
+        return this;
     }
 
-    // --- Helper Checkers ---
+    setFrom(from) {
+        this.from = from;
+        this.saveToStorage();
+        return this;
+    }
 
-    _checkKeyword(product) {
-        const k = this.filters.keyword;
+    setTo(to) {
+        this.to = to;
+        this.saveToStorage();
+        return this;
+    }
+
+    setSearchKeyword(keyword) {
+        this.searchKeyword = keyword || '';
+        this.saveToStorage();
+        return this;
+    }
+
+    setItemsPerPage(itemsPerPage) {
+        this.itemsPerPage = typeof itemsPerPage === 'number' ? itemsPerPage : this.defaults.itemsPerPage;
+        this.saveToStorage();
+        return this;
+    }
+
+    setSortKey(sortKey) {
+        this.sortKey = sortKey || this.defaults.sortKey;
+        this.saveToStorage();
+        return this;
+    }
+
+    setSortOrder(sortOrder) {
+        this.sortOrder = sortOrder;
+        this.saveToStorage();
+        return this;
+    }
+
+    // === FILTER LOGIC ===
+
+    /**
+     * Check if a single product matches all filter conditions
+     * @param {Object} product - Product object to check
+     * @returns {boolean} True if product matches all conditions
+     */
+    match(product) {
+        if (!product) return false;
+
+        // 1. Search keyword filter
+        if (this.searchKeyword && !this._matchKeyword(product)) return false;
+
+        // 2. Categories filter
+        if (this.categories.length > 0 && !this.categories.includes(product.category)) return false;
+
+        // 3. Price range filter
+        if (!this._matchPriceRange(product)) return false;
+
+        // 4. Rating range filter
+        if (!this._matchRatingRange(product)) return false;
+
+        // 5. Date range filter
+        if (!this._matchDateRange(product)) return false;
+
+        return true;
+    }
+
+    /**
+     * Return filter function for use with Array.filter or repository.query
+     * @returns {Function} Filter function (product) => boolean
+     */
+    toFilterFunction() {
+        return (product) => this.match(product);
+    }
+
+    /**
+     * Calculate active filter count (only counts 7 specific fields)
+     * @returns {number} Number of active filter conditions
+     */
+    getActiveFilterCount() {
+        let count = 0;
+
+        // Count categories (each category counts as 1)
+        count += this.categories.length;
+
+        // Count price range (only if different from default)
+        if (this.minPrice !== this.defaults.minPrice) count++;
+        if (this.maxPrice !== this.defaults.maxPrice) count++;
+
+        // Count rating range (only if different from default)
+        if (this.minRate !== this.defaults.minRate) count++;
+        if (this.maxRate !== this.defaults.maxRate) count++;
+
+        // Count date range (only if set)
+        if (this.from !== null) count++;
+        if (this.to !== null) count++;
+
+        // Note: searchKeyword, itemsPerPage, sortKey, sortOrder are NOT counted
+
+        return count;
+    }
+
+    // === HELPER METHODS ===
+
+    _matchKeyword(product) {
+        const keyword = this.searchKeyword.toLowerCase();
         return (
-            product.name.toLowerCase().includes(k) ||
-            product.brief.toLowerCase().includes(k) ||
-            (product.tags && product.tags.toLowerCase().includes(k))
+            product.name.toLowerCase().includes(keyword) ||
+            product.brief.toLowerCase().includes(keyword) ||
+            (product.tags && product.tags.toLowerCase().includes(keyword))
         );
     }
 
-    _checkPrice(product) {
-        const price = this.getEffectivePrice(product);
-        return price >= this.filters.priceRange.min && price <= this.filters.priceRange.max;
+    _matchPriceRange(product) {
+        const price = this._getEffectivePrice(product);
+        return price >= this.minPrice && price <= this.maxPrice;
     }
 
-    _checkRating(product) {
+    _matchRatingRange(product) {
         const rate = product.average_rate || 0;
-        return rate >= this.filters.ratingRange.min && rate <= this.filters.ratingRange.max;
+        return rate >= this.minRate && rate <= this.maxRate;
     }
 
-    _checkDate(product) {
-        const { from, to } = this.filters.dateRange;
-        if (!from && !to) return true;
+    _matchDateRange(product) {
+        if (!this.from && !this.to) return true;
         if (!product.launch_time) return false;
 
-        // Assuming launch_time is "dd-mm-yyyy" from JSON
+        // Assuming launch_time is "dd-mm-yyyy" format
         const [d, m, y] = product.launch_time.split('-');
-        // Note: Months are 0-indexed in JS Date
-        const pDate = new Date(y, m - 1, d);
+        const productDate = new Date(y, m - 1, d);
 
-        if (from) {
-            const fromDate = new Date(from);
-            // Reset time to ensure fair comparison
-            fromDate.setHours(0,0,0,0);
-            if (pDate < fromDate) return false;
+        if (this.from) {
+            const fromDate = new Date(this.from);
+            fromDate.setHours(0, 0, 0, 0);
+            if (productDate < fromDate) return false;
         }
 
-        if (to) {
-            const toDate = new Date(to);
-            toDate.setHours(0,0,0,0);
-            if (pDate > toDate) return false;
+        if (this.to) {
+            const toDate = new Date(this.to);
+            toDate.setHours(0, 0, 0, 0);
+            if (productDate > toDate) return false;
         }
 
         return true;
     }
 
-    getEffectivePrice(product) {
+    _getEffectivePrice(product) {
         const basePrice = product.price || 0;
         if (!product.discount || product.discount === '0') {
             return basePrice;
@@ -134,8 +253,84 @@ class ProductFilter {
         }
         return basePrice;
     }
+
+    // === PERSISTENCE ===
+
+    /**
+     * Save current state to sessionStorage
+     */
+    saveToStorage() {
+        try {
+            const state = {
+                categories: this.categories,
+                minPrice: this.minPrice,
+                maxPrice: this.maxPrice,
+                minRate: this.minRate,
+                maxRate: this.maxRate,
+                from: this.from,
+                to: this.to,
+                searchKeyword: this.searchKeyword,
+                itemsPerPage: this.itemsPerPage,
+                sortKey: this.sortKey,
+                sortOrder: this.sortOrder
+            };
+            sessionStorage.setItem(this.storageKey, JSON.stringify(state));
+        } catch (error) {
+            console.warn('Failed to save filter state to storage:', error);
+        }
+    }
+
+    /**
+     * Load state from sessionStorage
+     */
+    loadFromStorage() {
+        try {
+            const stored = sessionStorage.getItem(this.storageKey);
+            if (stored) {
+                const state = JSON.parse(stored);
+
+                // Restore each field safely
+                this.categories = Array.isArray(state.categories) ? state.categories : this.defaults.categories;
+                this.minPrice = typeof state.minPrice === 'number' ? state.minPrice : this.defaults.minPrice;
+                this.maxPrice = typeof state.maxPrice === 'number' ? state.maxPrice : this.defaults.maxPrice;
+                this.minRate = typeof state.minRate === 'number' ? state.minRate : this.defaults.minRate;
+                this.maxRate = typeof state.maxRate === 'number' ? state.maxRate : this.defaults.maxRate;
+                this.from = state.from;
+                this.to = state.to;
+                this.searchKeyword = state.searchKeyword || this.defaults.searchKeyword;
+                this.itemsPerPage = typeof state.itemsPerPage === 'number' ? state.itemsPerPage : this.defaults.itemsPerPage;
+                this.sortKey = state.sortKey || this.defaults.sortKey;
+                this.sortOrder = state.sortOrder;
+            }
+        } catch (error) {
+            console.warn('Failed to load filter state from storage:', error);
+            this.resetToDefaults();
+        }
+    }
+
+    /**
+     * Clear storage
+     */
+    clearStorage() {
+        try {
+            sessionStorage.removeItem(this.storageKey);
+        } catch (error) {
+            console.warn('Failed to clear filter storage:', error);
+        }
+    }
+
+    /**
+     * Reset all fields to defaults and save
+     */
+    reset() {
+        this.resetToDefaults();
+        this.saveToStorage();
+        return this;
+    }
 }
 
+// Create and expose global singleton instance
 if (typeof window !== 'undefined') {
     window.ProductFilter = ProductFilter;
+    window.productFilter = new ProductFilter();
 }

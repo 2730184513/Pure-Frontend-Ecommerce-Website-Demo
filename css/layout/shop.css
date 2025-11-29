@@ -6,7 +6,7 @@
     width: 100%;
     display: flex;
     align-items: flex-start;
-    transition: all 0.4s ease;
+    /* 移除父容器的 transition，让子元素各自控制 */
 }
 
 /* Product content area */
@@ -14,7 +14,9 @@
     flex: 1;
     width: 100%;
     margin-left: 0;
-    transition: margin-left 0.4s ease, width 0.4s ease;
+    /* 使用相同的速度曲线和持续时间，确保同步移动 */
+    transition: margin-left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     min-height: 100vh;
     padding-bottom: 60px;
@@ -30,7 +32,7 @@
 .product-grid-container {
     max-width: 1240px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 35px 20px;
 }
 
 /* Product grid */
@@ -82,4 +84,3 @@
         gap: 15px;
     }
 }
-

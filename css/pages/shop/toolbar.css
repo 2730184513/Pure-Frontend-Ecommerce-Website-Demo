@@ -3,23 +3,22 @@
 .shop-toolbar {
     /* Sticky Behavior Logic */
     position: sticky;
-    top: 100px; /* Stops exactly below the 100px fixed Header */
+    top: 100px;
     z-index: 800;
 
     /* Width & Alignment Constraints */
-    max-width: 1240px; /* Same as .product-grid-container */
-    margin: 0 auto; /* Center horizontally */
-    width: 100%; /* Responsive fit */
+    max-width: 1240px;
+    width: 100%;
 
     /* Styling */
     background: #F9F1E7;
     padding: 20px 30px;
-    margin-bottom: 30px; /* Spacing from grid */
+    margin: 35px auto 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    border-radius: 10px; /* Rounded corners for aesthetic independent bar */
+    border-radius: 10px;
 }
 
 /* --- LEFT SECTION --- */
@@ -36,18 +35,59 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 5px;
-    transition: opacity 0.2s;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
 .filter-btn:hover {
-    opacity: 0.8;
+    background: rgba(184, 142, 47, 0.1);
 }
 
+/* Active state when filter sidebar is open */
+.filter-btn.active {
+    background: var(--primary-color, #B88E2F);
+    color: white;
+    box-shadow: 0 2px 8px rgba(184, 142, 47, 0.3);
+}
+
+.filter-btn.active .filter-span {
+    color: white;
+}
+
+.filter-btn.active .icon-filter {
+    filter: brightness(0) invert(1);
+}
+
+/* Icon container for stacking two icons */
+.icon-filter-container {
+    position: relative;
+    width: 25px;
+    height: 25px;
+}
+
+/* Base icon styles */
 .icon-filter {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 25px;
     height: 25px;
     object-fit: contain;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform-origin: center;
+}
+
+/* Main icon (filter.png) - visible by default */
+.icon-filter-main {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+/* Alternative icon (arrow-left.png) - hidden by default */
+.icon-filter-alt {
+    opacity: 0;
+    transform: rotate(0deg);
 }
 
 .filter-span {
@@ -119,7 +159,7 @@
     width: 100%;
     background: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    display: none; /* Hidden by default */
+    display: none;
     z-index: 850;
     border-radius: 4px;
     margin-top: 4px;
@@ -165,4 +205,3 @@
     padding: 0 2px;
     border-radius: 2px;
 }
-
