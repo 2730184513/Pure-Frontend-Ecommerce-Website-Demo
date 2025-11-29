@@ -3,36 +3,34 @@
  * Manages pagination controls and page navigation
  */
 class PagingManager {
-    constructor() {
+    constructor(onChangeCallback) {
         this.currentPage = 1;
         this.totalPages = 1;
-        this.totalItems = 0;
-        this.itemsPerPage = 16;
-        this.onPageChangeCallback = null;
+        this.onChangeCallback = onChangeCallback || (() => {});
         this.isInitialized = false;
     }
 
     /**
-     * Initialize paging manager
-     * @param {Function} onPageChangeCallback - Callback when page changes
+     * Initialize paging with total items and items per page
+     * @param {number} totalItems - Total number of items
+     * @param {number} itemsPerPage - Items per page
+     * @param {Function} onChangeCallback - Callback when page changes (optional)
      */
-    init(onPageChangeCallback) {
-        this.onPageChangeCallback = onPageChangeCallback || (() => {});
+    init(totalItems, itemsPerPage, onChangeCallback) {
+        if (onChangeCallback) {
+            this.onChangeCallback = onChangeCallback;
+        }
+
+        this.totalPages = Math.ceil(totalItems / itemsPerPage);
+        this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages));
+
+        // Render pagination controls
+        this.render();
+
         this.isInitialized = true;
     }
 
-    /**
-     * Set configuration
-     * @param {number} totalItems - Total number of items
-     * @param {number} itemsPerPage - Items per page
-     * @param {number} currentPage - Current page (optional)
-     */
-    setConfig(totalItems, itemsPerPage, currentPage = 1) {
-        this.totalItems = totalItems;
-        this.itemsPerPage = itemsPerPage;
-        this.totalPages = Math.ceil(totalItems / itemsPerPage);
-        this.currentPage = Math.max(1, Math.min(currentPage, this.totalPages));
-    }
+
 
     /**
      * Get current page number
@@ -43,6 +41,14 @@ class PagingManager {
     }
 
     /**
+     * Get total pages count
+     * @returns {number}
+     */
+    getTotalPages() {
+        return this.totalPages;
+    }
+
+    /**
      * Set current page
      * @param {number} page - Page number
      */
@@ -50,34 +56,10 @@ class PagingManager {
         const newPage = Math.max(1, Math.min(page, this.totalPages));
         if (newPage !== this.currentPage) {
             this.currentPage = newPage;
-            this.triggerPageChange();
+            this.triggerChangeCallback();
         }
     }
-    /**
-     * Get page slice indices
-     * @returns {Object} Object with start and end indices
-     */
-    getPageSlice() {
-        const start = (this.currentPage - 1) * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        return { start, end };
-    }
 
-    /**
-     * Get display text (e.g., "Showing 1–16 of 64 results")
-     * @returns {string}
-     */
-    getDisplayText() {
-        if (this.totalItems === 0) {
-            return 'Showing 0 results';
-        }
-
-        const { start, end } = this.getPageSlice();
-        const showStart = start + 1;
-        const showEnd = Math.min(end, this.totalItems);
-
-        return `Showing ${showStart}–${showEnd} of ${this.totalItems} results`;
-    }
 
     /**
      * Render pagination controls
@@ -204,9 +186,9 @@ class PagingManager {
      * Trigger page change callback
      * @private
      */
-    triggerPageChange() {
-        if (this.onPageChangeCallback) {
-            this.onPageChangeCallback(this.currentPage);
+    triggerChangeCallback() {
+        if (this.onChangeCallback) {
+            this.onChangeCallback();
         }
     }
 

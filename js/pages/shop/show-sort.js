@@ -4,22 +4,20 @@
  * 依赖: SortStateStrategy (需要先加载 SortStrategy.js)
  */
 class ShowSortManager {
-    constructor() {
-        this.itemsPerPage = 16;
-        this.sortMode = 'default';
-        this.sortState = { name: 0, price: 0, rate: 0 };
+    constructor(onChangeCallback) {
+        this.sortState = {name: 0, price: 0, rate: 0};
         this.isInitialized = false;
-        this.onChangeCallback = null;
+        this.onChangeCallback = onChangeCallback || (() => {
+        });
+        this.init();
     }
 
     /**
      * Initialize show-sort controls
-     * @param {Function} onChangeCallback - Callback when settings change
      */
-    init(onChangeCallback) {
+    init() {
         if (this.isInitialized) return;
 
-        this.onChangeCallback = onChangeCallback || (() => {});
         this.bindShowPerPageEvents();
         this.bindSortDropdownEvents();
 
@@ -60,7 +58,8 @@ class ShowSortManager {
      * @param {HTMLElement} element - Dropdown item element
      */
     handleShowChange(value, element) {
-        this.itemsPerPage = value;
+        // Update productFilter
+        window.productFilter.setItemsPerPage(value);
 
         const label = document.getElementById('current-show-label');
         const items = document.querySelectorAll('#show-dropdown .dropdown-item');
@@ -72,7 +71,7 @@ class ShowSortManager {
             label.textContent = value;
         }
 
-        this.triggerChange();
+        this.triggerChangeCallback();
     }
 
     /**
@@ -111,8 +110,22 @@ class ShowSortManager {
     handleCustomSort(key, element) {
         this._resetOtherSortKeys(key);
         this._cycleSortState(key);
-        this.updateSortVisuals(key, this.sortState[key], element);
-        this.triggerChange();
+
+        // Update productFilter based on sort state
+        const state = this.sortState[key];
+        if (state === 0) {
+            // Default state
+            window.productFilter.setSortKey('default').setSortOrder(null);
+        } else if (state === 1) {
+            // Ascending
+            window.productFilter.setSortKey(key).setSortOrder('asc');
+        } else if (state === 2) {
+            // Descending
+            window.productFilter.setSortKey(key).setSortOrder('desc');
+        }
+
+        this.updateSortVisuals(key, state, element);
+        this.triggerChangeCallback();
     }
 
     /**
@@ -150,8 +163,6 @@ class ShowSortManager {
         // 重置所有项的视觉状态
         this._resetAllSortItemsVisuals();
 
-        // 使用策略更新排序模式
-        this.sortMode = state === 0 ? strategy.getSortMode() : strategy.getSortMode(key);
 
         // 使用策略更新 UI
         this._applySortStrategy(strategy, key, element);
@@ -200,46 +211,18 @@ class ShowSortManager {
     /**
      * Trigger change callback
      */
-    triggerChange() {
+    triggerChangeCallback() {
         if (this.onChangeCallback) {
             this.onChangeCallback();
         }
     }
 
     /**
-     * Get current items per page
-     * @returns {number}
+     * Reset sort to default (for UI state restoration)
      */
-    getItemsPerPage() {
-        return this.itemsPerPage;
-    }
-
-    /**
-     * Get current sort mode
-     * @returns {string} Sort mode (e.g., 'price-asc', 'default')
-     */
-    getSortMode() {
-        return this.sortMode;
-    }
-
-    /**
-     * Reset sort to default
-     */
-    resetSort() {
-        this.sortMode = 'default';
-        this.sortState = { name: 0, price: 0, rate: 0 };
+    resetSortUI() {
+        this.sortState = {name: 0, price: 0, rate: 0};
         this.updateSortVisuals('', 0, null);
-    }
-
-    /**
-     * Get configuration object
-     * @returns {Object} Configuration with itemsPerPage and sortMode
-     */
-    getConfig() {
-        return {
-            itemsPerPage: this.itemsPerPage,
-            sortMode: this.sortMode
-        };
     }
 
     /**
@@ -247,8 +230,6 @@ class ShowSortManager {
      * @param {number} value - Items per page value
      */
     setItemsPerPage(value) {
-        this.itemsPerPage = value;
-
         const label = document.getElementById('current-show-label');
         if (label) {
             label.textContent = value;
@@ -271,7 +252,7 @@ class ShowSortManager {
      */
     setSorting(key, order) {
         if (!key || !order) {
-            this.resetSort();
+            this.resetSortUI();
             return;
         }
 
@@ -295,8 +276,8 @@ class ShowSortManager {
      */
     resetToDefaults() {
         this.setItemsPerPage(16);
-        this.resetSort();
-        this.triggerChange();
+        this.resetSortUI();
+        this.triggerChangeCallback();
     }
 }
 
