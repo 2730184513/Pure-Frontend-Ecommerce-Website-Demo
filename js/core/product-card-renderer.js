@@ -9,29 +9,131 @@ class ProductCardRenderer {
         this.container = document.querySelector(containerSelector);
         this.popups = new Map();
 
+        // Performance optimization settings
+        this.batchSize = 12; // Render products in batches
+        this.renderTimeout = 16; // 60fps timing
+
+        // Intersection observer for lazy loading
+        this.intersectionObserver = null;
+        this.initIntersectionObserver();
+
         if (!this.container) {
             console.error(`Container not found: ${containerSelector}`);
         }
     }
 
     /**
-     * Render a single product card
-     * @param {Object} product - Product data
-     * @returns {HTMLElement} Product card element
+     * Initialize intersection observer for lazy image loading
+     * @private
      */
+    initIntersectionObserver() {
+        if ('IntersectionObserver' in window) {
+            this.intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                            this.intersectionObserver.unobserve(img);
+                        }
+                    }
+                });
+            }, {
+                rootMargin: '50px'
+            });
+        }
+    }
+
+    /**
+     * Render all products with batch processing for better performance
+     * @param {Array} products - Product array
+     * @param {string} containerSelector - Target container selector
+     * @param {string} keyword - Optional search keyword for highlighting
+     */
+    async renderAll(products, containerSelector, keyword = '') {
+        if (!products || products.length === 0) {
+            this.renderEmpty();
+            return;
+        }
+
+        // Clear container and show loading state
+        this.container.innerHTML = this.createLoadingPlaceholders(Math.min(products.length, 12));
+
+        // Use document fragment for better performance
+        const fragment = document.createDocumentFragment();
+
+        // Batch render products to avoid blocking UI
+        await this.batchRenderProducts(products, fragment, keyword);
+
+        // Replace loading placeholders with actual content
+        this.container.innerHTML = '';
+        this.container.appendChild(fragment);
+
+        console.log(`✓ Rendered ${products.length} products`);
+    }
+
+    /**
+     * Create loading placeholders for better UX
+     * @param {number} count - Number of placeholders to create
+     * @returns {string} HTML string for placeholders
+     * @private
+     */
+    createLoadingPlaceholders(count) {
+        let placeholders = '';
+        for (let i = 0; i < count; i++) {
+            placeholders += `
+                <div class="product-card loading-placeholder">
+                    <div class="product-image placeholder-shimmer"></div>
+                    <div class="product-info">
+                        <div class="placeholder-line placeholder-shimmer"></div>
+                        <div class="placeholder-line placeholder-shimmer short"></div>
+                        <div class="placeholder-line placeholder-shimmer"></div>
+                    </div>
+                </div>
+            `;
+        }
+        return placeholders;
+    }
+
+    /**
+     * Batch render products to avoid blocking the UI
+     * @param {Array} products - Products to render
+     * @param {DocumentFragment} fragment - Target fragment
+     * @param {string} keyword - Search keyword
+     * @private
+     */
+    async batchRenderProducts(products, fragment, keyword) {
+        for (let i = 0; i < products.length; i += this.batchSize) {
+            const batch = products.slice(i, i + this.batchSize);
+
+            // Render batch
+            batch.forEach(product => {
+                const card = this.renderCard(product, keyword);
+                fragment.appendChild(card);
+            });
+
+            // Yield control to browser for smooth UI
+            if (i + this.batchSize < products.length) {
+                await new Promise(resolve => setTimeout(resolve, this.renderTimeout));
+            }
+        }
+    }
+
     /**
      * Render a single product card
      * @param {Object} product - Product data
+     * @param {string} keyword - Optional keyword for highlighting
      * @returns {HTMLElement} Product card element
      */
-    renderCard(product) {
+    renderCard(product, keyword) {
         const article = document.createElement('article');
         article.className = 'product-card';
         article.dataset.productId = product.id;
 
         // Compose card from independent sections
         article.appendChild(this.createImageSection(product));
-        article.appendChild(this.createInfoSection(product));
+        article.appendChild(this.createInfoSection(product, keyword));
 
         // Attach interactive behavior
         this.attachPopup(article, product);
@@ -60,17 +162,28 @@ class ProductCardRenderer {
     }
 
     /**
-     * Create product image element with error handling
+     * Create product image element with lazy loading and error handling
      * @param {Object} product - Product data
      * @returns {HTMLImageElement} Image element
      */
     createProductImage(product) {
         const img = document.createElement('img');
-        img.src = product.product_picture;
-        img.alt = product.name;
+
+        // Implement lazy loading if intersection observer is available
+        if (this.intersectionObserver) {
+            img.dataset.src = product.product_picture;
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlZWVlZWUiLz48L3N2Zz4='; // Placeholder SVG
+            img.alt = product.name;
+            this.intersectionObserver.observe(img);
+        } else {
+            img.src = product.product_picture;
+            img.alt = product.name;
+        }
+
         img.onerror = () => {
             img.src = '/201-project/images/products/placeholder.jpg';
         };
+
         return img;
     }
 
@@ -127,14 +240,15 @@ class ProductCardRenderer {
     /**
      * Create product info section with name, description, and price
      * @param {Object} product - Product data
+     * @param {string} keyword - Optional keyword for highlighting
      * @returns {HTMLElement} Info section element
      */
-    createInfoSection(product) {
+    createInfoSection(product, keyword) {
         const infoDiv = document.createElement('div');
         infoDiv.className = 'product-info';
 
-        infoDiv.appendChild(this.createProductName(product.name));
-        infoDiv.appendChild(this.createProductDescription(product.brief));
+        infoDiv.appendChild(this.createProductName(product.name, keyword));
+        infoDiv.appendChild(this.createProductDescription(product.brief, keyword));
         infoDiv.appendChild(this.createPriceBox(product));
 
         return infoDiv;
@@ -143,24 +257,38 @@ class ProductCardRenderer {
     /**
      * Create product name element
      * @param {string} name - Product name
+     * @param {string} keyword - Optional keyword for highlighting
      * @returns {HTMLElement} Name element
      */
-    createProductName(name) {
+    createProductName(name, keyword) {
         const nameSpan = document.createElement('span');
         nameSpan.className = 'product-name';
-        nameSpan.textContent = name;
+
+        if (keyword && keyword.trim()) {
+            nameSpan.innerHTML = this.highlightKeyword(name, keyword);
+        } else {
+            nameSpan.textContent = name;
+        }
+
         return nameSpan;
     }
 
     /**
      * Create product description element
      * @param {string} description - Product description
+     * @param {string} keyword - Optional keyword for highlighting
      * @returns {HTMLElement} Description element
      */
-    createProductDescription(description) {
+    createProductDescription(description, keyword) {
         const descSpan = document.createElement('span');
         descSpan.className = 'product-desc';
-        descSpan.textContent = description;
+
+        if (keyword && keyword.trim()) {
+            descSpan.innerHTML = this.highlightKeyword(description, keyword);
+        } else {
+            descSpan.textContent = description;
+        }
+
         return descSpan;
     }
 
@@ -209,8 +337,10 @@ class ProductCardRenderer {
     }
 
 
+
+
     /**
-     * Render multiple products
+     * Render multiple products (legacy method for backward compatibility)
      * @param {Array} products - Array of product data
      * @param {boolean} clearContainer - Whether to clear container first
      */
@@ -315,10 +445,49 @@ class ProductCardRenderer {
         this.popups.forEach(popup => popup.destroy());
         this.popups.clear();
     }
+
+    /**
+     * Highlight keyword in text using mark tags
+     * @param {string} text - Text to highlight in
+     * @param {string} keyword - Keyword to highlight
+     * @returns {string} HTML string with highlighted keyword
+     * @private
+     */
+    highlightKeyword(text, keyword) {
+        if (!text || !keyword) return text;
+
+        // Escape special regex characters in keyword
+        const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        // Create regex for case-insensitive global matching
+        const regex = new RegExp(`(${escapedKeyword})`, 'gi');
+
+        // Replace matches with mark tags
+        return text.replace(regex, '<mark class="highlight-red">$1</mark>');
+    }
+
+    /**
+     * Render empty state when no products are found
+     */
+    renderEmpty() {
+        if (!this.container) {
+            console.error('Container not available for empty state');
+            return;
+        }
+
+        this.container.innerHTML = `
+            <div class="empty-products-state">
+                <div class="empty-icon">🔍</div>
+                <h3 class="empty-title">No products found</h3>
+                <p class="empty-message">Try adjusting your filters or search terms to find what you're looking for.</p>
+            </div>
+        `;
+
+        console.log('✓ Rendered empty products state');
+    }
 }
 
 // Export
 if (typeof window !== 'undefined') {
     window.ProductCardRenderer = ProductCardRenderer;
 }
-

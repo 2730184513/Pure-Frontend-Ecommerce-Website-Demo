@@ -11,9 +11,11 @@ class HomeManager {
             initialProductCount: config.initialProductCount || 8,
             loadMoreCount: config.loadMoreCount || 8
         };
-        this.productRepository = null;
         this.carousel = null;
         this.categoryRotator = null;
+        this.renderer = null;
+        this.displayedProducts = [];
+        this.allProducts = [];
     }
 
     /**
@@ -24,6 +26,9 @@ class HomeManager {
         console.log('🏠 Initializing Home Page...');
 
         try {
+            // 确保数据层已加载
+            await window.productRepository.loadAll();
+
             await this._initializeComponents();
             console.log('✓ Home page initialized successfully');
         } catch (error) {
@@ -122,24 +127,28 @@ class HomeManager {
     }
 
     /**
-     * Initialize product repository and load initial products
+     * Initialize product display with initial products
      * @private
      */
     async _initProductDisplay() {
         console.log('🛍️ Initializing product display...');
 
-        if (!window.ProductRepository) {
-            console.warn('ProductRepository not found');
+        if (!window.productRepository) {
+            console.warn('productRepository not found');
             return;
         }
 
-        this.productRepository = new ProductRepository();
-        this.productRepository.initRenderer('.product-grid');
+        // Initialize renderer
+        this.renderer = new ProductCardRenderer('.product-grid');
 
-        // Load initial products
-        await this.productRepository.loadInitialProducts(
-            this.config.initialProductCount
-        );
+        // Get all products and display initial set
+        this.allProducts = window.productRepository.getAll();
+
+        // Display initial products
+        this.displayedProducts = this.allProducts.slice(0, this.config.initialProductCount);
+        this.renderer.renderAll(this.displayedProducts, '.product-grid');
+
+        console.log(`✓ Displayed ${this.displayedProducts.length} initial products`);
     }
 
     /**
@@ -153,72 +162,59 @@ class HomeManager {
             return;
         }
 
-        showMoreBtn.addEventListener('click', async (e) => {
+        showMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            await this._handleShowMore();
+            this._handleShowMore();
         });
 
         console.log('✓ Show More functionality initialized');
     }
 
     /**
-     * Handle show more button click
+     * Handle show more button click - redirect to shop page
      * @private
      */
-    async _handleShowMore() {
-        if (!this.productRepository) return;
-
-        // Check if there are more products
-        const hasMore = await this.productRepository.hasMore();
-
-        if (!hasMore) {
-            this._showNoMoreProductsMessage();
-            return;
-        }
-
-        // Load more products
-        const loaded = await this.productRepository.loadMore(this.config.loadMoreCount);
-
-        if (loaded === 0) {
-            this._showNoMoreProductsMessage();
-        }
-
-        // Hide button if no more products
-        const stillHasMore = await this.productRepository.hasMore();
-        if (!stillHasMore) {
-            this._hideShowMoreButton();
-        }
+    _handleShowMore() {
+        console.log('🔄 Redirecting to shop page...');
+        window.location.href = '/201-project/shop.html';
     }
 
-    /**
-     * Show "no more products" message
-     * @private
-     */
-    _showNoMoreProductsMessage() {
-        alert('No more products to display!');
-    }
 
-    /**
-     * Hide show more button
-     * @private
-     */
-    _hideShowMoreButton() {
-        const showMoreBtn = document.querySelector('.show-more-container');
-        if (showMoreBtn) {
-            showMoreBtn.style.display = 'none';
-        }
-    }
 
     // ============================================================================
     // Public Accessors
     // ============================================================================
 
     /**
-     * Get product repository instance
-     * @returns {ProductRepository|null}
+     * Get renderer instance
+     * @returns {ProductCardRenderer|null}
      */
-    getProductRepository() {
-        return this.productRepository;
+    getRenderer() {
+        return this.renderer;
+    }
+
+    /**
+     * Get displayed products count
+     * @returns {number}
+     */
+    getDisplayedCount() {
+        return this.displayedProducts.length;
+    }
+
+    /**
+     * Get total products count
+     * @returns {number}
+     */
+    getTotalCount() {
+        return this.allProducts.length;
+    }
+
+    /**
+     * Check if more products are available
+     * @returns {boolean}
+     */
+    hasMore() {
+        return this.displayedProducts.length < this.allProducts.length;
     }
 
     /**
