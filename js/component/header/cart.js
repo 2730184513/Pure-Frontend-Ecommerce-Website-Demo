@@ -53,6 +53,10 @@ class CartManager {
 
         let message;
         if (existing) {
+            if (existing.qty === 9999) {
+                window.toast.error(`Maximum quantity for ${product.name} reached!`);
+                return;
+            }
             existing.qty++;
             message = `${product.name} quantity increased in cart!`;
         } else {
@@ -67,7 +71,7 @@ class CartManager {
         }
 
         this.saveCart();
-        this.showNotification(message, 'success');
+        window.toast.success(message);
 
         // Update renderer and play animation
         if (this.dropdownRenderer) {
@@ -83,8 +87,9 @@ class CartManager {
      * Update product quantity
      * @param {string} variantId - Variant ID
      * @param {number} delta - Quantity change (+1 or -1)
+     * @param {boolean} silent - If true, don't show notifications (default: false)
      */
-    updateQuantity(variantId, delta) {
+    updateQuantity(variantId, delta, silent = false) {
         const item = this.cart.find(i => i.variantId === variantId);
         if (item) {
             const newQty = item.qty + delta;
@@ -104,6 +109,8 @@ class CartManager {
 
             // Dispatch event for cart page to sync
             window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+            // Note: silent parameter is reserved for future use in preventing notifications
         }
     }
 
@@ -126,12 +133,13 @@ class CartManager {
 
         // Show notification (unless silent mode)
         if (item && !silent) {
-            this.showNotification(`${item.name} removed from cart`, 'info');
+            window.toast.info(`${item.name} removed from cart`);
         }
 
         // Dispatch event for cart page to sync
         window.dispatchEvent(new CustomEvent('cartUpdated'));
     }
+
     /**
      * Save cart to localStorage
      */
@@ -154,18 +162,6 @@ class CartManager {
      */
     getCount() {
         return this.cart.length;
-    }
-    /**
-     * Show notification
-     * @param {string} message - Message to display
-     * @param {string} type - Notification type
-     */
-    showNotification(message, type = 'info') {
-        if (window.toast) {
-            window.toast.show(message, type);
-        } else {
-            console.warn('Toast manager not available');
-        }
     }
 }
 

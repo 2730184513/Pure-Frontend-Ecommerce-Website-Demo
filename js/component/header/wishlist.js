@@ -48,13 +48,13 @@ class WishlistManager {
     addProduct(product) {
         // Check for duplicates
         if (this.wishlist.some(i => i.id === product.id)) {
-            this.showNotification('This item is already in your wishlist!', 'error');
+            window.toast.error('This item is already in your wishlist!');
             return false;
         }
 
         this.wishlist.push(product);
         this.saveWishlist();
-        this.showNotification(`${product.name} added to wishlist!`, 'success');
+        window.toast.success(`${product.name} added to wishlist!`);
 
         // Update renderer and play animation
         if (this.dropdownRenderer) {
@@ -94,19 +94,6 @@ class WishlistManager {
      */
     getCount() {
         return this.wishlist.length;
-    }
-
-    /**
-     * Show notification
-     * @param {string} message - Message to display
-     * @param {string} type - Notification type
-     */
-    showNotification(message, type = 'info') {
-        if (window.toast) {
-            window.toast.show(message, type);
-        } else {
-            console.warn('Toast manager not available');
-        }
     }
 }
 

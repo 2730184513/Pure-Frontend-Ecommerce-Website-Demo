@@ -89,14 +89,13 @@
 <script src="/201-project/js/component/component-loader.js"></script>
 <script src="/201-project/js/core/page-utility.js"></script>
 <script src="/201-project/js/core/toast.js"></script>
-<script src="/201-project/js/core/navigation-state-manager.js"></script>
+
 
 <!-- Data layer -->
-<script src="/201-project/js/core/product-data-loader.js"></script>
 <script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/pages/shop/product-filter.js"></script>
 
 <!-- Header components -->
-<script src="/201-project/js/core/navigate.js"></script>
 <script src="/201-project/js/component/header/search.js"></script>
 <script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
 <script src="/201-project/js/component/header/cart.js"></script>
@@ -118,10 +117,8 @@
 <script>
     // Load page banner and feature banner components, then initialize cart page
     document.addEventListener('DOMContentLoaded', async () => {
-        // Get dynamic breadcrumb based on referrer
-        const breadcrumb = window.FurniroApp && typeof FurniroApp.getDynamicBreadcrumb === 'function'
-            ? FurniroApp.getDynamicBreadcrumb()
-            : [{text: 'Home', href: '/201-project/index.html'}, {text: 'Cart'}];
+        // Simple breadcrumb for cart page
+        const breadcrumb = [{text: 'Home', href: '/201-project/index.html'}, {text: 'Cart'}];
 
         await ComponentLoader.loadComponents([
             {
@@ -138,15 +135,40 @@
             }
         ]);
 
-        // Initialize cart page after main app loads
-        setTimeout(() => {
-            if (window.CartPageManager) {
-                const cartPageManager = new CartPageManager();
-                cartPageManager.init();
-            } else {
-                console.error('CartPageManager not found - check script loading order');
-            }
-        }, 500);
+        // Wait for main app to be fully initialized
+        const waitForApp = () => {
+            return new Promise((resolve) => {
+                const checkInit = () => window.FurniroApp && window.FurniroApp.isInitialized === true;
+
+                if (checkInit()) {
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (checkInit()) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 50);
+
+                    // Timeout after 5 seconds
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.warn('Main app initialization timeout');
+                        resolve();
+                    }, 5000);
+                }
+            });
+        };
+
+        await waitForApp();
+
+        // Initialize cart page manager
+        if (window.CartPageManager) {
+            const cartPageManager = new CartPageManager();
+            cartPageManager.init();
+        } else {
+            console.error('CartPageManager not found - check script loading order');
+        }
     });
 </script>
 

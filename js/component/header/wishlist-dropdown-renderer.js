@@ -235,7 +235,7 @@ class WishlistDropdownRenderer {
                 const item = wishlist.find(i => i.id === productId);
                 if (item) {
                     this.wishlistManager.removeProduct(productId);
-                    this.wishlistManager.showNotification(`${item.name} removed from wishlist`, 'info');
+                    window.toast.info(`${item.name} removed from wishlist`);
                     this.render();
                     this.updateBadge();
                 }

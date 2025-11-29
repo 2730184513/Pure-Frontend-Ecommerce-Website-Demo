@@ -214,26 +214,34 @@ class CartDropdownRenderer {
         if (!item) return;
 
         let value = parseInt(input.value);
+        let showToast = false;
+        let toastMessage = '';
 
         // Validate input
         if (isNaN(value) || value < 1) {
-            if (window.toast) {
-                window.toast.show('Quantity cannot be less than 1. Setting to minimum value.', 'warning');
-            }
+            showToast = true;
+            toastMessage = 'Quantity cannot be less than 1';
             value = 1;
         } else if (value > 9999) {
-            if (window.toast) {
-                window.toast.show('Quantity cannot exceed 9999. Setting to maximum value.', 'warning');
-            }
+            showToast = true;
+            toastMessage = 'Quantity cannot exceed 9999';
             value = 9999;
         }
 
-        // Update quantity
+        // Update input field to corrected value
+        input.value = value;
+
+        // Update quantity using silent mode to avoid double notifications
         const delta = value - item.qty;
         if (delta !== 0) {
-            this.cartManager.updateQuantity(variantId, delta);
+            this.cartManager.updateQuantity(variantId, delta, true); // Use silent mode
             this.render();
             this.updateBadge();
+        }
+
+        // Show validation toast after updating - using unified message format
+        if (showToast && window.toast) {
+            window.toast.show(toastMessage, 'warning');
         }
     }
 
@@ -328,11 +336,6 @@ class CartDropdownRenderer {
                 e.stopPropagation();
                 this.handleQuantityInputChange(input);
             });
-
-            input.addEventListener('blur', (e) => {
-                e.stopPropagation();
-                this.handleQuantityInputChange(input);
-            });
         });
     }
 
@@ -363,7 +366,7 @@ class CartDropdownRenderer {
             return;
         }
 
-        this.cartManager.updateQuantity(variantId, -1);
+        this.cartManager.updateQuantity(variantId, -1, true); // Use silent mode
         this.render();
         this.updateBadge();
     }
@@ -383,7 +386,7 @@ class CartDropdownRenderer {
             return;
         }
 
-        this.cartManager.updateQuantity(variantId, 1);
+        this.cartManager.updateQuantity(variantId, 1, true); // Use silent mode
         this.render();
         this.updateBadge();
     }
