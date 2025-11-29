@@ -63,11 +63,14 @@ class CheckoutManager {
 
             // Bind back button
             this.bindBackButton();
+
+            // Bind page cleanup events
+            this.bindPageCleanupEvents();
         } catch (error) {
             console.error('Error during checkout initialization:', error);
             alert('Failed to initialize checkout page: ' + error.message);
         }
-    }
+   }
 
     /**
      * Bind back button
@@ -78,12 +81,40 @@ class CheckoutManager {
         if (backBtn) {
             backBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-
-                // Set flag to indicate user is returning from incomplete checkout
-                sessionStorage.setItem('returning_from_checkout', 'true');
-
                 window.location.href = '/201-project/cart.html';
             });
+        }
+    }
+
+    /**
+     * Bind page cleanup events
+     */
+    bindPageCleanupEvents() {
+        // Clear selected items when navigating away from checkout
+        window.addEventListener('beforeunload', () => {
+            this.clearCheckoutData();
+        });
+
+        // Also clear when clicking back button or other navigation
+        window.addEventListener('pagehide', () => {
+            this.clearCheckoutData();
+        });
+
+        // Handle browser back/forward navigation
+        window.addEventListener('popstate', () => {
+            this.clearCheckoutData();
+        });
+    }
+
+    /**
+     * Clear checkout-related localStorage data
+     */
+    clearCheckoutData() {
+        try {
+            localStorage.removeItem('checkout_selected_items');
+            console.log('Checkout data cleared from localStorage');
+        } catch (error) {
+            console.warn('Error clearing checkout data:', error);
         }
     }
 
@@ -106,11 +137,11 @@ class CheckoutManager {
             return;
         }
 
-        // Get form data
-        const formData = this.formManager.getFormData();
-        const paymentMethod = this.summaryManager.getPaymentMethod();
+        // Get selected items for removal from cart
         const selectedItems = this.summaryManager.getSelectedItems();
-        const grandTotal = this.summaryManager.calculateGrandTotal();
+
+        // Note: formData, paymentMethod, and grandTotal would be used here
+        // for actual order processing in a real application
 
 
         // Remove ordered items from cart (silent mode - no individual notifications)
@@ -118,10 +149,11 @@ class CheckoutManager {
             this.cartManager.removeProduct(item.variantId, true);
         });
 
-        // Clear checkout selections and returning flag (order completed successfully)
-        const navStateManager = new NavigationStateManager();
-        navStateManager.clearCartSelections();
-        sessionStorage.removeItem('returning_from_checkout');
+        // Clear checkout selected items since order is complete
+        localStorage.removeItem('checkout_selected_items');
+
+        // Clear order success flag if exists
+        sessionStorage.removeItem('order_placed_success');
 
         // Set a flag in sessionStorage to show success message after redirect
         sessionStorage.setItem('order_placed_success', 'true');

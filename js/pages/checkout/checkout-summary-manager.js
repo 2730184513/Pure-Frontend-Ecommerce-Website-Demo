@@ -23,10 +23,39 @@ class CheckoutSummaryManager {
      * Load selected items from cart
      */
     loadSelectedItems() {
-        const rawData = localStorage.getItem('checkout_selected_items');
-        const selectedVariantIds = JSON.parse(rawData || '[]');
-        const cart = this.cartManager.getCart();
-        this.selectedItems = cart.filter(item => selectedVariantIds.includes(item.variantId));
+        try {
+            const rawData = localStorage.getItem('checkout_selected_items');
+            if (!rawData) {
+                console.warn('No selected items found in localStorage');
+                this.selectedItems = [];
+                return;
+            }
+
+            const selectedVariantIds = JSON.parse(rawData);
+            if (!Array.isArray(selectedVariantIds)) {
+                console.warn('Invalid selected items data format');
+                this.selectedItems = [];
+                return;
+            }
+
+            const cart = this.cartManager.getCart();
+            this.selectedItems = cart.filter(item => selectedVariantIds.includes(item.variantId));
+
+            // Log for debugging
+            console.log(`Loaded ${this.selectedItems.length} selected items for checkout`);
+
+            // If no valid items found but we had IDs, it means items were removed from cart
+            if (this.selectedItems.length === 0 && selectedVariantIds.length > 0) {
+                console.warn('Selected items no longer exist in cart');
+                // Clear the invalid localStorage data
+                localStorage.removeItem('checkout_selected_items');
+            }
+        } catch (error) {
+            console.error('Error loading selected items:', error);
+            this.selectedItems = [];
+            // Clear potentially corrupted localStorage data
+            localStorage.removeItem('checkout_selected_items');
+        }
     }
 
     /**

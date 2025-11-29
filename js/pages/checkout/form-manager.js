@@ -5,8 +5,6 @@
 class FormManager {
     constructor(formElement) {
         this.form = formElement;
-        // Use window global objects
-        this.dataService = new window.LocationDataService();
         this.renderer = new window.FormRenderer(this.form);
         this.countryDropdown = null;
         this.provinceDropdown = null;
@@ -15,8 +13,8 @@ class FormManager {
     }
 
     async initialize() {
-        // Load data first
-        await this.dataService.initialize();
+        // Ensure location data is loaded
+        await window.locationRepository.loadData();
 
         // Initialize components
         this.initializeDropdowns();
@@ -38,7 +36,7 @@ class FormManager {
 
         // Create country dropdown
         this.countryDropdown = new window.SearchableDropdown(countryInput, {
-            searchFunction: (query) => this.dataService.searchCountries(query),
+            searchFunction: (query) => window.locationRepository.searchCountries(query),
             allItems: allCountries,
             placeholder: 'Search or select a country...'
         });
@@ -229,7 +227,7 @@ class FormManager {
      * Update provinces
      */
     updateProvinces(countryName) {
-        const states = this.dataService.getStates(countryName);
+        const states = window.locationRepository.getProvincesByCountry(countryName);
         const provinceInput = this.provinceDropdown.getInputElement();
 
         if (states.length > 0) {
@@ -254,13 +252,7 @@ class FormManager {
      * Load all countries
      */
     loadAllCountries() {
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        const countries = [];
-        letters.forEach(letter => {
-            const items = this.dataService.searchCountries(letter);
-            countries.push(...items);
-        });
-        return countries;
+        return window.locationRepository.getAllCountries();
     }
 
     /**

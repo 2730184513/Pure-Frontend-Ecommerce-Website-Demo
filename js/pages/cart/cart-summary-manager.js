@@ -190,10 +190,8 @@ class CartSummaryManager {
             selectedVariantIds.push(variantId);
         });
 
-        // Save selections using NavigationStateManager
-        const navStateManager = new NavigationStateManager();
-        navStateManager.saveCartSelections(selectedVariantIds);
-
+        // Save selected items to localStorage for checkout page
+        localStorage.setItem('checkout_selected_items', JSON.stringify(selectedVariantIds));
         // Navigate to checkout
         window.location.href = 'checkout.html';
     }
