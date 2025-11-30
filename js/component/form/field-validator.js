@@ -93,6 +93,40 @@ class FieldValidator {
     reset() {
         this.hasBeenTouched = false;
     }
+
+    /**
+     * Static method to validate a field (for compatibility with existing code)
+     * @param {HTMLElement} field - The field to validate
+     * @returns {boolean} True if field is valid
+     */
+    static validateField(field) {
+        const validator = new FieldValidator(field);
+        validator.markAsTouched();
+        const result = validator.validate();
+
+        // Display error message
+        const errorSpan = field.parentNode.querySelector('.error-message');
+        if (errorSpan) {
+            if (result.valid) {
+                errorSpan.classList.remove('show');
+                errorSpan.textContent = '';
+            } else {
+                errorSpan.textContent = result.message;
+                errorSpan.classList.add('show');
+            }
+        }
+
+        return result.valid;
+    }
+
+    /**
+     * Instance method for compatibility
+     * @param {HTMLElement} field - The field to validate
+     * @returns {boolean} True if field is valid
+     */
+    validateField(field) {
+        return FieldValidator.validateField(field);
+    }
 }
 
 // Export to window

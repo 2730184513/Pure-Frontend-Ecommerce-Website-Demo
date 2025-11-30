@@ -132,34 +132,62 @@ class CheckoutManager {
      * Handle form submission
      */
     async handleSubmit() {
-        // Validate form
-        if (!this.formManager.validateAll()) {
-            return;
+        // Show loading state
+        const submitBtn = this.form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
         }
 
-        // Get selected items for removal from cart
-        const selectedItems = this.summaryManager.getSelectedItems();
+        try {
+            // Validate form
+            if (!this.formManager.validateAll()) {
+                // Show validation error toast
+                if (window.toastManager) {
+                    window.toastManager.show('Please check the form and fix any errors', 'error');
+                }
+                return;
+            }
 
-        // Note: formData, paymentMethod, and grandTotal would be used here
-        // for actual order processing in a real application
+            // Get selected items for removal from cart
+            const selectedItems = this.summaryManager.getSelectedItems();
 
+            // Simulate processing delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Remove ordered items from cart (silent mode - no individual notifications)
-        selectedItems.forEach(item => {
-            this.cartManager.removeProduct(item.variantId, true);
-        });
+            // Remove ordered items from cart (silent mode - no individual notifications)
+            selectedItems.forEach(item => {
+                this.cartManager.removeProduct(item.variantId, true);
+            });
 
-        // Clear checkout selected items since order is complete
-        localStorage.removeItem('checkout_selected_items');
+            // Clear checkout selected items since order is complete
+            localStorage.removeItem('checkout_selected_items');
 
-        // Clear order success flag if exists
-        sessionStorage.removeItem('order_placed_success');
+            // Clear order success flag if exists
+            sessionStorage.removeItem('order_placed_success');
 
-        // Set a flag in sessionStorage to show success message after redirect
-        sessionStorage.setItem('order_placed_success', 'true');
+            // Show success toast
+            if (window.toastManager) {
+                window.toastManager.show('Order placed successfully! Thank you for your purchase.', 'success');
+            }
 
-        // Redirect to cart page immediately
-        window.location.href = '/201-project/cart.html';
+            // Redirect to home page after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/201-project/index.html';
+            }, 2000);
+
+        } catch (error) {
+            console.error('Checkout submission error:', error);
+            if (window.toastManager) {
+                window.toastManager.show('Failed to place order. Please try again.', 'error');
+            }
+        } finally {
+            // Restore button state
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Place Order';
+            }
+        }
     }
 }
 

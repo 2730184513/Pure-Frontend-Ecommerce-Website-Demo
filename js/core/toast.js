@@ -225,5 +225,6 @@ class ToastManager {
 if (typeof window !== 'undefined') {
     window.ToastManager = ToastManager;
     window.toast = new ToastManager();
+    window.toastManager = window.toast; // Alias for compatibility
 }
 

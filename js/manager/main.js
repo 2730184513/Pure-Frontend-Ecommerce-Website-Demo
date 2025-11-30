@@ -11,7 +11,8 @@ class FurniroApp {
             home: null,
             shop: null,
             cart: null,      // Cart page manager (initialized in cart.html)
-            checkout: null   // Checkout page manager (initialized in checkout.html)
+            checkout: null,  // Checkout page manager (initialized in checkout.html)
+            contact: null    // Contact page manager (initialized in contact.html)
         };
         this.config = {
             initialProductCount: 8,
@@ -24,7 +25,8 @@ class FurniroApp {
             [PageUtility.PAGE_IDS.HOME]: 'home',
             [PageUtility.PAGE_IDS.SHOP]: 'shop',
             [PageUtility.PAGE_IDS.CART]: 'cart',
-            [PageUtility.PAGE_IDS.CHECKOUT]: 'checkout'
+            [PageUtility.PAGE_IDS.CHECKOUT]: 'checkout',
+            [PageUtility.PAGE_IDS.CONTACT]: 'contact'
         };
 
 
@@ -48,7 +50,8 @@ class FurniroApp {
             'index.html': 'Home',
             'shop.html': 'Shop',
             'cart.html': 'Cart',
-            'checkout.html': 'Checkout'
+            'checkout.html': 'Checkout',
+            'contact.html': 'Contact'
         };
 
         let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
@@ -58,6 +61,8 @@ class FurniroApp {
         } else if (currentPage === 'checkout.html') {
             breadcrumb.push({text: 'Cart', href: '/201-project/cart.html'});
             breadcrumb.push({text: 'Checkout'});
+        } else if (currentPage === 'contact.html') {
+            breadcrumb.push({text: 'Contact'});
         } else if (pageNames[currentPage] && currentPage !== 'index.html') {
             breadcrumb.push({text: pageNames[currentPage]});
         }
@@ -264,6 +269,10 @@ class FurniroApp {
                 break;
 
             case PageUtility.PAGE_IDS.CHECKOUT:
+                this._logExternalManagerInit(pageName);
+                break;
+
+            case PageUtility.PAGE_IDS.CONTACT:
                 this._logExternalManagerInit(pageName);
                 break;
 

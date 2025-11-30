@@ -13,7 +13,8 @@ class PageUtility {
         HOME: 1,
         SHOP: 2,
         CART: 3,
-        CHECKOUT: 4
+        CHECKOUT: 4,
+        CONTACT: 5
     };
 
     /**
@@ -24,7 +25,8 @@ class PageUtility {
         [this.PAGE_IDS.HOME]: '#inspirationsCarousel, #browseRange',
         [this.PAGE_IDS.SHOP]: '#shop-product-grid',
         [this.PAGE_IDS.CART]: '#cart-items-container',
-        [this.PAGE_IDS.CHECKOUT]: '#checkoutForm'
+        [this.PAGE_IDS.CHECKOUT]: '#checkoutForm',
+        [this.PAGE_IDS.CONTACT]: '#contactForm'
     };
 
     /**
@@ -34,7 +36,8 @@ class PageUtility {
         [this.PAGE_IDS.HOME]: 'Home',
         [this.PAGE_IDS.SHOP]: 'Shop',
         [this.PAGE_IDS.CART]: 'Cart',
-        [this.PAGE_IDS.CHECKOUT]: 'Checkout'
+        [this.PAGE_IDS.CHECKOUT]: 'Checkout',
+        [this.PAGE_IDS.CONTACT]: 'Contact'
     };
 
     /**
