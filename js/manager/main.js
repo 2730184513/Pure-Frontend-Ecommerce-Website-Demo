@@ -12,7 +12,8 @@ class FurniroApp {
             shop: null,
             cart: null,      // Cart page manager (initialized in cart.html)
             checkout: null,  // Checkout page manager (initialized in checkout.html)
-            contact: null    // Contact page manager (initialized in contact.html)
+            contact: null,   // Contact page manager (initialized in contact.html)
+            about: null      // About page manager (initialized here)
         };
         this.config = {
             initialProductCount: 8,
@@ -26,7 +27,8 @@ class FurniroApp {
             [PageUtility.PAGE_IDS.SHOP]: 'shop',
             [PageUtility.PAGE_IDS.CART]: 'cart',
             [PageUtility.PAGE_IDS.CHECKOUT]: 'checkout',
-            [PageUtility.PAGE_IDS.CONTACT]: 'contact'
+            [PageUtility.PAGE_IDS.CONTACT]: 'contact',
+            [PageUtility.PAGE_IDS.ABOUT]: 'about'
         };
 
 
@@ -51,7 +53,8 @@ class FurniroApp {
             'shop.html': 'Shop',
             'cart.html': 'Cart',
             'checkout.html': 'Checkout',
-            'contact.html': 'Contact'
+            'contact.html': 'Contact',
+            'about.html': 'About'
         };
 
         let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
@@ -63,6 +66,8 @@ class FurniroApp {
             breadcrumb.push({text: 'Checkout'});
         } else if (currentPage === 'contact.html') {
             breadcrumb.push({text: 'Contact'});
+        } else if (currentPage === 'about.html') {
+            breadcrumb.push({text: 'About'});
         } else if (pageNames[currentPage] && currentPage !== 'index.html') {
             breadcrumb.push({text: pageNames[currentPage]});
         }
@@ -276,6 +281,10 @@ class FurniroApp {
                 this._logExternalManagerInit(pageName);
                 break;
 
+            case PageUtility.PAGE_IDS.ABOUT:
+                await this._initAboutManager(managerKey, pageName);
+                break;
+
             default:
                 console.warn(`No manager defined for page: ${pageName}`);
         }
@@ -311,6 +320,22 @@ class FurniroApp {
             // Expose shop manager globally for SearchManager to access
             window.shopManager = this.managers[managerKey];
 
+            console.log(`✓ ${pageName} manager initialized`);
+        } else {
+            console.warn(`${pageName}Manager not found`);
+        }
+    }
+
+    /**
+     * Initialize about page manager
+     * @param {string} managerKey - Manager key
+     * @param {string} pageName - Page name
+     * @private
+     */
+    async _initAboutManager(managerKey, pageName) {
+        if (window.AboutManager) {
+            this.managers[managerKey] = new AboutManager();
+            await this.managers[managerKey].init();
             console.log(`✓ ${pageName} manager initialized`);
         } else {
             console.warn(`${pageName}Manager not found`);

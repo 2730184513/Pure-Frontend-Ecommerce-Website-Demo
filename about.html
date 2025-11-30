@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Furniro</title>
+
+  <link rel="stylesheet" href="/201-project/css/layout/main.css">
+
+  <!-- Header component styles -->
+  <link rel="stylesheet" href="/201-project/css/layout/header.css">
+  <link rel="stylesheet" href="/201-project/css/components/header/search.css">
+  <link rel="stylesheet" href="/201-project/css/components/header/cart-wishlist.css">
+
+
+  <link rel="stylesheet" href="/201-project/css/layout/footer.css">
+
+  <link rel="stylesheet" href="/201-project/css/core/toast.css">
+  <link rel="stylesheet" href="/201-project/css/components/banners/page-banner.css">
+  <link rel="stylesheet" href="/201-project/css/components/banners/feature-banner.css">
+
+  <!-- Contact page styles -->
+  <link rel="stylesheet" href="css/layout/about.css">
+  <link rel="stylesheet" href="css/pages/about/typewriter.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<div id="banner-placeholder"></div>
+
+<!-- About内容区域 - 纯文本 -->
+<section class="about-typewriter-section">
+  <div class="typewriter-container">
+
+    <!-- 内容 -->
+    <div class="typewriter-content">
+      <p class="reveal-paragraph" data-index="0">
+        Furniro was founded on the simple idea of bringing sustainably sourced, meticulously crafted, impeccably designed, and built-to-last luxury furniture to your home. At Meubel House, we believe in designing and crafting intuitively iconic pieces of furniture that exude luxury elegance and effortless comfort. We conceptualize and design every piece to be rich in detail, high in comfort, and best in functionality.
+      </p>
+
+      <p class="reveal-paragraph" data-index="1">
+        From visual interest to texture, to shape to the minute tailored details, we meticulously craft our collection of living, dining, and outdoor furniture to become a point of pride at your home. At the heart of Meubel House is our dedicated and skilled team of artisans and craftsmen that we have carefully chosen to work with us and their deep appreciation for the maker's touch.
+      </p>
+
+      <p class="reveal-paragraph" data-index="2">
+        And we go the extra mile to achieve excellence, thanks to their craftsmanship and several decades of experience behind them. With hand-selection of premium materials considering their texture, uniqueness, and longevity, coupled with a thoughtful selection of tones and designs, we ensure the quality of our pieces is bespoke without forgetting to highlight the inherent beauty of materials.
+      </p>
+
+      <p class="reveal-paragraph" data-index="3">
+        Further, our founders' passion for environment and adventure takes them across Asia to handpick unique pieces in the most unexpected places. From vintage markets in mountainous villages, nowhere is off-limits for finding pieces of furniture that align with Meubel House's standards. Bringing that impeccable sense of style and design to your purchase experience, we are situated in a secluded yet stunning location, surrounded by the tranquility of lush green nature in the quietness of Gower Street in the heart of Colombo.
+      </p>
+
+      <p class="reveal-paragraph" data-index="4">
+        Our showroom is stylishly designed to browse our collections of living, dining, and outdoor furniture, and accessories, while experiencing homely luxury. The blissful quietness of the surroundings, calming sight of lush greens, and the heavenly coziness of our stylish furniture, complemented by our friendly staff, who will assist you with choosing, purchasing, and delivering, is a comforting experience in itself. And we invite you to walk into our sanctuary of design and craftsmanship to discover furniture that will make your house feel like home.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+
+<div id="feature-banner-placeholder"></div>
+
+<div id="footer-placeholder"></div>
+
+<!-- Core utilities -->
+<script src="/201-project/js/component/component-loader.js"></script>
+<script src="/201-project/js/core/page-utility.js"></script>
+<script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/navigate.js"></script>
+
+<!-- Data layer -->
+<script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/pages/shop/product-filter.js"></script>
+
+<!-- Header components -->
+<script src="/201-project/js/component/header/search.js"></script>
+<script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/cart.js"></script>
+<script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist.js"></script>
+
+
+
+
+
+<!-- About page components -->
+<script src="/201-project/js/pages/about/paragraph-reveal.js"></script>
+
+<!-- Page managers -->
+<script src="/201-project/js/manager/about-manager.js"></script>
+<script src="/201-project/js/manager/header-manager.js"></script>
+
+<!-- Main controller (must be last) -->
+<script src="/201-project/js/manager/main.js"></script>
+
+<script>
+  // Initialize about page after main app initialization
+  (async function() {
+    // Wait for main app initialization
+    const waitForApp = () => {
+      return new Promise((resolve) => {
+        const checkInit = () => window.FurniroApp && window.FurniroApp.isInitialized === true;
+
+        if (checkInit()) {
+          resolve();
+        } else {
+          const checkInterval = setInterval(() => {
+            if (checkInit()) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 50);
+
+          // Timeout after 10 seconds
+          setTimeout(() => {
+            clearInterval(checkInterval);
+            console.error('Timeout: Main app not initialized');
+            resolve();
+          }, 10000);
+        }
+      });
+    };
+
+    await waitForApp();
+
+    try {
+      console.log('🚀 Initializing About Page...');
+
+      // Simple breadcrumb for about page
+      const breadcrumb = [
+        { text: 'Home', href: '/201-project/index.html' },
+        { text: 'About' }
+      ];
+
+      // Load page-specific components (banner and feature-banner)
+      await ComponentLoader.loadComponents([
+        {
+          name: 'page-banner',
+          target: '#banner-placeholder',
+          params: {
+            'banner-title': 'About',
+            'banner-breadcrumb': breadcrumb
+          }
+        },
+        {
+          name: 'feature-banner',
+          target: '#feature-banner-placeholder'
+        }
+      ]);
+
+      console.log('✓ About page components loaded');
+    } catch (error) {
+      console.error('❌ About page initialization failed:', error);
+    }
+  })();
+</script>
+
+</body>
+</html>

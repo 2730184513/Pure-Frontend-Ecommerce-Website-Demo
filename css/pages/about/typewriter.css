@@ -1,0 +1,21 @@
+/* ========================================
+   Typewriter Animation - Simple Fade In
+   ======================================== */
+
+/* 标题样式 - 始终显示 */
+.typewriter-title {
+    opacity: 1;
+}
+
+/* 段落初始状态 - 隐藏 */
+.reveal-paragraph {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* 段落显示状态 - 从下往上淡入 */
+.reveal-paragraph.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
