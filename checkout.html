@@ -19,9 +19,12 @@
 
     <!-- Checkout page styles -->
     <link rel="stylesheet" href="/201-project/css/layout/checkout.css">
-    <link rel="stylesheet" href="/201-project/css/components/forms/form-billing.css">
-    <link rel="stylesheet" href="/201-project/css/pages/checkout/checkout-summary.css">
+    <!-- Generic form component styles -->
+    <link rel="stylesheet" href="/201-project/css/components/forms/form.css">
     <link rel="stylesheet" href="/201-project/css/components/forms/searchable-dropdown.css">
+    <!-- Checkout-specific styles -->
+    <link rel="stylesheet" href="/201-project/css/pages/checkout/form-billing.css">
+    <link rel="stylesheet" href="/201-project/css/pages/checkout/checkout-summary.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
             rel="stylesheet">
@@ -229,7 +232,7 @@
                 <strong>privacy policy.</strong>
             </p>
 
-            <button type="submit" class="place-order-btn">Place order</button>
+            <button type="submit" class="form-submit-btn place-order-btn">Place order</button>
         </aside>
     </form>
 </div>
@@ -253,8 +256,6 @@
 <script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
 <script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
 <script src="/201-project/js/component/header/wishlist.js"></script>
-
-<!-- Cart manager (needed for checkout) -->
 <script src="/201-project/js/component/header/cart.js"></script>
 
 <!-- Checkout page specific components -->
