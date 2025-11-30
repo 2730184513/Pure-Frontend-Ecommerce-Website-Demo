@@ -232,16 +232,7 @@ class InspirationsCarousel {
     }
 }
 
-// Auto-initialize
-const inspirationsCarousel = new InspirationsCarousel();
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => inspirationsCarousel.init());
-} else {
-    inspirationsCarousel.init();
-}
-
-// Register with main app
-if (window.FurniroApp) {
-    window.FurniroApp.modules.carousel = inspirationsCarousel;
+// Export class to global scope for HomeManager
+if (typeof window !== 'undefined') {
+    window.InspirationsCarousel = InspirationsCarousel;
 }

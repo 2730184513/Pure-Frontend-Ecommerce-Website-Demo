@@ -77,16 +77,7 @@ class CategoryRotator {
     }
 }
 
-// Auto-initialize
-const categoryRotator = new CategoryRotator();
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => categoryRotator.init());
-} else {
-    categoryRotator.init();
-}
-
-// Register with main app
-if (window.FurniroApp) {
-    window.FurniroApp.modules.categoryRotator = categoryRotator;
+// Export class to global scope for HomeManager
+if (typeof window !== 'undefined') {
+    window.CategoryRotator = CategoryRotator;
 }
