@@ -13,8 +13,7 @@
     background: white;
     z-index: 900;
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
-    /* 改用 ease-out 曲线：开始快，然后逐渐减速 */
-    transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: left 0.5s;
     overflow-y: auto;
     scrollbar-width: none;
     display: block;
