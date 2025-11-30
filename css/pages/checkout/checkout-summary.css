@@ -276,42 +276,10 @@ hr {
    PLACE ORDER BUTTON
    ======================================== */
 
+/* Button styles moved to form.css as .form-submit-btn */
+/* Keep class alias for backward compatibility */
 .place-order-btn {
-    width: 100%;
-    max-width: 318px;
-    height: 64px;
-    background: var(--primary-color);
-    border: none;
-    border-radius: 15px;
-    font-size: 20px;
-    font-family: var(--font-main);
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: block;
-    margin: 0 auto;
-}
-
-.place-order-btn:hover {
-    background: var(--primary-color);
-    color: #fff;
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(184, 142, 47, 0.4);
-}
-
-.place-order-btn:active {
-    transform: scale(0.98);
-    box-shadow: 0 4px 12px rgba(184, 142, 47, 0.3);
-}
-
-.place-order-btn:disabled {
-    background: var(--text-light-gray);
-    color: #fff;
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+    /* All styles inherited from .form-submit-btn in form.css */
 }
 
 /* ========================================
@@ -321,12 +289,6 @@ hr {
 @media (max-width: 768px) {
     .order-summary {
         padding: 20px;
-    }
-
-    .place-order-btn {
-        max-width: 100%;
-        height: 56px;
-        font-size: 18px;
     }
 }
 

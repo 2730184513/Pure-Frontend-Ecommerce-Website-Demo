@@ -1,58 +1,4 @@
-/* form-billing.css - Billing details form styles */
-
-/* ========================================
-   BILLING SECTION
-   ======================================== */
-
-.billing-section {
-    background: #fff;
-    padding: 35px 75px;
-}
-
-.billing-header {
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* Back Button */
-.back-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-}
-
-.back-button:hover {
-    transform: translateX(-3px);
-}
-
-.back-button img {
-    width: 24px;
-    height: 24px;
-}
-
-.billing-header-content {
-    flex: 1;
-}
-
-.billing-section h1 {
-    font-size: 36px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-dark);
-}
-
-.required-note {
-    font-size: 14px;
-    color: var(--text-light-gray);
-    font-weight: 400;
-}
+/* form.css - Generic form component styles */
 
 /* ========================================
    FORM LAYOUT
@@ -168,6 +114,48 @@
 }
 
 /* ========================================
+   FORM SUBMIT BUTTON
+   ======================================== */
+
+.form-submit-btn {
+    width: 100%;
+    max-width: 318px;
+    height: 64px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    font-family: var(--font-main);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.form-submit-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(184, 142, 47, 0.4);
+}
+
+.form-submit-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(184, 142, 47, 0.3);
+}
+
+.form-submit-btn:disabled {
+    background: var(--text-light-gray);
+    color: #fff;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 
@@ -176,12 +164,10 @@
         grid-template-columns: 1fr;
     }
 
-    .billing-section {
-        padding: 20px;
-    }
-
-    .billing-section h1 {
-        font-size: 28px;
+    .form-submit-btn {
+        max-width: 100%;
+        height: 56px;
+        font-size: 18px;
     }
 }
 
