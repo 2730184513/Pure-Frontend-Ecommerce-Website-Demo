@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Furniro</title>
+
+    <link rel="stylesheet" href="/201-project/css/layout/main.css">
+
+    <!-- Header component styles -->
+    <link rel="stylesheet" href="/201-project/css/layout/header.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/search.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/cart-wishlist.css">
+
+
+    <link rel="stylesheet" href="/201-project/css/layout/footer.css">
+
+    <link rel="stylesheet" href="/201-project/css/core/toast.css">
+    <link rel="stylesheet" href="/201-project/css/components/banners/page-banner.css">
+    <link rel="stylesheet" href="/201-project/css/components/banners/feature-banner.css">
+
+    <!-- Contact page styles -->
+    <link rel="stylesheet" href="/201-project/css/components/forms/form.css">
+    <link rel="stylesheet" href="/201-project/css/layout/contact.css">
+    <link rel="stylesheet" href="/201-project/css/pages/contact/form-contact.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
+            rel="stylesheet">
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<div id="banner-placeholder"></div>
+
+<!-- Contact Content -->
+<div class="contact-content-wrapper">
+    <!-- Contact Header Section (独立居中) -->
+    <div class="contact-main-header">
+        <h1>Get In Touch With Us</h1>
+        <p>For More Information About Our Product & Services. Please Feel Free To Drop Us An Email. Our Staff Always Be There To Help You Out. Do Not Hesitate!</p>
+    </div>
+
+    <!-- Contact Main Content (两列布局) -->
+    <div class="contact-container">
+        <!-- Contact Information Section -->
+        <aside class="contact-info">
+
+        <div class="contact-info-item">
+            <div class="contact-icon">
+                <img src="/201-project/images/icons/location.png" alt="Location">
+            </div>
+            <div class="contact-details">
+                <h3>Address</h3>
+                <p>236 5th SE Avenue, New York NY10000, United States</p>
+            </div>
+        </div>
+
+        <div class="contact-info-item">
+            <div class="contact-icon">
+                <img src="/201-project/images/icons/phone.png" alt="Phone">
+            </div>
+            <div class="contact-details">
+                <h3>Phone</h3>
+                <p>Mobile: +(84) 546-6789<br>Hotline: +(84) 456-6789</p>
+            </div>
+        </div>
+
+        <div class="contact-info-item">
+            <div class="contact-icon">
+                <img src="/201-project/images/icons/time.png" alt="Working Time">
+            </div>
+            <div class="contact-details">
+                <h3>Working Time</h3>
+                <p>Monday-Friday: 9:00 - 22:00<br>Saturday-Sunday: 9:00 - 21:00</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Contact Form Section -->
+    <section class="contact-form-section">
+        <div class="contact-form-header">
+            <div class="form-title-row">
+                <h2>Send us a message</h2>
+                <span class="required-note"><span class="required">*</span> indicates required field</span>
+            </div>
+        </div>
+
+        <form id="contactForm" class="contact-form" novalidate>
+            <div class="form-group">
+                <label for="name">Your Name<span class="required">*</span></label>
+                <input type="text"
+                       id="name"
+                       name="name"
+                       required
+                       pattern="^[A-Za-z\s\-']{2,100}$"
+                       data-error="Name must be 2-100 letters only"
+                       placeholder="Abc">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address<span class="required">*</span></label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       required
+                       pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+                       data-error="Please enter a valid email address"
+                       placeholder="Abc@def.com">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group subject-group">
+                <label for="subject">Subject</label>
+                <input type="text"
+                       id="subject"
+                       name="subject"
+                       pattern="^.{2,200}$"
+                       data-error="Subject must be 2-200 characters"
+                       placeholder="This is an optional">
+                <span class="error-message"></span>
+            </div>
+
+            <div class="form-group message-group">
+                <label for="message">Message<span class="required">*</span></label>
+                <textarea id="message"
+                          name="message"
+                          required
+                          minlength="10"
+                          maxlength="1000"
+                          data-error="Message must be 10-1000 characters"
+                          placeholder="Hi! I'd like to ask about"></textarea>
+                <span class="error-message"></span>
+            </div>
+
+            <button type="submit" class="form-submit-btn">Submit</button>
+        </form>
+    </section>
+    </div>
+</div>
+
+<div id="feature-banner-placeholder"></div>
+
+<div id="footer-placeholder"></div>
+
+<!-- Core utilities -->
+<script src="/201-project/js/component/component-loader.js"></script>
+<script src="/201-project/js/core/page-utility.js"></script>
+<script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/navigate.js"></script>
+
+<!-- Data layer -->
+<script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/pages/shop/product-filter.js"></script>
+
+<!-- Header components -->
+<script src="/201-project/js/component/header/search.js"></script>
+<script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/cart.js"></script>
+<script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist.js"></script>
+
+
+
+<!-- Form components -->
+<script src="/201-project/js/component/form/field-validator.js"></script>
+
+<!-- Contact page components -->
+<script src="/201-project/js/pages/contact/contact-form-manager.js"></script>
+<script src="/201-project/js/manager/contact-manager.js"></script>
+
+<!-- Page managers -->
+<script src="/201-project/js/manager/header-manager.js"></script>
+<script src="/201-project/js/manager/cart-manager.js"></script>
+
+<!-- Main controller (must be last) -->
+<script src="/201-project/js/manager/main.js"></script>
+
+<script>
+    // Initialize contact page after main app initialization
+    (async function() {
+        // Wait for main app initialization
+        const waitForApp = () => {
+            return new Promise((resolve) => {
+                const checkInit = () => window.FurniroApp && window.FurniroApp.isInitialized === true;
+
+                if (checkInit()) {
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (checkInit()) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 50);
+
+                    // Timeout after 10 seconds
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.error('Timeout: Main app not initialized');
+                        resolve();
+                    }, 10000);
+                }
+            });
+        };
+
+        await waitForApp();
+
+        try {
+            console.log('🚀 Initializing Contact Page...');
+
+            // Simple breadcrumb for contact page
+            const breadcrumb = [
+                { text: 'Home', href: '/201-project/index.html' },
+                { text: 'Contact' }
+            ];
+
+            // Load page-specific components (banner and feature-banner)
+            await ComponentLoader.loadComponents([
+                {
+                    name: 'page-banner',
+                    target: '#banner-placeholder',
+                    params: {
+                        'banner-title': 'Contact',
+                        'banner-breadcrumb': breadcrumb
+                    }
+                },
+                {
+                    name: 'feature-banner',
+                    target: '#feature-banner-placeholder'
+                }
+            ]);
+
+            console.log('✓ Contact page components loaded');
+
+            // Initialize contact manager
+            try {
+                const manager = new ContactManager();
+                await manager.initialize();
+                console.log('✓ Contact manager initialized');
+            } catch (error) {
+                console.error('Failed to initialize contact manager:', error);
+                alert('Failed to load contact page: ' + error.message);
+            }
+
+        } catch (error) {
+            console.error('❌ Contact page initialization failed:', error);
+        }
+    })();
+</script>
+
+</body>
+</html>
