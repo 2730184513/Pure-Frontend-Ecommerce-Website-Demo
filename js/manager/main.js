@@ -14,7 +14,8 @@ class FurniroApp {
             checkout: null,  // Checkout page manager (initialized in checkout.html)
             contact: null,   // Contact page manager (initialized in contact.html)
             about: null,     // About page manager (initialized here)
-            productDetail: null  // Product detail page manager
+            productDetail: null,  // Product detail page manager
+            login: null      // Login page manager (initialized in register-login.html)
         };
         this.config = {
             initialProductCount: 8,
@@ -30,7 +31,8 @@ class FurniroApp {
             [PageUtility.PAGE_IDS.CHECKOUT]: 'checkout',
             [PageUtility.PAGE_IDS.CONTACT]: 'contact',
             [PageUtility.PAGE_IDS.ABOUT]: 'about',
-            [PageUtility.PAGE_IDS.PRODUCT_DETAIL]: 'productDetail'
+            [PageUtility.PAGE_IDS.PRODUCT_DETAIL]: 'productDetail',
+            [PageUtility.PAGE_IDS.LOGIN]: 'login'
         };
 
 
@@ -56,7 +58,8 @@ class FurniroApp {
             'cart.html': 'Cart',
             'checkout.html': 'Checkout',
             'contact.html': 'Contact',
-            'about.html': 'About'
+            'about.html': 'About',
+            'register-login.html': 'Login'
         };
 
         let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
@@ -289,6 +292,10 @@ class FurniroApp {
 
             case PageUtility.PAGE_IDS.PRODUCT_DETAIL:
                 await this._initProductDetailManager(managerKey, pageName);
+                break;
+
+            case PageUtility.PAGE_IDS.LOGIN:
+                this._logExternalManagerInit(pageName);
                 break;
 
             default:

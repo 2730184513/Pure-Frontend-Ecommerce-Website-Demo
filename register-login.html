@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furniro - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Core styles -->
+  <link rel="stylesheet" href="/201-project/css/layout/main.css">
+  <link rel="stylesheet" href="/201-project/css/core/toast.css">
+  
+  <!-- Generic form component styles -->
+  <link rel="stylesheet" href="/201-project/css/components/forms/form.css">
+  
+  <!-- Login page specific styles -->
+  <link rel="stylesheet" href="/201-project/css/pages/register-login/login.css">
+</head>
+<body class="login-page">
+
+<!-- Main Container -->
+<div class="login-container" id="login-container">
+  
+  <!-- 左侧面板 - 表单区域（初始在左侧，滑动后到右侧） -->
+  <div class="login-panel login-panel--form" id="login-form-panel">
+    <div class="login-form-content" id="login-form-content">
+      <!-- 表单内容由 JS 动态渲染 -->
+    </div>
+  </div>
+  
+  <!-- 右侧面板 - 背景图区域（初始在右侧，滑动后到左侧） -->
+  <div class="login-panel login-panel--image" id="login-image-panel">
+    
+    <!-- Header Actions -->
+    <div class="login-image-actions">
+      <a href="#" id="signUpBtnHeader" class="login-action-link">Sign Up</a>
+      <button id="joinUsBtn" class="login-join-btn">Join Us</button>
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="login-hero-content">
+      <div class="login-tagline">
+        <div class="login-quote-mark">"</div>
+        <div class="login-tagline-wrapper">
+          <h2 class="login-tagline-text">Discover Our New Collection</h2>
+          <p class="login-tagline-subtitle">create the perfect home environment.</p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+<!-- Core utilities -->
+<script src="/201-project/js/core/toast.js"></script>
+
+<!-- Form components -->
+<script src="/201-project/js/component/form/field-validator.js"></script>
+<script src="/201-project/js/component/form/form-renderer.js"></script>
+
+<!-- Form handlers -->
+<script src="/201-project/js/pages/register-login/base-form-handler.js"></script>
+<script src="/201-project/js/pages/register-login/login-form-handler.js"></script>
+<script src="/201-project/js/pages/register-login/signup-form-handler.js"></script>
+<script src="/201-project/js/pages/register-login/forgot-password-form-handler.js"></script>
+
+<!-- Page manager -->
+<script src="/201-project/js/manager/login-manager.js"></script>
+
+<!-- Initialize login page -->
+<script>
+  document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize login manager
+    const loginManager = new LoginManager();
+    await loginManager.init();
+    
+    // Expose globally for debugging
+    window.loginManagerInstance = loginManager;
+  });
+</script>
+
+</body>
+</html>

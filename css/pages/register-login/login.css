@@ -1,0 +1,443 @@
+/**
+ * Login/Register Page Styles
+ * 动画效果：点击注册/忘记密码时，图片面板滑到左侧，表单面板滑到右侧
+ * 只包含 main.css 中没有的样式
+ */
+
+/* ========================================
+   BODY OVERRIDE FOR LOGIN PAGE
+   ======================================== */
+body.login-page {
+    height: 100vh;
+    background: var(--bg-beige);
+    overflow: hidden;
+    padding-top: 0;
+}
+
+/* ========================================
+   MAIN CONTAINER
+   ======================================== */
+.login-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ========================================
+   PANELS - 使用绝对定位实现滑动
+   ======================================== */
+.login-panel {
+    position: absolute;
+    top: 0;
+    width: 50vw;
+    height: 100vh;
+    transition: transform 0.7s cubic-bezier(.77, 0, .18, 1);
+}
+
+/* 表单面板 - 初始在左侧 */
+.login-panel--form {
+    left: 0;
+    background: var(--bg-beige);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 60px;
+    z-index: 2;
+}
+
+/* 图片面板 - 初始在右侧 */
+.login-panel--image {
+    left: 50vw;
+    background-image: url('/201-project/images/login-background.jpg');
+    background-size: cover;
+    background-position: center 80%;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+/* ========================================
+   动画状态 - 交换位置
+   ======================================== */
+/* 表单面板滑到右侧 */
+.login-container.swapped .login-panel--form {
+    transform: translateX(50vw);
+}
+
+/* 图片面板滑到左侧 */
+.login-container.swapped .login-panel--image {
+    transform: translateX(-50vw);
+}
+
+/* ========================================
+   FORM CONTENT WRAPPER
+   ======================================== */
+.login-form-content {
+    width: 100%;
+    max-width: 400px;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   LOGO HEADER
+   ======================================== */
+.login-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 60px;
+}
+
+.login-logo-img {
+    height: 32px;
+    width: auto;
+}
+
+.login-logo-text {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* ========================================
+   GREETING & SUBTITLE
+   ======================================== */
+.login-greeting {
+    font-size: 86px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 1.1;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-gray);
+    margin-bottom: 40px;
+}
+
+/* ========================================
+   FORM STYLES
+   ======================================== */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form .form-group {
+    margin-bottom: 0;
+}
+
+.login-form .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.login-form .form-group label .required {
+    color: #e74c3c;
+    margin-left: 2px;
+}
+
+.login-form .form-group input {
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #fff;
+    min-height: auto;
+    transition: border-color 0.3s;
+}
+
+.login-form .form-group input:focus {
+    box-shadow: none;
+    border-color: var(--primary-color);
+}
+
+.login-form .form-group input::placeholder {
+    color: var(--text-light-gray);
+}
+
+.login-form .error-message {
+    font-size: 12px;
+    margin-top: 0;
+}
+
+.login-form .error-message.show {
+    margin-top: 6px;
+}
+
+/* ========================================
+   FORM FOOTER
+   ======================================== */
+.login-form-footer {
+    text-align: right;
+    margin-top: -10px;
+}
+
+.login-forgot-password {
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px dotted var(--text-gray);
+}
+
+/* ========================================
+   SUBMIT BUTTON
+   ======================================== */
+.login-submit-btn {
+    width: 100%;
+    padding: 16px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.login-submit-btn:hover {
+    background-color: #A07828;
+}
+
+.login-submit-btn:disabled {
+    background-color: var(--text-light-gray);
+    cursor: not-allowed;
+}
+
+/* ========================================
+   SIGNUP PROMPT
+   ======================================== */
+.login-signup-prompt {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--text-gray);
+    font-size: 14px;
+}
+
+.login-signup-link {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ========================================
+   IMAGE PANEL - HEADER ACTIONS
+   ======================================== */
+.login-image-actions {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 20;
+}
+
+.login-action-link {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.login-action-link:hover {
+    color: var(--primary-color);
+}
+
+.login-join-btn {
+    padding: 10px 28px;
+    border: 2px solid #fff;
+    border-radius: 25px;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+}
+
+.login-join-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ========================================
+   IMAGE PANEL - HERO CONTENT
+   ======================================== */
+.login-hero-content {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    padding: 0 60px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.login-tagline {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.login-quote-mark {
+    font-size: 80px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 0.8;
+    margin-top: -10px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.login-tagline-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-tagline-text {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.login-tagline-subtitle {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    margin-top: 4px;
+}
+
+/* ========================================
+   BACK BUTTON
+   ======================================== */
+.login-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.login-back-btn:hover {
+    color: var(--primary-color);
+}
+
+.login-back-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ========================================
+   FORM TITLE
+   ======================================== */
+.login-form-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* ========================================
+   RESPONSIVE - TABLET
+   ======================================== */
+@media (max-width: 1024px) {
+    .login-panel {
+        width: 100vw;
+    }
+
+    .login-panel--form {
+        padding: 30px 20px;
+    }
+
+    .login-panel--image {
+        display: none;
+    }
+
+    .login-container.swapped .login-panel--form {
+        transform: none;
+    }
+
+    .login-greeting {
+        font-size: 48px;
+    }
+
+    .login-logo-text {
+        font-size: 24px;
+    }
+
+    .login-logo-img {
+        height: 24px;
+    }
+
+    .login-header {
+        margin-bottom: 40px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    .login-greeting {
+        font-size: 36px;
+    }
+
+    .login-tagline-text {
+        font-size: 28px;
+    }
+
+    .login-quote-mark {
+        font-size: 60px;
+    }
+
+    .login-panel--form {
+        padding: 20px;
+    }
+
+    .login-hero-content {
+        bottom: 60px;
+        padding: 0 30px;
+    }
+
+    .login-image-actions {
+        top: 20px;
+        right: 20px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - SHORT HEIGHT
+   ======================================== */
+@media (max-height: 700px) {
+    .login-panel--form {
+        align-items: flex-start;
+        padding-top: 60px;
+    }
+}
+
+/* ========================================
+   TOAST CONTAINER POSITION OVERRIDE
+   ======================================== */
+.login-page .toast-container {
+    top: 40px;
+}

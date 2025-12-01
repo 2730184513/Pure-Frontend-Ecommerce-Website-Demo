@@ -16,7 +16,8 @@ class PageUtility {
         CHECKOUT: 4,
         CONTACT: 5,
         ABOUT: 6,
-        PRODUCT_DETAIL: 7
+        PRODUCT_DETAIL: 7,
+        LOGIN: 8
     };
 
     /**
@@ -30,7 +31,8 @@ class PageUtility {
         [this.PAGE_IDS.CHECKOUT]: '#checkoutForm',
         [this.PAGE_IDS.CONTACT]: '#contactForm',
         [this.PAGE_IDS.ABOUT]: '.about-typewriter-section',
-        [this.PAGE_IDS.PRODUCT_DETAIL]: '#product-breadcrumb, #related-products-grid'
+        [this.PAGE_IDS.PRODUCT_DETAIL]: '#product-breadcrumb, #related-products-grid',
+        [this.PAGE_IDS.LOGIN]: '#login-container, .login-page'
     };
 
     /**
@@ -43,7 +45,8 @@ class PageUtility {
         [this.PAGE_IDS.CHECKOUT]: 'Checkout',
         [this.PAGE_IDS.CONTACT]: 'Contact',
         [this.PAGE_IDS.ABOUT]: 'About',
-        [this.PAGE_IDS.PRODUCT_DETAIL]: 'Product Detail'
+        [this.PAGE_IDS.PRODUCT_DETAIL]: 'Product Detail',
+        [this.PAGE_IDS.LOGIN]: 'Login'
     };
 
     /**
