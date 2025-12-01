@@ -1,0 +1,33 @@
+/* ========================================
+   BREADCRUMB NAVIGATION STYLES
+   Styles for breadcrumb navigation on product detail page
+   Layout in: layout/product-detail.css
+   ======================================== */
+
+.breadcrumb-section .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: black;
+}
+
+/* Override page-banner.css link for product detail page */
+.breadcrumb-section .breadcrumb-link {
+    font-weight: 400;
+    color: black;
+    text-decoration: none;
+}
+
+.breadcrumb-section .breadcrumb-link:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-section .breadcrumb-separator {
+    margin: 0 12px;
+    color: black;
+}
+
+.breadcrumb-section .breadcrumb-current {
+    color: black;
+    font-weight: 400;
+}

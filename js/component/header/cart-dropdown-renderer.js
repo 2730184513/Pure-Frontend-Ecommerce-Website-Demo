@@ -283,6 +283,7 @@ class CartDropdownRenderer {
     createCartItemElement(item) {
         const el = document.createElement('div');
         el.className = 'cart-item';
+        el.dataset.productId = item.id; // Store product ID for navigation
 
         const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
         const placeholderSrc = '/201-project/images/products/placeholder.jpg';
@@ -307,7 +308,29 @@ class CartDropdownRenderer {
         </div>
     `;
 
+        // Add double-click to navigate to product detail
+        el.addEventListener('dblclick', (e) => {
+            // Prevent navigation if clicking on buttons or inputs
+            if (e.target.closest('.qty-btn') || e.target.closest('.qty-input') || e.target.closest('.delete')) {
+                return;
+            }
+            this.navigateToProductDetail(item.id);
+        });
+
+        // Add cursor style hint
+        el.style.cursor = 'pointer';
+
         return el;
+    }
+
+    /**
+     * Navigate to product detail page
+     * @param {string} productId - Product ID
+     */
+    navigateToProductDetail(productId) {
+        sessionStorage.setItem('productDetailId', productId);
+        sessionStorage.setItem('productDetailSource', 'cart');
+        window.location.href = '/201-project/product-detail.html';
     }
 
     /**

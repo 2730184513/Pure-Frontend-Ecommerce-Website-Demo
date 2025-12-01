@@ -1,0 +1,177 @@
+/* ========================================
+   PRODUCT TEXT INFO STYLES
+   Styles for product title, price, rating, description, meta
+   Layout in: layout/product-detail.css
+   ======================================== */
+
+/* === Product Title === */
+.product-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: black;
+    margin-bottom: 8px;
+}
+
+/* === Price Section === */
+.product-price-section {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.product-price-section .current-price {
+    font-size: 24px;
+    font-weight: 600;
+    color: #ff4444;
+}
+
+.product-price-section .original-price {
+    font-size: 12px;
+    color: #B0B0B0;
+    text-decoration: line-through;
+}
+
+.out-of-stock-badge {
+    color: #E97171;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* === Rating Section === */
+.product-rating-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.stars-container {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.star-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.rating-divider {
+    font-size: 16px;
+    color: #9F9F9F;
+    margin: 0 4px;
+}
+
+.rating-score {
+    font-size: 13px;
+    color: #9F9F9F;
+}
+
+.review-count {
+    font-size: 13px;
+    color: #9F9F9F;
+}
+
+/* === Description Text Section === */
+.product-description-text-section {
+    margin-bottom: 12px;
+}
+
+.product-detail-text {
+    font-size: 13px;
+    color: black;
+    line-height: 1.6;
+    max-height: 60px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.product-detail-text.expanded {
+    max-height: none;
+}
+
+.product-detail-text.no-overflow {
+    max-height: none;
+}
+
+.expand-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #9F9F9F;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.expand-link:hover {
+    color: var(--primary-color);
+}
+
+.expand-link.hidden {
+    display: none;
+}
+
+/* === Remain Section === */
+.product-remain-section {
+    margin-bottom: 16px;
+}
+
+.remain-text {
+    font-size: 14px;
+    color: #9F9F9F;
+}
+
+/* === Divider === */
+.product-divider {
+    border: none;
+    border-top: 1px solid #D9D9D9;
+    margin: 24px 0;
+}
+
+/* === Meta Section (SKU, Category, Tags, Share) === */
+.product-meta-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.meta-row {
+    display: flex;
+    align-items: center;
+}
+
+.meta-label {
+    width: 80px;
+    font-size: 16px;
+    color: #9F9F9F;
+}
+
+.meta-separator {
+    width: 16px;
+    font-size: 16px;
+    color: #9F9F9F;
+}
+
+.meta-value {
+    font-size: 16px;
+    color: #9F9F9F;
+}
+
+.social-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.social-link img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0);
+    transition: filter 0.3s ease;
+}
+
+.social-link:hover img {
+    filter: brightness(0.3);
+}

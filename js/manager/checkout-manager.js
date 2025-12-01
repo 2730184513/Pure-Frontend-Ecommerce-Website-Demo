@@ -11,23 +11,30 @@ class CheckoutManager {
     }
 
     async initialize() {
-        // Check if accessed from cart page
+        // Check if accessed from valid source (cart page or product detail page)
         const referrer = document.referrer;
         let isFromCart = false;
+        let isFromProductDetail = false;
+        
         if (referrer) {
             try {
                 const referrerUrl = new URL(referrer);
                 const referrerPage = referrerUrl.pathname.split('/').pop() || 'index.html';
                 isFromCart = referrerPage === 'cart.html';
+                isFromProductDetail = referrerPage === 'product-detail.html';
             } catch (e) {
                 console.warn('Could not parse referrer:', e);
             }
         }
 
-        // If not from cart, redirect to cart
-        if (!isFromCart) {
+        // Also check if we have direct checkout item (from product detail)
+        const hasDirectCheckout = localStorage.getItem('direct_checkout_item') !== null;
+        const hasCartCheckout = localStorage.getItem('checkout_selected_items') !== null;
+
+        // If not from valid source and no checkout data, redirect to cart
+        if (!isFromCart && !isFromProductDetail && !hasDirectCheckout && !hasCartCheckout) {
             if (window.toast) {
-                window.toast.show('Please access checkout from your cart', 'info');
+                window.toast.show('Please access checkout from your cart or product page', 'info');
             }
             setTimeout(() => {
                 window.location.href = '/201-project/cart.html';
@@ -112,6 +119,7 @@ class CheckoutManager {
     clearCheckoutData() {
         try {
             localStorage.removeItem('checkout_selected_items');
+            localStorage.removeItem('direct_checkout_item');
             console.log('Checkout data cleared from localStorage');
         } catch (error) {
             console.warn('Error clearing checkout data:', error);
@@ -149,19 +157,25 @@ class CheckoutManager {
                 return;
             }
 
-            // Get selected items for removal from cart
+            // Get selected items
             const selectedItems = this.summaryManager.getSelectedItems();
+            const isDirectCheckout = this.summaryManager.getIsDirectCheckout();
 
             // Simulate processing delay
             await new Promise(resolve => setTimeout(resolve, 1500));
 
-            // Remove ordered items from cart (silent mode - no individual notifications)
-            selectedItems.forEach(item => {
-                this.cartManager.removeProduct(item.variantId, true);
-            });
+            // Only remove from cart if this is a cart-based checkout (not direct checkout)
+            if (!isDirectCheckout) {
+                // Remove ordered items from cart (silent mode - no individual notifications)
+                selectedItems.forEach(item => {
+                    this.cartManager.removeProduct(item.variantId, true);
+                });
+            }
+            // For direct checkout, we don't modify the cart at all
 
-            // Clear checkout selected items since order is complete
+            // Clear all checkout data since order is complete
             localStorage.removeItem('checkout_selected_items');
+            localStorage.removeItem('direct_checkout_item');
 
             // Clear order success flag if exists
             sessionStorage.removeItem('order_placed_success');

@@ -42,22 +42,27 @@ class CartManager {
 
     /**
      * Add product to cart
-     * @param {Object} product - Product to add
+     * @param {Object} product - Product to add (should include selectedSize and selectedColor if pre-selected)
      */
     addProduct(product) {
-        const size = product.size ? Object.keys(product.size)[0] : 'Standard';
-        const color = product.color ? Object.keys(product.color)[0] : 'Default';
+        // Use pre-selected size/color if provided, otherwise use first option or default
+        const size = product.selectedSize || (product.size ? Object.keys(product.size)[0] : 'Standard');
+        const color = product.selectedColor || (product.color ? Object.keys(product.color)[0] : 'Default');
         const variantId = `${product.id}-${size.replace(/\s/g, '')}-${color.replace(/#/g, '')}`;
 
         const existing = this.cart.find(item => item.variantId === variantId);
 
         let message;
         if (existing) {
-            if (existing.qty === 9999) {
+            // If product already exists, add the quantity (default to 1 if not specified)
+            const qtyToAdd = product.qty || 1;
+            const newQty = existing.qty + qtyToAdd;
+            
+            if (newQty > 9999) {
                 window.toast.error(`Maximum quantity for ${product.name} reached!`);
                 return;
             }
-            existing.qty++;
+            existing.qty = newQty;
             message = `${product.name} quantity increased in cart!`;
         } else {
             this.cart.push({
@@ -65,7 +70,7 @@ class CartManager {
                 variantId,
                 selectedSize: size,
                 selectedColor: color,
-                qty: 1
+                qty: product.qty || 1
             });
             message = `${product.name} has been added to your cart!`;
         }

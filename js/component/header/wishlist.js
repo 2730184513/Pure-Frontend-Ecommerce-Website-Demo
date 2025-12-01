@@ -37,6 +37,15 @@ class WishlistManager {
         window.addEventListener('addToWishlist', (e) => {
             this.addProduct(e.detail.product);
         });
+
+        // Listen for wishlist updates from other sources (e.g., product detail page)
+        window.addEventListener('wishlistUpdated', () => {
+            this.loadWishlist();
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.updateBadge();
+                this.dropdownRenderer.render();
+            }
+        });
     }
 
 

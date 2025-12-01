@@ -1,0 +1,285 @@
+/* ========================================
+   PRODUCT SELECTION STYLES
+   Styles for size/color selectors, quantity counter, action buttons
+   Layout in: layout/product-detail.css
+   ======================================== */
+
+/* === Size & Color Section === */
+.product-size-section,
+.product-color-section {
+    margin-bottom: 18px;
+}
+
+.section-label {
+    display: block;
+    font-size: 16px;
+    color: #9F9F9F;
+    margin-bottom: 12px;
+}
+
+/* Size Options */
+.size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.size-btn {
+    position: relative;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 10px;
+    background: #F9F1E7;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    color: black;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.size-btn.selected {
+    background: var(--primary-color);
+    color: white;
+}
+
+.size-btn:hover:not(.selected) {
+    background: #E8D9C5;
+}
+
+/* Color Options */
+.color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.color-btn {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Outer ring for selected state using box-shadow */
+.color-btn.selected {
+    box-shadow: 0 0 0 3px white, 0 0 0 5px var(--primary-color);
+}
+
+.color-btn:hover:not(.selected) {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px rgba(184, 142, 47, 0.5);
+}
+
+/* === Tooltips === */
+.size-tooltip,
+.color-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: #333;
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    margin-bottom: 8px;
+    z-index: 10;
+}
+
+.size-tooltip::after,
+.color-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #333;
+}
+
+.size-tooltip.visible,
+.color-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* === Actions Section === */
+.product-actions-section {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+/* === Quantity Counter === */
+.quantity-counter {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.quantity-counter.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    background: transparent;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+}
+
+.qty-btn.minus {
+    background: transparent;
+    border-color: #E0E0E0;
+    color: var(--text-light-gray, #9F9F9F);
+}
+
+.qty-btn.minus:hover:not(:disabled) {
+    background: #F5F5F5;
+    border-color: #D0D0D0;
+}
+
+.qty-btn.plus {
+    background: transparent;
+    border-color: #E0E0E0;
+    color: var(--text-dark, #333);
+    font-weight: 600;
+}
+
+.qty-btn.plus:hover:not(:disabled) {
+    background: #F5F5F5;
+    border-color: #D0D0D0;
+}
+
+.qty-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+.quantity-input {
+    width: 50px;
+    height: 32px;
+    text-align: center;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-input:focus {
+    background: #F9F1E7;
+}
+
+/* === Action Buttons === */
+
+/* Checkout button */
+.btn-checkout {
+    padding: 12px 40px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-checkout:hover:not(:disabled) {
+    background: #dd3333;
+}
+
+.btn-checkout.disabled,
+.btn-checkout:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #ccc;
+}
+
+/* Add to cart button - icon only */
+.btn-add-to-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-to-cart:hover:not(:disabled) {
+    background: #F9F1E7;
+    border-color: var(--primary-color);
+}
+
+.btn-add-to-cart.disabled,
+.btn-add-to-cart:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-add-to-cart .cart-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Like button - icon only */
+.btn-like {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-like:hover {
+    background: #F9F1E7;
+    border-color: var(--primary-color);
+}
+
+.btn-like.liked {
+    border-color: #E97171;
+    background: #FFF5F5;
+}
+
+.like-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+    .product-actions-section {
+        flex-wrap: wrap;
+    }
+}

@@ -1,0 +1,170 @@
+/* ========================================
+   PRODUCT DETAIL PAGE - LAYOUT STYLES
+   Contains all section layout and container styles
+   for product detail page sections
+   ======================================== */
+
+/* === Breadcrumb Section Layout === */
+.breadcrumb-section {
+    background: #F9F1E7;
+    padding: 38px 0;
+}
+
+.breadcrumb-section .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 100px;
+}
+
+/* === Product Info Section Layout === */
+.product-info-section {
+    padding: 35px 0 48px 0;
+    background: white;
+}
+
+.product-info-container {
+    display: flex;
+    gap: 60px;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 20px;
+    align-items: stretch; /* Make both sides equal height */
+}
+
+/* Left Side: Product Images Layout */
+.product-images {
+    flex: 0 0 553px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-image-container {
+    width: 100%;
+    flex: 1; /* Fill the height to match right side */
+    min-height: 500px;
+    background: #F9F1E7;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Right Side: Product Details Layout */
+.product-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === Product Description Section Layout === */
+.product-description-section {
+    padding: 48px 0;
+    background: white;
+    border-top: 1px solid #D9D9D9;
+}
+
+.description-tabs-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* === Related Products Section Layout === */
+.related-products-section {
+    padding: 56px 0 69px 0;
+    background: white;
+    border-top: 1px solid #D9D9D9;
+}
+
+.related-products-section .container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.related-products-section .section-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.related-products-section .section-title {
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Product grid - 4 columns layout */
+.related-products-section .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+/* Show More button container */
+.related-products-section .show-more-container {
+    text-align: center;
+    margin-top: 32px;
+}
+
+.related-products-section .btn-show-more {
+    display: inline-block;
+    padding: 12px 74px;
+    background: white;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.related-products-section .btn-show-more:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.related-products-section .btn-show-more.hidden {
+    display: none;
+}
+
+/* ========================================
+   RESPONSIVE LAYOUT
+   ======================================== */
+@media (max-width: 1024px) {
+    .breadcrumb-section .container {
+        padding: 0 40px;
+    }
+
+    .product-info-container {
+        flex-direction: column;
+    }
+
+    .product-images {
+        flex: none;
+        max-width: 100%;
+    }
+
+    .related-products-section .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .breadcrumb-section .container {
+        padding: 0 20px;
+    }
+
+    .related-products-section .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .related-products-section .product-grid {
+        grid-template-columns: 1fr;
+    }
+}

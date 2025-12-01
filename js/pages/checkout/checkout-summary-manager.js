@@ -7,6 +7,7 @@ class CheckoutSummaryManager {
     constructor(cartManager) {
         this.cartManager = cartManager;
         this.selectedItems = [];
+        this.isDirectCheckout = false; // Flag to track if this is a direct checkout
         this.renderer = new window.CheckoutSummaryRenderer();
     }
 
@@ -20,10 +21,21 @@ class CheckoutSummaryManager {
     }
 
     /**
-     * Load selected items from cart
+     * Load selected items from cart or direct checkout
      */
     loadSelectedItems() {
         try {
+            // First check for direct checkout item (from product detail page)
+            const directCheckoutItem = localStorage.getItem('direct_checkout_item');
+            if (directCheckoutItem) {
+                const item = JSON.parse(directCheckoutItem);
+                this.selectedItems = [item];
+                this.isDirectCheckout = true;
+                console.log('Loaded direct checkout item');
+                return;
+            }
+
+            // Otherwise, load from cart-based checkout
             const rawData = localStorage.getItem('checkout_selected_items');
             if (!rawData) {
                 console.warn('No selected items found in localStorage');
@@ -40,6 +52,7 @@ class CheckoutSummaryManager {
 
             const cart = this.cartManager.getCart();
             this.selectedItems = cart.filter(item => selectedVariantIds.includes(item.variantId));
+            this.isDirectCheckout = false;
 
             // Log for debugging
             console.log(`Loaded ${this.selectedItems.length} selected items for checkout`);
@@ -55,6 +68,7 @@ class CheckoutSummaryManager {
             this.selectedItems = [];
             // Clear potentially corrupted localStorage data
             localStorage.removeItem('checkout_selected_items');
+            localStorage.removeItem('direct_checkout_item');
         }
     }
 
@@ -118,6 +132,14 @@ class CheckoutSummaryManager {
      */
     getSelectedItems() {
         return this.selectedItems;
+    }
+
+    /**
+     * Check if this is a direct checkout (from product detail page)
+     * @returns {boolean}
+     */
+    getIsDirectCheckout() {
+        return this.isDirectCheckout;
     }
 
     /**

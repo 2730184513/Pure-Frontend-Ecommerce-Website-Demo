@@ -204,6 +204,7 @@ class WishlistDropdownRenderer {
         wishlist.forEach(item => {
             const el = document.createElement('div');
             el.className = 'wishlist-item';
+            el.dataset.productId = item.id; // Store product ID for navigation
 
             // Use placeholder first for instant display
             const placeholderSrc = '/201-project/images/products/placeholder.jpg';
@@ -221,6 +222,19 @@ class WishlistDropdownRenderer {
                         data-id="${item.id}" 
                         style="border:none;background:transparent;cursor:pointer;font-size:16px;">✕</button>
             `;
+
+            // Add double-click to navigate to product detail
+            el.addEventListener('dblclick', (e) => {
+                // Prevent navigation if clicking on remove button
+                if (e.target.closest('.remove-wish-btn')) {
+                    return;
+                }
+                this.navigateToProductDetail(item.id);
+            });
+
+            // Add cursor style hint
+            el.style.cursor = 'pointer';
+
             container.appendChild(el);
         });
 
@@ -241,6 +255,16 @@ class WishlistDropdownRenderer {
                 }
             });
         });
+    }
+
+    /**
+     * Navigate to product detail page
+     * @param {string} productId - Product ID
+     */
+    navigateToProductDetail(productId) {
+        sessionStorage.setItem('productDetailId', productId);
+        sessionStorage.setItem('productDetailSource', 'wishlist');
+        window.location.href = '/201-project/product-detail.html';
     }
 
     /**

@@ -55,6 +55,7 @@ class CartProductLineRenderer {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
         cartItem.dataset.variantId = item.variantId;
+        cartItem.dataset.productId = item.id; // Store product ID for navigation
 
         // Get color display name
         const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
@@ -109,6 +110,23 @@ class CartProductLineRenderer {
      * @param {Object} item - Cart item data
      */
     attachEventListeners(cartItem, item) {
+        // Double-click to navigate to product detail
+        cartItem.addEventListener('dblclick', (e) => {
+            // Prevent navigation if clicking on interactive elements
+            if (e.target.closest('.checkbox-container') || 
+                e.target.closest('.quantity-controls') || 
+                e.target.closest('.actions')) {
+                return;
+            }
+            this.navigateToProductDetail(item.id);
+        });
+
+        // Add cursor style hint for product info area
+        const productInfo = cartItem.querySelector('.product-info');
+        const productImage = cartItem.querySelector('.product-image-container');
+        if (productInfo) productInfo.style.cursor = 'pointer';
+        if (productImage) productImage.style.cursor = 'pointer';
+
         // Quantity controls
         const decreaseBtn = cartItem.querySelector('.quantity-btn.decrease');
         const increaseBtn = cartItem.querySelector('.quantity-btn.increase');
@@ -241,6 +259,16 @@ class CartProductLineRenderer {
 
         // Trigger re-render
         window.dispatchEvent(new CustomEvent('cartUpdated'));
+    }
+
+    /**
+     * Navigate to product detail page
+     * @param {string} productId - Product ID
+     */
+    navigateToProductDetail(productId) {
+        sessionStorage.setItem('productDetailId', productId);
+        sessionStorage.setItem('productDetailSource', 'cart');
+        window.location.href = '/201-project/product-detail.html';
     }
 }
 

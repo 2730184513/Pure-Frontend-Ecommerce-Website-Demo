@@ -13,7 +13,8 @@ class FurniroApp {
             cart: null,      // Cart page manager (initialized in cart.html)
             checkout: null,  // Checkout page manager (initialized in checkout.html)
             contact: null,   // Contact page manager (initialized in contact.html)
-            about: null      // About page manager (initialized here)
+            about: null,     // About page manager (initialized here)
+            productDetail: null  // Product detail page manager
         };
         this.config = {
             initialProductCount: 8,
@@ -28,7 +29,8 @@ class FurniroApp {
             [PageUtility.PAGE_IDS.CART]: 'cart',
             [PageUtility.PAGE_IDS.CHECKOUT]: 'checkout',
             [PageUtility.PAGE_IDS.CONTACT]: 'contact',
-            [PageUtility.PAGE_IDS.ABOUT]: 'about'
+            [PageUtility.PAGE_IDS.ABOUT]: 'about',
+            [PageUtility.PAGE_IDS.PRODUCT_DETAIL]: 'productDetail'
         };
 
 
@@ -285,6 +287,10 @@ class FurniroApp {
                 await this._initAboutManager(managerKey, pageName);
                 break;
 
+            case PageUtility.PAGE_IDS.PRODUCT_DETAIL:
+                await this._initProductDetailManager(managerKey, pageName);
+                break;
+
             default:
                 console.warn(`No manager defined for page: ${pageName}`);
         }
@@ -335,6 +341,22 @@ class FurniroApp {
     async _initAboutManager(managerKey, pageName) {
         if (window.AboutManager) {
             this.managers[managerKey] = new AboutManager();
+            await this.managers[managerKey].init();
+            console.log(`✓ ${pageName} manager initialized`);
+        } else {
+            console.warn(`${pageName}Manager not found`);
+        }
+    }
+
+    /**
+     * Initialize product detail page manager
+     * @param {string} managerKey - Manager key
+     * @param {string} pageName - Page name
+     * @private
+     */
+    async _initProductDetailManager(managerKey, pageName) {
+        if (window.ProductDetailManager) {
+            this.managers[managerKey] = new ProductDetailManager();
             await this.managers[managerKey].init();
             console.log(`✓ ${pageName} manager initialized`);
         } else {
@@ -408,8 +430,10 @@ class FurniroApp {
     async _preloadData() {
         const pageId = PageUtility.getCurrentPageId();
 
-        // Pre-load product data for home and shop pages
-        if (pageId === PageUtility.PAGE_IDS.HOME || pageId === PageUtility.PAGE_IDS.SHOP) {
+        // Pre-load product data for home, shop, and product detail pages
+        if (pageId === PageUtility.PAGE_IDS.HOME || 
+            pageId === PageUtility.PAGE_IDS.SHOP ||
+            pageId === PageUtility.PAGE_IDS.PRODUCT_DETAIL) {
             await this.globalSingletons.productRepository.loadAll();
             console.log('✓ Product data pre-loaded');
         }

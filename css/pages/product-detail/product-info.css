@@ -1,0 +1,28 @@
+/* ========================================
+   PRODUCT IMAGES STYLES
+   Styles for product images section only
+   Layout in: layout/product-detail.css
+   Other styles split into:
+   - breadcrumb.css
+   - product-text-info.css
+   - product-selection.css
+   ======================================== */
+
+/* === Main Image Container === */
+.main-image-container {
+    width: 100%;
+    flex: 1;
+    min-height: 500px;
+    background: #F9F1E7;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

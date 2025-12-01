@@ -381,6 +381,45 @@ class ProductCardRenderer {
         const popup = new ProductPopup(card, product);
         popup.render();
         this.popups.set(product.id, popup);
+
+        // Attach double-click navigation event
+        this.attachDoubleClickNavigation(card, product);
+    }
+
+    /**
+     * Attach double-click event for navigating to product detail page
+     * @param {HTMLElement} card - Product card element
+     * @param {Object} product - Product data
+     * @private
+     */
+    attachDoubleClickNavigation(card, product) {
+        card.addEventListener('dblclick', (event) => {
+            // Exclude button areas from triggering navigation
+            const target = event.target;
+            const isButton = target.closest('.btn-add-cart') || 
+                            target.closest('.action-item') ||
+                            target.tagName === 'BUTTON';
+            
+            if (isButton) {
+                return;
+            }
+
+            // Store product ID and source page to sessionStorage
+            sessionStorage.setItem('productDetailId', product.id);
+            
+            // Determine source page
+            const currentPath = window.location.pathname;
+            let sourcePage = 'home';
+            if (currentPath.includes('shop.html')) {
+                sourcePage = 'shop';
+            } else if (currentPath.includes('product-detail.html')) {
+                sourcePage = 'product-detail';
+            }
+            sessionStorage.setItem('productDetailSource', sourcePage);
+
+            // Navigate to product detail page
+            window.location.href = '/201-project/product-detail.html';
+        });
     }
 
     /**
