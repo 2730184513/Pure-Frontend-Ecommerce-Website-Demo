@@ -145,9 +145,11 @@ class CartProductLineRenderer {
 
         increaseBtn.addEventListener('click', () => {
             const currentQty = parseInt(quantityInput.value) || item.qty;
-            if (currentQty >= 9999) {
+            // Use remaining stock as max limit, fallback to 9999
+            const maxQty = item.number_of_remain || 9999;
+            if (currentQty >= maxQty) {
                 if (window.toast) {
-                    window.toast.show('Quantity cannot exceed 9999', 'warning');
+                    window.toast.show(`Maximum available quantity is ${maxQty}`, 'warning');
                 }
                 return;
             }
@@ -205,6 +207,8 @@ class CartProductLineRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
+        // Use remaining stock as max limit, fallback to 9999
+        const maxQty = item.number_of_remain || 9999;
         let value = parseInt(input.value);
 
         // Validate input
@@ -214,11 +218,11 @@ class CartProductLineRenderer {
             }
             value = 1;
             input.value = value;
-        } else if (value > 9999) {
+        } else if (value > maxQty) {
             if (window.toast) {
-                window.toast.show('Quantity cannot exceed 9999. Setting to maximum value.', 'warning');
+                window.toast.show(`Maximum available quantity is ${maxQty}. Setting to maximum value.`, 'warning');
             }
-            value = 9999;
+            value = maxQty;
             input.value = value;
         }
 

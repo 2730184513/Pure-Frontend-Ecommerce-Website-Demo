@@ -213,6 +213,8 @@ class CartDropdownRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
+        // Use remaining stock as max limit, fallback to 9999
+        const maxQty = item.number_of_remain || 9999;
         let value = parseInt(input.value);
         let showToast = false;
         let toastMessage = '';
@@ -222,10 +224,10 @@ class CartDropdownRenderer {
             showToast = true;
             toastMessage = 'Quantity cannot be less than 1';
             value = 1;
-        } else if (value > 9999) {
+        } else if (value > maxQty) {
             showToast = true;
-            toastMessage = 'Quantity cannot exceed 9999';
-            value = 9999;
+            toastMessage = `Maximum available quantity is ${maxQty}`;
+            value = maxQty;
         }
 
         // Update input field to corrected value
@@ -401,10 +403,13 @@ class CartDropdownRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
+        // Use remaining stock as max limit, fallback to 9999
+        const maxQty = item.number_of_remain || 9999;
         const newQty = item.qty + 1;
-        if (newQty > 9999) {
+        
+        if (newQty > maxQty) {
             if (window.toast) {
-                window.toast.show('Quantity cannot exceed 9999', 'warning');
+                window.toast.show(`Maximum available quantity is ${maxQty}`, 'warning');
             }
             return;
         }

@@ -58,8 +58,10 @@ class CartManager {
             const qtyToAdd = product.qty || 1;
             const newQty = existing.qty + qtyToAdd;
             
-            if (newQty > 9999) {
-                window.toast.error(`Maximum quantity for ${product.name} reached!`);
+            // Use remaining stock as max limit, fallback to 9999
+            const maxQty = product.number_of_remain || 9999;
+            if (newQty > maxQty) {
+                window.toast.error(`Maximum available quantity is ${maxQty}!`);
                 return;
             }
             existing.qty = newQty;

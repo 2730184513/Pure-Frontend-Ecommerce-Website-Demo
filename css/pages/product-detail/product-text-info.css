@@ -165,13 +165,20 @@
     gap: 20px;
 }
 
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .social-link img {
     width: 20px;
     height: 20px;
     filter: brightness(0);
-    transition: filter 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 .social-link:hover img {
     filter: brightness(0.3);
+    transform: scale(1.2);
 }
