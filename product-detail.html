@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link rel="stylesheet" href="/201-project/css/layout/main.css">
+
+    <!-- Header component styles -->
+    <link rel="stylesheet" href="/201-project/css/layout/header.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/search.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/cart-wishlist.css">
+
+    <link rel="stylesheet" href="/201-project/css/layout/footer.css">
+    <link rel="stylesheet" href="/201-project/css/core/toast.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
+            rel="stylesheet">
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+
+<!--导航栏-->
+
+<!--商品种类选择区-->
+
+<!--商品详情信息区-->
+
+<!--相关产品展示区-->
+
+<div id="footer-placeholder"></div>
+<!-- Core utilities -->
+<script src="/201-project/js/component/component-loader.js"></script>
+<script src="/201-project/js/core/page-utility.js"></script>
+<script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/navigate.js"></script>
+
+<!-- Data layer -->
+<script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/pages/shop/product-filter.js"></script>
+
+<!-- Header components -->
+<script src="/201-project/js/component/header/search.js"></script>
+<script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/cart.js"></script>
+<script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist.js"></script>
+
+
+
+<!-- Page managers -->
+<script src="/201-project/js/manager/header-manager.js"></script>
+
+<!-- Main controller (must be last) -->
+<script src="/201-project/js/manager/main.js"></script>
+
+<script>
+    // Initialize about page after main app initialization
+    (async function() {
+        // Wait for main app initialization
+        const waitForApp = () => {
+            return new Promise((resolve) => {
+                const checkInit = () => window.FurniroApp && window.FurniroApp.isInitialized === true;
+
+                if (checkInit()) {
+                    resolve();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (checkInit()) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 50);
+
+                    // Timeout after 10 seconds
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        console.error('Timeout: Main app not initialized');
+                        resolve();
+                    }, 10000);
+                }
+            });
+        };
+
+        await waitForApp();
+
+        try {
+            console.log('🚀 Initializing About Page...');
+
+            // Simple breadcrumb for about page
+            const breadcrumb = [
+                { text: 'Home', href: '/201-project/index.html' },
+                { text: 'About' }
+            ];
+
+            // Load page-specific components (banner and feature-banner)
+            await ComponentLoader.loadComponents([
+                {
+                    name: 'page-banner',
+                    target: '#banner-placeholder',
+                    params: {
+                        'banner-title': 'About',
+                        'banner-breadcrumb': breadcrumb
+                    }
+                },
+                {
+                    name: 'feature-banner',
+                    target: '#feature-banner-placeholder'
+                }
+            ]);
+
+            console.log('✓ About page components loaded');
+        } catch (error) {
+            console.error('❌ About page initialization failed:', error);
+        }
+    })();
+</script>
+</body>
+</html>
