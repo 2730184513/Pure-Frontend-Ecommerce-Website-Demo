@@ -19,17 +19,83 @@ class ShopManager {
         // 1. 确保数据层已加载
         await window.productRepository.loadAll();
 
-        // 2. 初始化所有UI组件
+        // 2. 处理外部传入的搜索关键词（从其他页面跳转过来）
+        this._handleExternalSearchKeyword();
+
+        // 3. 初始化所有UI组件
         this._initializeUIComponents();
 
-        // 3. 绑定全局事件
+        // 4. 从 productFilter 恢复 UI 状态
+        this._restoreUIState();
+
+        // 5. 绑定全局事件
         this._bindGlobalEvents();
 
-        // 5. 执行初始渲染
+        // 6. 执行初始渲染
         this.render();
 
         this.isInitialized = true;
         console.log('✓ Shop Manager initialized');
+    }
+
+    /**
+     * Handle external search keyword from localStorage
+     * This handles redirects from login page or other pages
+     * @private
+     */
+    _handleExternalSearchKeyword() {
+        const externalKeyword = localStorage.getItem('shop_search_query');
+        if (externalKeyword !== null) {
+            // Apply to productFilter
+            if (window.productFilter) {
+                window.productFilter.setSearchKeyword(externalKeyword);
+            }
+            // Clear the localStorage flag to prevent re-applying on refresh
+            localStorage.removeItem('shop_search_query');
+            console.log(`✓ Applied external search keyword: ${externalKeyword}`);
+        }
+    }
+
+    /**
+     * Restore UI state from productFilter
+     * This ensures UI matches saved filter state when returning to shop page
+     * @private
+     */
+    _restoreUIState() {
+        // 1. Restore filter sidebar UI
+        if (this.filterSidebar && typeof this.filterSidebar.restoreFromProductFilter === 'function') {
+            this.filterSidebar.restoreFromProductFilter();
+        }
+
+        // 2. Restore show/sort dropdown UI
+        if (this.showSort) {
+            const itemsPerPage = window.productFilter.getItemsPerPage();
+            const sortKey = window.productFilter.getSortKey();
+            const sortOrder = window.productFilter.getSortOrder();
+
+            this.showSort.setItemsPerPage(itemsPerPage);
+            if (sortKey && sortKey !== 'default' && sortOrder) {
+                this.showSort.setSorting(sortKey, sortOrder);
+            }
+        }
+
+        // 3. Restore search input in header (if exists)
+        const searchKeyword = window.productFilter.getSearchKeyword();
+        const searchInput = document.getElementById('global-search-input');
+        if (searchInput && searchKeyword) {
+            searchInput.value = searchKeyword;
+        }
+
+        // 4. Auto-open sidebar if there are active filters (excluding search keyword)
+        const activeFilterCount = window.productFilter.getActiveFilterCount();
+        if (activeFilterCount > 0 && this.toolbar && typeof this.toolbar.setSidebarState === 'function') {
+            // Use setTimeout to ensure DOM is ready and animation can be applied
+            setTimeout(() => {
+                this.toolbar.setSidebarState(true);
+            }, 100);
+        }
+
+        console.log('✓ UI state restored from productFilter');
     }
 
     /**

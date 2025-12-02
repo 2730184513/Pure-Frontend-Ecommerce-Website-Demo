@@ -162,6 +162,52 @@ class ToolbarManager {
 
         resultsElement.textContent = text;
     }
+
+    /**
+     * Programmatically set sidebar open/close state with animation
+     * @param {boolean} shouldOpen - Whether to open the sidebar
+     */
+    setSidebarState(shouldOpen) {
+        const filterBtn = document.getElementById('filter-toggle-btn');
+        const layoutWrapper = document.getElementById('shop-layout');
+        const iconMain = filterBtn ? filterBtn.querySelector('.icon-filter-main') : null;
+        const iconAlt = filterBtn ? filterBtn.querySelector('.icon-filter-alt') : null;
+
+        if (!filterBtn || !layoutWrapper || !iconMain || !iconAlt) {
+            return;
+        }
+
+        const isCurrentlyOpen = layoutWrapper.classList.contains('sidebar-open');
+
+        // Only change if state differs
+        if (shouldOpen === isCurrentlyOpen) {
+            return;
+        }
+
+        // Apply animation
+        this.animateIconSwitch(iconMain, iconAlt, shouldOpen, () => {
+            this.isAnimating = false;
+        });
+
+        // Update layout state
+        if (shouldOpen) {
+            layoutWrapper.classList.add('sidebar-open');
+        } else {
+            layoutWrapper.classList.remove('sidebar-open');
+        }
+
+        // Update button active state
+        filterBtn.classList.toggle('active', shouldOpen);
+    }
+
+    /**
+     * Check if sidebar is currently open
+     * @returns {boolean}
+     */
+    isSidebarOpen() {
+        const layoutWrapper = document.getElementById('shop-layout');
+        return layoutWrapper ? layoutWrapper.classList.contains('sidebar-open') : false;
+    }
 }
 
 if (typeof window !== 'undefined') {

@@ -367,6 +367,45 @@ class FilterSidebar {
     }
 
     /**
+     * Restore all filter UI state from productFilter
+     * Call this when returning to shop page to sync UI with saved filter state
+     */
+    restoreFromProductFilter() {
+        if (!window.productFilter) {
+            console.warn('productFilter not available for restoration');
+            return;
+        }
+
+        // 1. Restore categories
+        const categories = window.productFilter.getCategories();
+        this.restoreCategories(categories);
+
+        // 2. Restore price range
+        const minPrice = window.productFilter.getMinPrice();
+        const maxPrice = window.productFilter.getMaxPrice();
+        this.restorePriceRange(minPrice, maxPrice);
+
+        // 3. Restore rating range
+        const minRate = window.productFilter.getMinRate();
+        const maxRate = window.productFilter.getMaxRate();
+        this.restoreRatingRange(minRate, maxRate);
+
+        // 4. Restore date range
+        const from = window.productFilter.getFrom();
+        const to = window.productFilter.getTo();
+        this.restoreDateRange(from, to);
+
+        // 5. Restore search keyword to input
+        const searchKeyword = window.productFilter.getSearchKeyword();
+        const searchInput = document.getElementById('global-search-input');
+        if (searchInput && searchKeyword) {
+            searchInput.value = searchKeyword;
+        }
+
+        console.log('✓ Filter UI restored from productFilter');
+    }
+
+    /**
      * Clear all filters and reset to default state
      */
     clearAll() {
