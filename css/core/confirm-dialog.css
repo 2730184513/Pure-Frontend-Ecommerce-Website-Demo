@@ -1,0 +1,374 @@
+/* ========================================
+   CONFIRM DIALOG STYLES
+   ======================================== */
+
+/* Overlay */
+.confirm-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.confirm-dialog-overlay.show {
+    opacity: 1;
+}
+
+/* Dialog */
+.confirm-dialog {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 450px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    transform: scale(0.9) translateY(-20px);
+    transition: transform 0.2s ease;
+}
+
+.confirm-dialog.show {
+    transform: scale(1) translateY(0);
+}
+
+.confirm-dialog.confirm-dialog-wide {
+    max-width: 520px;
+}
+
+/* Header */
+.confirm-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.confirm-dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.confirm-dialog-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-light-gray);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.confirm-dialog-close:hover {
+    color: var(--text-dark);
+}
+
+/* Body */
+.confirm-dialog-body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.confirm-dialog-message {
+    font-size: 14px;
+    color: var(--text-gray);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Input Section */
+.confirm-input-section {
+    margin-top: 20px;
+}
+
+.confirm-input-label {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.confirm-input-label strong {
+    color: #d73a49;
+}
+
+.confirm-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d73a49;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.confirm-input:focus {
+    border-color: #d73a49;
+    box-shadow: 0 0 0 3px rgba(215, 58, 73, 0.1);
+}
+
+/* Footer */
+.confirm-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid #e1e4e8;
+    background: #f6f8fa;
+}
+
+/* Buttons */
+.confirm-dialog-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.confirm-dialog-btn.cancel-btn {
+    background: white;
+    border: 1px solid #d0d7de;
+    color: var(--text-dark);
+}
+
+.confirm-dialog-btn.cancel-btn:hover {
+    background: #f3f4f6;
+}
+
+.confirm-dialog-btn.confirm-btn {
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: white;
+}
+
+.confirm-dialog-btn.confirm-btn:hover {
+    background: #9A7328;
+    border-color: #9A7328;
+}
+
+.confirm-dialog-btn.confirm-btn.danger {
+    background: #d73a49;
+    border-color: #d73a49;
+}
+
+.confirm-dialog-btn.confirm-btn.danger:hover:not(:disabled) {
+    background: #cb2431;
+    border-color: #cb2431;
+}
+
+.confirm-dialog-btn.confirm-btn:disabled {
+    background: #94d3a2;
+    border-color: #94d3a2;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.confirm-dialog-btn.confirm-btn.danger:disabled {
+    background: #f8b4b4;
+    border-color: #f8b4b4;
+}
+
+/* ========================================
+   PRODUCT PREVIEW IN DIALOG
+   ======================================== */
+
+.confirm-product-preview {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    pointer-events: none; /* 只读模式 - 禁用所有交互 */
+    user-select: text; /* 但允许选择文本 */
+}
+
+.preview-image-section {
+    flex-shrink: 0;
+}
+
+.preview-product-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e1e4e8;
+}
+
+.preview-info-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-product-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.preview-price-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.preview-current-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.preview-original-price {
+    font-size: 13px;
+    color: var(--text-light-gray);
+    text-decoration: line-through;
+}
+
+.preview-rating-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.preview-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.preview-star-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.preview-review-count {
+    font-size: 12px;
+    color: var(--text-light-gray);
+}
+
+.preview-brief {
+    font-size: 13px;
+    color: var(--text-gray);
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.preview-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.preview-sku,
+.preview-category {
+    font-size: 11px;
+    color: var(--text-light-gray);
+    background: #e1e4e8;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+/* ========================================
+   FORM SECONDARY BUTTONS
+   ======================================== */
+
+/* Clear All / Secondary Button */
+.form-secondary-btn {
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 10px 0;
+    transition: color 0.2s ease;
+    font-family: inherit;
+}
+
+.form-secondary-btn:hover {
+    color: var(--text-dark);
+}
+
+/* Delete Product Link Button */
+.form-danger-link {
+    background: none;
+    border: none;
+    color: #d73a49;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 10px 0;
+    transition: color 0.2s ease;
+    font-family: inherit;
+}
+
+.form-danger-link:hover {
+    color: #cb2431;
+}
+
+/* Form Actions Layout Update */
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 576px) {
+    .confirm-dialog {
+        width: 95%;
+        margin: 10px;
+    }
+
+    .confirm-product-preview {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .preview-info-section {
+        width: 100%;
+    }
+
+    .preview-meta {
+        justify-content: center;
+    }
+
+    .confirm-dialog-footer {
+        flex-direction: column;
+    }
+
+    .confirm-dialog-btn {
+        width: 100%;
+    }
+}
