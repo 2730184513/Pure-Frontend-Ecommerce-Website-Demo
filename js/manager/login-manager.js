@@ -1,6 +1,7 @@
 /**
  * LoginManager - 登录/注册页面主控制器
  * 持有并协调三个表单处理器：LoginFormHandler, SignUpFormHandler, ForgotPasswordFormHandler
+ * 持有 UserRepository 进行用户数据管理
  * 负责动画控制和页面切换逻辑
  */
 class LoginManager {
@@ -11,6 +12,9 @@ class LoginManager {
         
         // 表单渲染器
         this.formRenderer = null;
+        
+        // 用户数据仓库
+        this.userRepository = null;
         
         // 表单处理器
         this.loginHandler = null;
@@ -36,14 +40,28 @@ class LoginManager {
             return;
         }
         
+        // 初始化用户仓库
+        this.userRepository = window.userRepository;
+        if (!this.userRepository) {
+            console.error('UserRepository not found');
+            return;
+        }
+        
         // 初始化表单渲染器
         this.formRenderer = new window.FormRenderer(this.formContent);
         
         // 初始化表单处理器
         this.initializeHandlers();
         
-        // 渲染登录表单
-        this.loginHandler.render();
+        // 检查是否需要直接显示 forgot password 表单
+        const showForgotPassword = sessionStorage.getItem('show_forgot_password');
+        if (showForgotPassword === 'true') {
+            sessionStorage.removeItem('show_forgot_password');
+            this.showForgotPassword();
+        } else {
+            // 渲染登录表单
+            this.loginHandler.render();
+        }
         
         // 绑定右侧面板事件
         this.bindImagePanelEvents();
@@ -65,7 +83,8 @@ class LoginManager {
             {
                 onSignUpClick: () => this.showSignUp(),
                 onForgotClick: () => this.showForgotPassword(),
-                onLoginSuccess: (data) => this.handleLoginSuccess(data)
+                onLoginSuccess: (data) => this.handleLoginSuccess(data),
+                onLogin: (email, password) => this.handleLogin(email, password)
             }
         );
 
@@ -75,7 +94,9 @@ class LoginManager {
             this.formRenderer,
             {
                 onBackClick: () => this.showLogin(),
-                onSignUpSuccess: (data) => this.handleSignUpSuccess(data)
+                onSignUpSuccess: (data) => this.handleSignUpSuccess(data),
+                onRegister: (userData) => this.handleRegister(userData),
+                onCheckEmail: (email) => this.checkEmailExists(email)
             }
         );
 
@@ -85,9 +106,59 @@ class LoginManager {
             this.formRenderer,
             {
                 onBackClick: () => this.showLogin(),
-                onResetSuccess: (data) => this.handleResetSuccess(data)
+                onResetSuccess: (data) => this.handleResetSuccess(data),
+                onResetPassword: (data) => this.handleResetPassword(data),
+                onVerifyUser: (email, phone) => this.verifyUserIdentity(email, phone)
             }
         );
+    }
+
+    /**
+     * 处理登录
+     * @param {string} email 
+     * @param {string} password 
+     * @returns {Promise<Object>}
+     */
+    async handleLogin(email, password) {
+        return await this.userRepository.authenticate(email, password);
+    }
+
+    /**
+     * 处理注册
+     * @param {Object} userData 
+     * @returns {Promise<Object>}
+     */
+    async handleRegister(userData) {
+        return await this.userRepository.register(userData);
+    }
+
+    /**
+     * 检查邮箱是否已存在
+     * @param {string} email 
+     * @returns {boolean}
+     */
+    checkEmailExists(email) {
+        return this.userRepository.emailExists(email);
+    }
+
+    /**
+     * 验证用户身份
+     * @param {string} email 
+     * @param {string} phone 
+     * @returns {Object}
+     */
+    verifyUserIdentity(email, phone) {
+        return this.userRepository.verifyUserIdentity(email, phone);
+    }
+
+    /**
+     * 处理密码重置
+     * @param {Object} data - { email, phone, newPassword }
+     * @returns {Promise<Object>}
+     */
+    async handleResetPassword(data) {
+        const { email, phone, newPassword } = data;
+        return await this.userRepository.resetPassword(email, phone, newPassword);
     }
 
     /**

@@ -1,12 +1,15 @@
 /**
  * SignUpFormHandler - 注册表单处理器
  * 负责注册表单的渲染、验证和提交逻辑
+ * 使用 FormRenderer 和 FormFieldFactory 进行声明式表单渲染
  */
 class SignUpFormHandler extends BaseFormHandler {
     constructor(formContentElement, formRenderer, callbacks = {}) {
         super(formContentElement, formRenderer);
         this.onBackClick = callbacks.onBackClick || (() => {});
         this.onSignUpSuccess = callbacks.onSignUpSuccess || (() => {});
+        this.onRegister = callbacks.onRegister || (() => Promise.resolve({ success: true }));
+        this.onCheckEmail = callbacks.onCheckEmail || (() => false);
     }
 
     /**
@@ -17,51 +20,124 @@ class SignUpFormHandler extends BaseFormHandler {
     }
 
     /**
+     * 获取表单字段配置
+     * @returns {Array} 字段配置数组
+     */
+    getFieldsConfig() {
+        return [
+            {
+                type: 'text',
+                id: 'signupUser',
+                name: 'signupUser',
+                label: 'Username',
+                required: true,
+                minlength: 3,
+                maxlength: 30,
+                pattern: '^[a-zA-Z0-9_]+$',
+                dataError: 'Username must be 3-30 characters (letters, numbers, underscore)'
+            },
+            {
+                type: 'email',
+                id: 'signupEmail',
+                name: 'signupEmail',
+                label: 'Email',
+                required: true,
+                pattern: '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$',
+                dataError: 'Please enter a valid email address'
+            },
+            {
+                type: 'password',
+                id: 'signupPassword',
+                name: 'signupPassword',
+                label: 'Password',
+                required: true,
+                minlength: 8,
+                showStrength: true,
+                showRequirements: true,
+                dataError: 'Password must meet the strength requirements'
+            },
+            {
+                type: 'password',
+                id: 'signupConfirmPassword',
+                name: 'signupConfirmPassword',
+                label: 'Confirm Password',
+                required: true,
+                showStrength: false,
+                showRequirements: false,
+                matchField: 'signupPassword',
+                matchError: 'Passwords do not match',
+                dataError: 'Please confirm your password'
+            },
+            {
+                type: 'tel',
+                id: 'signupTel',
+                name: 'signupTel',
+                label: 'Phone',
+                required: true,
+                pattern: '^[0-9+\\-\\s()]+$',
+                minlength: 7,
+                dataError: 'Please enter a valid phone number'
+            }
+        ];
+    }
+
+    /**
+     * 获取表单配置
+     * @returns {Object} 表单配置对象
+     */
+    getFormConfig() {
+        return {
+            id: this.getFormId(),
+            className: 'login-form',
+            fields: this.getFieldsConfig(),
+            submitButton: {
+                text: 'Sign Up',
+                id: 'signupSubmitBtn',
+                className: 'login-submit-btn'
+            },
+            footerLink: {
+                text: 'Already have an account?',
+                linkText: 'Back to Login',
+                linkId: 'backToLoginBtn'
+            }
+        };
+    }
+
+    /**
      * 获取表单HTML
      */
     getFormHTML() {
-        return `
-            <button type="button" class="login-back-btn" id="backToLoginBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                Back to Login
-            </button>
-            <h2 class="login-form-title">Create Account</h2>
-            <form class="login-form" id="signUpForm" novalidate>
-                <div class="form-group">
-                    <label for="signupUser">Username<span class="required">*</span></label>
-                    <input type="text" id="signupUser" name="signupUser" required minlength="3" maxlength="30"
-                           pattern="^[a-zA-Z0-9_]+$" data-error="Username must be 3-30 characters (letters, numbers, underscore)">
-                    <span class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email<span class="required">*</span></label>
-                    <input type="email" id="signupEmail" name="signupEmail" required
-                           pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" data-error="Please enter a valid email address">
-                    <span class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password<span class="required">*</span></label>
-                    <input type="password" id="signupPassword" name="signupPassword" required minlength="6"
-                           data-error="Password must be at least 6 characters">
-                    <span class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="signupConfirmPassword">Confirm Password<span class="required">*</span></label>
-                    <input type="password" id="signupConfirmPassword" name="signupConfirmPassword" required
-                           data-error="Please confirm your password">
-                    <span class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="signupTel">Phone<span class="required">*</span></label>
-                    <input type="tel" id="signupTel" name="signupTel" required
-                           pattern="^[0-9+\\-\\s()]+$" minlength="7" data-error="Please enter a valid phone number">
-                    <span class="error-message"></span>
-                </div>
-                <button type="submit" class="login-submit-btn">Sign Up</button>
-            </form>
+        const formConfig = this.getFormConfig();
+        
+        // 标题
+        const headerHtml = '<h2 class="login-form-title">Create Account</h2>';
+        
+        // 使用 FormFieldFactory 生成字段
+        const fieldsHtml = formConfig.fields.map(field => {
+            return this.formRenderer.renderField(field);
+        }).join('');
+
+        // 提交按钮
+        const submitBtnHtml = FormFieldFactory.createSubmitButton(formConfig.submitButton);
+
+        // 底部链接
+        const footerLinkHtml = `
+            <div class="login-signup-prompt">
+                ${formConfig.footerLink.text} <a href="#" id="${formConfig.footerLink.linkId}" class="login-signup-link">${formConfig.footerLink.linkText}</a>
+            </div>
         `;
+
+        // 组装表单
+        const formHtml = `
+            ${headerHtml}
+            <form class="${formConfig.className}" id="${formConfig.id}" novalidate>
+                ${fieldsHtml}
+                ${submitBtnHtml}
+            </form>
+            ${footerLinkHtml}
+        `;
+
+        return formHtml;
     }
 
     /**
@@ -77,9 +153,73 @@ class SignUpFormHandler extends BaseFormHandler {
             });
         }
 
+        // 密码强度检测
+        const passwordInput = document.getElementById('signupPassword');
+        if (passwordInput) {
+            passwordInput.addEventListener('input', () => this.updatePasswordStrength());
+        }
+
+        // 密码确认实时检测
+        const confirmInput = document.getElementById('signupConfirmPassword');
+        if (confirmInput) {
+            confirmInput.addEventListener('input', () => this.checkPasswordMatch());
+        }
+
+        // 邮箱检查
+        const emailInput = document.getElementById('signupEmail');
+        if (emailInput) {
+            emailInput.addEventListener('blur', () => this.checkEmailExists());
+        }
+
         // 表单提交
         if (this.form) {
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+    }
+
+    /**
+     * 更新密码强度显示
+     */
+    updatePasswordStrength() {
+        const password = document.getElementById('signupPassword')?.value || '';
+        const strengthInfo = PasswordStrengthValidator.check(password);
+        
+        // 使用 FormRenderer 更新密码强度显示
+        this.formRenderer.updatePasswordStrength('signupPassword', strengthInfo);
+        this.formRenderer.flush();
+
+        return strengthInfo.isStrong;
+    }
+
+    /**
+     * 检查密码是否匹配
+     */
+    checkPasswordMatch() {
+        const password = document.getElementById('signupPassword')?.value;
+        const confirmPassword = document.getElementById('signupConfirmPassword')?.value;
+        const confirmField = document.getElementById('signupConfirmPassword');
+
+        if (confirmPassword && password !== confirmPassword) {
+            confirmField?.classList.add('invalid');
+            confirmField?.classList.remove('valid');
+        } else if (confirmPassword && password === confirmPassword) {
+            confirmField?.classList.remove('invalid');
+            confirmField?.classList.add('valid');
+        }
+    }
+
+    /**
+     * 检查邮箱是否已存在
+     */
+    checkEmailExists() {
+        const email = document.getElementById('signupEmail')?.value;
+        if (!email) return;
+
+        const exists = this.onCheckEmail(email);
+        if (exists) {
+            const emailField = document.getElementById('signupEmail');
+            this.formRenderer.showFieldError(emailField, 'This email is already registered');
+            this.formRenderer.flush();
         }
     }
 
@@ -100,12 +240,40 @@ class SignUpFormHandler extends BaseFormHandler {
     }
 
     /**
+     * 验证密码强度
+     */
+    validatePasswordStrength() {
+        const password = document.getElementById('signupPassword')?.value || '';
+        
+        if (!PasswordStrengthValidator.isValid(password)) {
+            const passwordField = document.getElementById('signupPassword');
+            this.formRenderer.showFieldError(passwordField, 'Password does not meet all requirements');
+            this.formRenderer.flush();
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 处理注册提交
      */
     async handleSubmit(e) {
         e.preventDefault();
 
-        // 先验证密码匹配
+        // 验证邮箱是否已存在
+        const email = document.getElementById('signupEmail').value;
+        if (this.onCheckEmail(email)) {
+            this.showToast('This email is already registered', 'error');
+            return;
+        }
+
+        // 验证密码强度
+        if (!this.validatePasswordStrength()) {
+            this.showToast('Password does not meet the strength requirements', 'error');
+            return;
+        }
+
+        // 验证密码匹配
         if (!this.validatePasswordMatch()) {
             this.showToast('Passwords do not match', 'error');
             return;
@@ -117,19 +285,21 @@ class SignUpFormHandler extends BaseFormHandler {
         }
 
         const username = document.getElementById('signupUser').value;
-        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
         const tel = document.getElementById('signupTel').value;
 
         this.setButtonLoading(true, 'Signing up...', 'Sign Up');
 
         try {
-            // 模拟注册请求
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // 调用注册函数
+            const result = await this.onRegister({ username, email, password, phone: tel });
 
-            this.showToast('Account created successfully! Please login.', 'success');
-
-            // 通知成功
-            this.onSignUpSuccess({ username, email, tel });
+            if (result.success) {
+                this.showToast('Account created successfully! Please login.', 'success');
+                this.onSignUpSuccess({ username, email, tel });
+            } else {
+                this.showToast(result.message || 'Sign up failed. Please try again.', 'error');
+            }
 
         } catch (error) {
             console.error('Sign up error:', error);
