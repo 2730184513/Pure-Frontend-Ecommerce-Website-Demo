@@ -25,6 +25,10 @@ class FieldValidator {
             return { valid: true };
         }
 
+        // 检查字段匹配（如确认密码）
+        const matchResult = this.checkMatch(value);
+        if (!matchResult.valid) return matchResult;
+
         const lengthResult = this.checkLength(value, this.field.minLength, this.field.maxLength);
         if (!lengthResult.valid) return lengthResult;
 
@@ -41,6 +45,27 @@ class FieldValidator {
                 message: `${this.getFieldLabel()} is required`
             };
         }
+        return { valid: true };
+    }
+
+    /**
+     * 检查字段是否与另一个字段匹配
+     * 使用 data-match 属性指定要匹配的字段 ID
+     */
+    checkMatch(value) {
+        const matchFieldId = this.field.dataset.match;
+        if (!matchFieldId) return { valid: true };
+
+        const matchField = document.getElementById(matchFieldId);
+        if (!matchField) return { valid: true };
+
+        if (value !== matchField.value) {
+            return {
+                valid: false,
+                message: this.field.dataset.matchError || 'Passwords do not match'
+            };
+        }
+
         return { valid: true };
     }
 
