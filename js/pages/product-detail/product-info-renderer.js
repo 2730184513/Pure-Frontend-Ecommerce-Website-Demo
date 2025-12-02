@@ -46,7 +46,7 @@ class ProductInfoRenderer {
         return `
             <div class="product-images">
                 <div class="main-image-container">
-                    <img src="${product.product_picture}" alt="${this.escapeHTML(product.name)}" class="main-image" id="main-product-image">
+                    <img src="${product.product_picture}" alt="${this.escapeHTML(product.name)}" class="main-image" id="main-product-image" onerror="this.onerror=null;this.src='/201-project/images/products/placeholder.jpg';">
                 </div>
             </div>
         `;
@@ -148,11 +148,11 @@ class ProductInfoRenderer {
         const totalFull = roundUp ? fullStars + 1 : fullStars;
         
         for (let i = 0; i < totalFull && i < 5; i++) {
-            html += '<img src="/201-project/images/icons/star.png" alt="star" class="star-icon">';
+            html += '<img src="/201-project/images/icons/star.png" alt="star" class="star-icon" onerror="this.onerror=null;this.src=\'/201-project/images/products/placeholder.jpg\';">';
         }
         
         if (hasHalfStar && totalFull < 5) {
-            html += '<img src="/201-project/images/icons/half-star.png" alt="half star" class="star-icon">';
+            html += '<img src="/201-project/images/icons/half-star.png" alt="half star" class="star-icon" onerror="this.onerror=null;this.src=\'/201-project/images/products/placeholder.jpg\';">';
         }
 
         return html;
@@ -318,13 +318,13 @@ class ProductInfoRenderer {
                     <span class="meta-separator">:</span>
                     <div class="social-icons">
                         <a href="https://facebook.com" target="_blank" class="social-link">
-                            <img src="/201-project/images/icons/facebook.png" alt="Facebook">
+                            <img src="/201-project/images/icons/facebook.png" alt="Facebook" onerror="this.onerror=null;this.src='/201-project/images/products/placeholder.jpg';">
                         </a>
                         <a href="https://linkedin.com" target="_blank" class="social-link">
-                            <img src="/201-project/images/icons/linkedin.png" alt="LinkedIn">
+                            <img src="/201-project/images/icons/linkedin.png" alt="LinkedIn" onerror="this.onerror=null;this.src='/201-project/images/products/placeholder.jpg';">
                         </a>
                         <a href="https://twitter.com" target="_blank" class="social-link">
-                            <img src="/201-project/images/icons/twitter.png" alt="Twitter">
+                            <img src="/201-project/images/icons/twitter.png" alt="Twitter" onerror="this.onerror=null;this.src='/201-project/images/products/placeholder.jpg';">
                         </a>
                     </div>
                 </div>

@@ -58,6 +58,28 @@
     font-weight: 600;
 }
 
+/* ========================================
+   ADMIN MODIFY PRODUCT BUTTON
+   ======================================== */
+
+.btn-modify-product {
+    background: #B88E2F;
+    border: none;
+    padding: 12px 36px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-modify-product:hover {
+    background: #9A7328;
+}
+
+.modify-span {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
 .action-links {
     display: flex;
     gap: 20px;

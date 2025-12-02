@@ -23,6 +23,19 @@ class ProductPopup {
     }
 
     /**
+     * Check if current user is admin
+     * @returns {boolean} True if admin
+     * @private
+     */
+    isCurrentUserAdmin() {
+        if (window.AuthGuard) {
+            const user = window.AuthGuard.getCurrentUser();
+            return user && (user.isAdmin === true || user.email?.toLowerCase() === 'admin@admin.com');
+        }
+        return false;
+    }
+
+    /**
      * Create popup DOM element
      * @returns {HTMLElement} Popup element
      * @private
@@ -30,10 +43,17 @@ class ProductPopup {
     createPopupElement() {
         const popup = document.createElement('div');
         popup.className = 'pop-up';
+        
+        // Check if current user is admin
+        const isAdmin = this.isCurrentUserAdmin();
+        const modifyProductBtn = isAdmin 
+            ? '<button class="btn-modify-product"><span class="modify-span">Modify Product</span></button>'
+            : '';
 
         popup.innerHTML = `
             <div class="overlay"></div>
             <div class="popup-actions">
+                ${modifyProductBtn}
                 <button class="btn-add-cart">
                     <span class="addtocart-span">Add to cart</span>
                 </button>
@@ -63,6 +83,7 @@ class ProductPopup {
         const addToCartBtn = this.element.querySelector('.btn-add-cart');
         const shareBtn = this.element.querySelector('.action-share');
         const likeBtn = this.element.querySelector('.action-like');
+        const modifyProductBtn = this.element.querySelector('.btn-modify-product');
 
         if (addToCartBtn) {
             addToCartBtn.addEventListener('click', (e) => this.handleAddToCart(e));
@@ -74,6 +95,10 @@ class ProductPopup {
 
         if (likeBtn) {
             likeBtn.addEventListener('click', (e) => this.handleLike(e));
+        }
+
+        if (modifyProductBtn) {
+            modifyProductBtn.addEventListener('click', (e) => this.handleModifyProduct(e));
         }
     }
 
@@ -151,6 +176,25 @@ class ProductPopup {
         window.dispatchEvent(new CustomEvent('addToWishlist', {
             detail: { product: this.product }
         }));
+    }
+
+    /**
+     * Handle modify product action (Admin only)
+     * @param {Event} event - Click event
+     * @private
+     */
+    handleModifyProduct(event) {
+        event.stopPropagation();
+
+        // Dispatch custom event for product modification
+        window.dispatchEvent(new CustomEvent('modifyProduct', {
+            detail: { product: this.product }
+        }));
+
+        // TODO: Navigate to product edit page or open edit modal
+        if (window.toast) {
+            window.toast.info(`Modify Product: ${this.product.name} - Feature coming soon!`);
+        }
     }
 
     /**

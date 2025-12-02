@@ -138,11 +138,29 @@ class UserDropdownRenderer {
     }
 
     /**
+     * Check if current user is admin
+     * @returns {boolean} True if admin
+     */
+    isAdmin() {
+        const user = this.userManager.getCurrentUser();
+        return user && (user.isAdmin === true || user.email?.toLowerCase() === 'admin@admin.com');
+    }
+
+    /**
      * Render content for logged-in users
      * @param {HTMLElement} container - Container element
      */
     renderLoggedInContent(container) {
         const user = this.userManager.getCurrentUser();
+        const isAdmin = this.isAdmin();
+        
+        // Admin shows "Manage Inventory" at the top instead of "Change Password"
+        const manageInventoryBtn = isAdmin 
+            ? '<button class="user-action-btn admin-btn" id="manageInventoryBtn">Manage Inventory</button>'
+            : '';
+        const changePasswordBtn = isAdmin 
+            ? ''
+            : '<button class="user-action-btn" id="changePasswordBtn">Change Password</button>';
         
         container.innerHTML = `
             <div class="user-info">
@@ -150,13 +168,14 @@ class UserDropdownRenderer {
                     <img src="/201-project/images/icons/user_avatar.png" alt="User Avatar">
                 </div>
                 <div class="user-details">
-                    <span class="user-name">${this.escapeHtml(user.username || 'User')}</span>
+                    <span class="user-name">${this.escapeHtml(user.username || 'User')}${isAdmin ? ' <span class="admin-badge">Admin</span>' : ''}</span>
                     <span class="user-email">${this.escapeHtml(user.email || '')}</span>
                 </div>
             </div>
             <div class="user-actions">
+                ${manageInventoryBtn}
                 <button class="user-action-btn" id="changeAccountBtn">Change Account</button>
-                <button class="user-action-btn" id="changePasswordBtn">Change Password</button>
+                ${changePasswordBtn}
                 <button class="user-action-btn logout-btn" id="logoutBtn">Log Out</button>
             </div>
         `;
@@ -202,12 +221,21 @@ class UserDropdownRenderer {
             });
         }
 
-        // Change password button (logged in)
+        // Change password button (logged in, not for admin)
         const changePasswordBtn = container.querySelector('#changePasswordBtn');
         if (changePasswordBtn) {
             changePasswordBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.handleChangePassword();
+            });
+        }
+
+        // Manage Inventory button (admin only)
+        const manageInventoryBtn = container.querySelector('#manageInventoryBtn');
+        if (manageInventoryBtn) {
+            manageInventoryBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.handleManageInventory();
             });
         }
 
@@ -239,6 +267,18 @@ class UserDropdownRenderer {
         // 设置标记，让 register-login 页面直接显示 forgot password 表单
         sessionStorage.setItem('show_forgot_password', 'true');
         window.location.href = '/201-project/register-login.html';
+    }
+
+    /**
+     * Handle manage inventory action (Admin only)
+     * Navigate to inventory management page
+     */
+    handleManageInventory() {
+        // TODO: Navigate to inventory management page when implemented
+        if (window.toast) {
+            window.toast.info('Inventory Management feature coming soon!');
+        }
+        // Future: window.location.href = '/201-project/admin/inventory.html';
     }
 
     /**

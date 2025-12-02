@@ -10,6 +10,37 @@ class UserRepository {
         this.STORAGE_KEY = 'furniro_users';
         this.users = [];
         this.dataLoaded = false;
+        
+        // Hardcoded Admin account configuration
+        this.ADMIN_CONFIG = {
+            email: 'admin@admin.com',
+            username: 'Admin',
+            phone: '123456789',
+            // Pre-computed SHA-256 hash of 'Admin@admin'
+            passwordHash: '11d13c2116b4439b7afc9b1d2cd2b40e1c25e84a48d26e70501af38287d2da8b',
+            id: 'admin-system',
+            isAdmin: true,
+            createdAt: '2024-01-01T00:00:00.000Z',
+            updatedAt: '2024-01-01T00:00:00.000Z'
+        };
+    }
+
+    /**
+     * Check if email is the admin email
+     * @param {string} email - Email to check
+     * @returns {boolean} True if admin email
+     */
+    isAdminEmail(email) {
+        return email.toLowerCase() === this.ADMIN_CONFIG.email.toLowerCase();
+    }
+
+    /**
+     * Check if user is admin
+     * @param {Object} user - User object
+     * @returns {boolean} True if admin
+     */
+    static isAdmin(user) {
+        return user && (user.isAdmin === true || user.email?.toLowerCase() === 'admin@admin.com');
     }
 
     /**
@@ -98,6 +129,14 @@ class UserRepository {
     async register(userData) {
         const { username, email, password, phone } = userData;
 
+        // Check if trying to register with admin email
+        if (this.isAdminEmail(email)) {
+            return {
+                success: false,
+                message: 'This email is reserved and cannot be used for registration'
+            };
+        }
+
         // Check if email already exists
         if (this.emailExists(email)) {
             return {
@@ -140,6 +179,28 @@ class UserRepository {
      * @returns {Promise<Object>} Result { success, message, user }
      */
     async authenticate(email, password) {
+        // Check if logging in as Admin
+        if (this.isAdminEmail(email)) {
+            const passwordHash = await this.hashPassword(password);
+            
+            if (passwordHash !== this.ADMIN_CONFIG.passwordHash) {
+                return {
+                    success: false,
+                    message: 'Incorrect password. Please try again.',
+                    errorType: 'wrong_password'
+                };
+            }
+
+            console.log(`✓ Admin authenticated: ${email}`);
+
+            const { passwordHash: _, ...safeAdmin } = this.ADMIN_CONFIG;
+            return {
+                success: true,
+                message: 'Login successful',
+                user: safeAdmin
+            };
+        }
+
         const user = this.users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
         if (!user) {
@@ -216,6 +277,14 @@ class UserRepository {
      * @returns {Promise<Object>} Result { success, message }
      */
     async resetPassword(email, phone, newPassword) {
+        // Check if trying to reset admin password
+        if (this.isAdminEmail(email)) {
+            return {
+                success: false,
+                message: 'Admin password cannot be changed'
+            };
+        }
+
         // First verify identity
         const verification = this.verifyUserIdentity(email, phone);
         

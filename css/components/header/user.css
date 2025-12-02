@@ -104,6 +104,29 @@
     color: #E97171;
 }
 
+/* Admin badge */
+.admin-badge {
+    display: inline-block;
+    background: #B88E2F;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Admin button - special styling */
+.user-action-btn.admin-btn {
+    color: #B88E2F;
+    font-weight: 500;
+}
+
+.user-action-btn.admin-btn:hover {
+    color: #9A7328;
+}
+
 /* ========================================
    GUEST USER MESSAGE
    ======================================== */
