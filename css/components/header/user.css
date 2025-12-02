@@ -1,0 +1,173 @@
+/* user.css - User dropdown styles */
+
+/* ========================================
+   USER DROPDOWN
+   ======================================== */
+
+.user-dropdown {
+    width: 280px;
+}
+
+.user-content {
+    padding: 20px;
+}
+
+/* ========================================
+   LOGGED IN USER INFO
+   ======================================== */
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F9F1E7;
+    margin-bottom: 16px;
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: #F9F1E7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 48px;
+    height: auto;
+    object-fit: cover;
+}
+
+.user-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-email {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ========================================
+   USER ACTION BUTTONS
+   ======================================== */
+
+.user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-action-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    color: #666;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.2s ease;
+}
+
+.user-action-btn:hover {
+    color: #B88E2F;
+}
+
+/* Logout button - special styling */
+.user-action-btn.logout-btn {
+    color: #999;
+}
+
+.user-action-btn.logout-btn:hover {
+    color: #E97171;
+}
+
+/* ========================================
+   GUEST USER MESSAGE
+   ======================================== */
+
+.user-guest-message {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.guest-icon {
+    width: 60px;
+    height: 60px;
+    background: #F9F1E7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    overflow: hidden;
+}
+
+.guest-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.guest-icon svg {
+    width: 32px;
+    height: 32px;
+    color: #B88E2F;
+}
+
+.guest-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 6px 0;
+}
+
+.guest-subtext {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+}
+
+/* ========================================
+   LOGIN BUTTON
+   ======================================== */
+
+.user-login-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: #B88E2F;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.user-login-btn:hover {
+    background: #9A7328;
+}
