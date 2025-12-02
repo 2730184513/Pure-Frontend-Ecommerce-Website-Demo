@@ -2,6 +2,12 @@
  * Product Repository - Global Singleton
  * Pure data access layer for products
  * Provides CRUD operations, query filtering, and sorting functionality
+ * 
+ * Data Persistence Strategy:
+ * - First checks localStorage for existing product data
+ * - If not found, loads from JSON files and persists to localStorage
+ * - All subsequent modifications are persisted to localStorage
+ * - This ensures data persistence across sessions in static website environment
  */
 
 class ProductRepository {
@@ -10,10 +16,11 @@ class ProductRepository {
         this.dataLoaded = false;
         this.dataPath = 'data/';
         this.categories = ['chair', 'lamp', 'sofa', 'table'];
+        this.STORAGE_KEY = 'furniro_products_data';
     }
 
     /**
-     * Load all product data from JSON files
+     * Load all product data - first tries localStorage, then falls back to JSON files
      * @returns {Promise<void>}
      */
     async loadAll() {
@@ -22,6 +29,18 @@ class ProductRepository {
         }
 
         try {
+            // First, try to load from localStorage
+            const storedData = localStorage.getItem(this.STORAGE_KEY);
+            
+            if (storedData) {
+                // Use data from localStorage
+                this.products = JSON.parse(storedData);
+                this.dataLoaded = true;
+                console.log(`✓ ProductRepository loaded ${this.products.length} products from localStorage`);
+                return;
+            }
+
+            // If no localStorage data, load from JSON files
             const loadPromises = this.categories.map(category =>
                 this.loadCategoryData(category)
             );
@@ -30,7 +49,10 @@ class ProductRepository {
             this.products = results.flat();
             this.dataLoaded = true;
 
-            console.log(`✓ ProductRepository loaded ${this.products.length} products`);
+            // Save to localStorage for future use
+            this.saveToLocalStorage();
+
+            console.log(`✓ ProductRepository loaded ${this.products.length} products from JSON files and saved to localStorage`);
         } catch (error) {
             console.error('✗ Error loading product data:', error);
             throw error;
@@ -134,6 +156,7 @@ class ProductRepository {
         }
 
         this.products[index] = { ...this.products[index], ...updates };
+        this.saveToLocalStorage();
         return this.products[index];
     }
 
@@ -149,6 +172,7 @@ class ProductRepository {
         }
 
         this.products.splice(index, 1);
+        this.saveToLocalStorage();
         return true;
     }
 
@@ -166,6 +190,108 @@ class ProductRepository {
     clear() {
         this.products = [];
         this.dataLoaded = false;
+        localStorage.removeItem(this.STORAGE_KEY);
+    }
+
+    /**
+     * Save current products data to localStorage
+     * @private
+     */
+    saveToLocalStorage() {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.products));
+            console.log('✓ Products data saved to localStorage');
+        } catch (error) {
+            console.error('✗ Error saving products to localStorage:', error);
+        }
+    }
+
+    /**
+     * Update product stock quantity
+     * @param {string} productId - Product ID
+     * @param {number} quantityChange - Quantity to subtract (positive number)
+     * @returns {boolean} True if successful, false if insufficient stock or product not found
+     */
+    updateStock(productId, quantityChange) {
+        const product = this.products.find(p => p.id === productId);
+        if (!product) {
+            console.error(`Product not found: ${productId}`);
+            return false;
+        }
+
+        const currentStock = product.number_of_remain || 0;
+        const newStock = currentStock - quantityChange;
+
+        if (newStock < 0) {
+            console.error(`Insufficient stock for product ${productId}: current=${currentStock}, requested=${quantityChange}`);
+            return false;
+        }
+
+        product.number_of_remain = newStock;
+        this.saveToLocalStorage();
+
+        // Dispatch event to notify other components about stock change
+        window.dispatchEvent(new CustomEvent('stockUpdated', {
+            detail: { productId, newStock, previousStock: currentStock }
+        }));
+
+        console.log(`✓ Stock updated for ${productId}: ${currentStock} -> ${newStock}`);
+        return true;
+    }
+
+    /**
+     * Check if product has available stock
+     * @param {string} productId - Product ID
+     * @returns {number} Available stock quantity (0 if product not found)
+     */
+    getStock(productId) {
+        const product = this.products.find(p => p.id === productId);
+        return product ? (product.number_of_remain || 0) : 0;
+    }
+
+    /**
+     * Check if product is out of stock
+     * @param {string} productId - Product ID
+     * @returns {boolean} True if out of stock or product not found
+     */
+    isOutOfStock(productId) {
+        return this.getStock(productId) <= 0;
+    }
+
+    /**
+     * Batch update stock for multiple products (used in checkout)
+     * @param {Array} items - Array of {productId, quantity} objects
+     * @returns {boolean} True if all updates successful
+     */
+    batchUpdateStock(items) {
+        // First validate all items have sufficient stock
+        for (const item of items) {
+            const currentStock = this.getStock(item.productId);
+            if (currentStock < item.quantity) {
+                console.error(`Insufficient stock for product ${item.productId}`);
+                return false;
+            }
+        }
+
+        // If all validations pass, perform updates
+        for (const item of items) {
+            this.updateStock(item.productId, item.quantity);
+        }
+
+        return true;
+    }
+
+    /**
+     * Reset product data from JSON files (useful for demo/testing)
+     * Clears localStorage and reloads from JSON
+     * @returns {Promise<void>}
+     */
+    async resetToOriginal() {
+        localStorage.removeItem(this.STORAGE_KEY);
+        this.products = [];
+        this.dataLoaded = false;
+        await this.loadAll();
+        console.log('✓ Product data reset to original JSON values');
     }
 }
 

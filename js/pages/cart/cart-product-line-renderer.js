@@ -8,6 +8,29 @@ class CartProductLineRenderer {
     }
 
     /**
+     * Get current stock for a product from ProductRepository
+     * @param {string} productId - Product ID
+     * @returns {number} Current stock quantity
+     * @private
+     */
+    getCurrentStock(productId) {
+        if (window.productRepository) {
+            return window.productRepository.getStock(productId);
+        }
+        return 9999; // Fallback
+    }
+
+    /**
+     * Check if product is out of stock
+     * @param {string} productId - Product ID
+     * @returns {boolean}
+     * @private
+     */
+    isOutOfStock(productId) {
+        return this.getCurrentStock(productId) <= 0;
+    }
+
+    /**
      * Render all cart items to a container
      * @param {HTMLElement} container - Target container
      * @param {Array} cartItems - Cart items from CartManager
@@ -53,7 +76,8 @@ class CartProductLineRenderer {
      */
     createProductLine(item, index) {
         const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
+        const isOutOfStock = this.isOutOfStock(item.id);
+        cartItem.className = 'cart-item' + (isOutOfStock ? ' out-of-stock-item' : '');
         cartItem.dataset.variantId = item.variantId;
         cartItem.dataset.productId = item.id; // Store product ID for navigation
 
@@ -62,8 +86,8 @@ class CartProductLineRenderer {
 
         cartItem.innerHTML = `
             <div class="checkbox-container">
-                <input type="checkbox" id="item${index}" class="item-checkbox" data-variant-id="${item.variantId}">
-                <label for="item${index}" class="custom-checkbox"></label>
+                <input type="checkbox" id="item${index}" class="item-checkbox" data-variant-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>
+                <label for="item${index}" class="custom-checkbox ${isOutOfStock ? 'disabled' : ''}"></label>
             </div>
             
             <div class="product-image-container">
@@ -87,10 +111,13 @@ class CartProductLineRenderer {
                 <div class="original-price" data-original="${item.price * 1.2}">RM ${(item.price * 1.2).toLocaleString()}</div>
             </div>
             
-            <div class="quantity-controls">
-                <button class="quantity-btn decrease">-</button>
-                <input type="number" class="quantity-input" value="${item.qty}" min="1" max="9999" data-variant-id="${item.variantId}">
-                <button class="quantity-btn increase">+</button>
+            <div class="quantity-controls-wrapper">
+                <div class="quantity-controls ${isOutOfStock ? 'frozen' : ''}">
+                    <button class="quantity-btn decrease" ${isOutOfStock ? 'disabled' : ''}>-</button>
+                    <input type="number" class="quantity-input" value="${item.qty}" min="1" max="9999" data-variant-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>
+                    <button class="quantity-btn increase" ${isOutOfStock ? 'disabled' : ''}>+</button>
+                </div>
+                ${isOutOfStock ? '<span class="out-of-stock-label">Out of Stock</span>' : ''}
             </div>
             
             <div class="actions">
@@ -133,6 +160,14 @@ class CartProductLineRenderer {
         const quantityInput = cartItem.querySelector('.quantity-input');
 
         decreaseBtn.addEventListener('click', () => {
+            // Check if out of stock
+            if (this.isOutOfStock(item.id)) {
+                if (window.toast) {
+                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                }
+                return;
+            }
+
             const currentQty = parseInt(quantityInput.value) || item.qty;
             if (currentQty <= 1) {
                 if (window.toast) {
@@ -144,9 +179,17 @@ class CartProductLineRenderer {
         });
 
         increaseBtn.addEventListener('click', () => {
+            // Check if out of stock
+            if (this.isOutOfStock(item.id)) {
+                if (window.toast) {
+                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                }
+                return;
+            }
+
             const currentQty = parseInt(quantityInput.value) || item.qty;
-            // Use remaining stock as max limit, fallback to 9999
-            const maxQty = item.number_of_remain || 9999;
+            // Use real-time stock as max limit
+            const maxQty = this.getCurrentStock(item.id);
             if (currentQty >= maxQty) {
                 if (window.toast) {
                     window.toast.show(`Maximum available quantity is ${maxQty}`, 'warning');
@@ -207,8 +250,17 @@ class CartProductLineRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
-        // Use remaining stock as max limit, fallback to 9999
-        const maxQty = item.number_of_remain || 9999;
+        // Check if out of stock
+        if (this.isOutOfStock(item.id)) {
+            if (window.toast) {
+                window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+            }
+            input.value = item.qty; // Reset to current value
+            return;
+        }
+
+        // Use real-time stock as max limit
+        const maxQty = this.getCurrentStock(item.id);
         let value = parseInt(input.value);
 
         // Validate input

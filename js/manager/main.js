@@ -437,10 +437,14 @@ class FurniroApp {
     async _preloadData() {
         const pageId = PageUtility.getCurrentPageId();
 
-        // Pre-load product data for home, shop, and product detail pages
+        // Pre-load product data for pages that need it
+        // Home, Shop, Product Detail: for displaying products
+        // Cart, Checkout: for stock validation when modifying quantities
         if (pageId === PageUtility.PAGE_IDS.HOME || 
             pageId === PageUtility.PAGE_IDS.SHOP ||
-            pageId === PageUtility.PAGE_IDS.PRODUCT_DETAIL) {
+            pageId === PageUtility.PAGE_IDS.PRODUCT_DETAIL ||
+            pageId === PageUtility.PAGE_IDS.CART ||
+            pageId === PageUtility.PAGE_IDS.CHECKOUT) {
             await this.globalSingletons.productRepository.loadAll();
             console.log('✓ Product data pre-loaded');
         }

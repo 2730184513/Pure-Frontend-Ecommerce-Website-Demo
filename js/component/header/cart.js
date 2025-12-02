@@ -51,10 +51,74 @@ class CartManager {
 
     /**
      * Load cart from localStorage (user-specific)
+     * Also validates cart items against current stock levels
      */
     loadCart() {
         const stored = localStorage.getItem(this.getStorageKey());
         this.cart = stored ? JSON.parse(stored) : [];
+        
+        // Validate and adjust cart quantities based on current stock
+        this.validateCartStock();
+    }
+
+    /**
+     * Validate cart items against current stock and adjust if necessary
+     * Shows notifications for items that were adjusted
+     * @private
+     */
+    validateCartStock() {
+        if (!window.productRepository || !window.productRepository.dataLoaded) {
+            // Repository not ready yet, skip validation
+            // Will be called again when repository is loaded
+            return;
+        }
+
+        const adjustedItems = [];
+        const outOfStockItems = [];
+        let cartModified = false;
+
+        this.cart.forEach(item => {
+            const currentStock = window.productRepository.getStock(item.id);
+            
+            if (currentStock <= 0) {
+                // Product is out of stock
+                if (item.qty !== 1) {
+                    item.qty = 1; // Set to 1 to keep in cart but frozen
+                    cartModified = true;
+                }
+                outOfStockItems.push(item.name);
+            } else if (item.qty > currentStock) {
+                // Quantity exceeds current stock
+                const oldQty = item.qty;
+                item.qty = currentStock;
+                cartModified = true;
+                adjustedItems.push({
+                    name: item.name,
+                    oldQty: oldQty,
+                    newQty: currentStock
+                });
+            }
+        });
+
+        // Save cart if modified
+        if (cartModified) {
+            this.saveCart();
+        }
+
+        // Show notifications after a short delay to ensure toast is ready
+        // Only notify about quantity adjustments when stock > 0 but quantity exceeds stock
+        // Don't notify about out-of-stock items to avoid repeated notifications on page load
+        if (adjustedItems.length > 0) {
+            setTimeout(() => {
+                adjustedItems.forEach(item => {
+                    if (window.toast) {
+                        window.toast.warning(
+                            `"${item.name}" quantity adjusted from ${item.oldQty} to ${item.newQty} due to stock changes.`
+                        );
+                    }
+                });
+            }, 500);
+        }
     }
 
     /**
@@ -80,6 +144,15 @@ class CartManager {
         window.addEventListener('userStateChanged', () => {
             this.reloadForCurrentUser();
         });
+
+        // Listen for stock updates to re-validate cart
+        window.addEventListener('stockUpdated', () => {
+            this.validateCartStock();
+            // Update dropdown if visible
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.render();
+            }
+        });
     }
 
 
@@ -88,6 +161,17 @@ class CartManager {
      * @param {Object} product - Product to add (should include selectedSize and selectedColor if pre-selected)
      */
     addProduct(product) {
+        // Check if product is out of stock (using real-time stock from repository)
+        let currentStock = product.number_of_remain || 9999;
+        if (window.productRepository) {
+            currentStock = window.productRepository.getStock(product.id);
+        }
+
+        if (currentStock <= 0) {
+            window.toast.warning('This product is currently out of stock. Please wait for restock.');
+            return;
+        }
+
         // Use pre-selected size/color if provided, otherwise use first option or default
         const size = product.selectedSize || (product.size ? Object.keys(product.size)[0] : 'Standard');
         const color = product.selectedColor || (product.color ? Object.keys(product.color)[0] : 'Default');
@@ -101,21 +185,26 @@ class CartManager {
             const qtyToAdd = product.qty || 1;
             const newQty = existing.qty + qtyToAdd;
             
-            // Use remaining stock as max limit, fallback to 9999
-            const maxQty = product.number_of_remain || 9999;
-            if (newQty > maxQty) {
-                window.toast.error(`Maximum available quantity is ${maxQty}!`);
+            // Use real-time stock as max limit
+            if (newQty > currentStock) {
+                window.toast.error(`Maximum available quantity is ${currentStock}!`);
                 return;
             }
             existing.qty = newQty;
             message = `${product.name} quantity increased in cart!`;
         } else {
+            // Check if requested quantity exceeds stock
+            const qtyToAdd = product.qty || 1;
+            if (qtyToAdd > currentStock) {
+                window.toast.error(`Only ${currentStock} items available in stock!`);
+                return;
+            }
             this.cart.push({
                 ...product,
                 variantId,
                 selectedSize: size,
                 selectedColor: color,
-                qty: product.qty || 1
+                qty: qtyToAdd
             });
             message = `${product.name} has been added to your cart!`;
         }
@@ -147,6 +236,20 @@ class CartManager {
             // Enforce minimum quantity of 1
             if (newQty < 1) {
                 return; // Don't allow quantity below 1
+            }
+
+            // Get real-time stock from repository for max limit
+            let maxQty = item.number_of_remain || 9999;
+            if (window.productRepository) {
+                maxQty = window.productRepository.getStock(item.id);
+            }
+
+            // Enforce maximum quantity based on real-time stock
+            if (newQty > maxQty) {
+                if (!silent && window.toast) {
+                    window.toast.warning(`Maximum available quantity is ${maxQty}`);
+                }
+                return;
             }
 
             item.qty = newQty;

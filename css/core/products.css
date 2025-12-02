@@ -176,6 +176,35 @@
 
 /* Pop-up styles moved to pop-up.css */
 
+/* --- SOLD OUT OVERLAY --- */
+.product-card.out-of-stock {
+    opacity: 0.85;
+}
+
+.product-card.out-of-stock:hover {
+    transform: none; /* Disable hover effect for out of stock items */
+}
+
+.sold-out-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(128, 128, 128, 0.45);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.sold-out-icon {
+    position: absolute;
+    top: 16px;
+
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
 /* --- EMPTY STATE --- */
 .empty-products-state {
     text-align: center;

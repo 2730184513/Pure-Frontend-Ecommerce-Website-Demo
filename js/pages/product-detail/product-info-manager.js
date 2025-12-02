@@ -27,6 +27,27 @@ class ProductInfoManager {
     }
 
     /**
+     * Get current stock from ProductRepository (real-time)
+     * @returns {number} Current stock quantity
+     * @private
+     */
+    getCurrentStock() {
+        if (window.productRepository && this.product) {
+            return window.productRepository.getStock(this.product.id);
+        }
+        return this.product?.number_of_remain || 0;
+    }
+
+    /**
+     * Check if product is out of stock
+     * @returns {boolean}
+     * @private
+     */
+    isOutOfStock() {
+        return this.getCurrentStock() <= 0;
+    }
+
+    /**
      * Initialize the product info section
      * @param {Object} product - Product data
      */
@@ -37,7 +58,8 @@ class ProductInfoManager {
         }
 
         this.product = product;
-        this.maxQuantity = product.number_of_remain || 9999;
+        // Use real-time stock from repository
+        this.maxQuantity = this.getCurrentStock();
 
         // Set default selections
         this.initDefaultSelections();
@@ -55,7 +77,78 @@ class ProductInfoManager {
         // Check description overflow after render
         setTimeout(() => this.renderer.checkDescriptionOverflow(), 0);
 
+        // Listen for stock updates
+        this.setupStockUpdateListener();
+
+        // Update UI based on current stock status
+        this.updateStockStatus();
+
         console.log('✓ Product Info Manager initialized');
+    }
+
+    /**
+     * Setup listener for stock updates
+     * @private
+     */
+    setupStockUpdateListener() {
+        window.addEventListener('stockUpdated', (e) => {
+            if (e.detail.productId === this.product.id) {
+                this.maxQuantity = e.detail.newStock;
+                this.updateStockStatus();
+                // Clamp current quantity to new max
+                if (this.quantity > this.maxQuantity && this.maxQuantity > 0) {
+                    this.quantity = this.maxQuantity;
+                    this.renderer.updateQuantityDisplay(this.quantity);
+                }
+            }
+        });
+    }
+
+    /**
+     * Update UI elements based on current stock status
+     * @private
+     */
+    updateStockStatus() {
+        const outOfStock = this.isOutOfStock();
+        const addToCartBtn = this.container?.querySelector('#btn-add-to-cart');
+        const checkoutBtn = this.container?.querySelector('#btn-checkout');
+        const qtyControls = this.container?.querySelector('.quantity-controls');
+
+        if (outOfStock) {
+            // Disable Add to Cart and Checkout buttons
+            if (addToCartBtn) {
+                addToCartBtn.disabled = true;
+                addToCartBtn.classList.add('disabled');
+                addToCartBtn.title = 'Out of stock - please wait for restock';
+            }
+            if (checkoutBtn) {
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add('disabled');
+                checkoutBtn.title = 'Out of stock - please wait for restock';
+            }
+            // Add visual indicator to quantity controls
+            if (qtyControls) {
+                qtyControls.classList.add('out-of-stock');
+            }
+        } else {
+            // Enable buttons
+            if (addToCartBtn) {
+                addToCartBtn.disabled = false;
+                addToCartBtn.classList.remove('disabled');
+                addToCartBtn.title = '';
+            }
+            if (checkoutBtn) {
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove('disabled');
+                checkoutBtn.title = '';
+            }
+            if (qtyControls) {
+                qtyControls.classList.remove('out-of-stock');
+            }
+        }
+
+        // Update max quantity
+        this.maxQuantity = this.getCurrentStock();
     }
 
     /**
@@ -202,6 +295,16 @@ class ProductInfoManager {
      * @private
      */
     handleQuantityChange(delta) {
+        // Check if out of stock
+        if (this.isOutOfStock()) {
+            if (window.toast) {
+                window.toast.warning('This product is currently out of stock. Please wait for restock.');
+            }
+            return;
+        }
+
+        // Get current real-time stock
+        this.maxQuantity = this.getCurrentStock();
         const newQty = this.quantity + delta;
 
         // Clamp to valid range
@@ -228,6 +331,17 @@ class ProductInfoManager {
      * @private
      */
     handleQuantityInputChange(input) {
+        // Check if out of stock
+        if (this.isOutOfStock()) {
+            if (window.toast) {
+                window.toast.warning('This product is currently out of stock. Please wait for restock.');
+            }
+            input.value = 1;
+            return;
+        }
+
+        // Get current real-time stock
+        this.maxQuantity = this.getCurrentStock();
         let value = parseInt(input.value, 10);
         
         // Handle invalid input
@@ -252,8 +366,27 @@ class ProductInfoManager {
      * @private
      */
     handleAddToCart() {
+        // Check if out of stock
+        if (this.isOutOfStock()) {
+            if (window.toast) {
+                window.toast.warning('This product is currently out of stock. Please wait for restock.');
+            }
+            return;
+        }
+
         // Validate selections
         if (!this.validateSelections()) return;
+
+        // Get current real-time stock
+        const currentStock = this.getCurrentStock();
+        if (this.quantity > currentStock) {
+            if (window.toast) {
+                window.toast.warning(`Only ${currentStock} items available in stock`);
+            }
+            this.quantity = currentStock;
+            this.renderer.updateQuantityDisplay(this.quantity);
+            return;
+        }
 
         // Create cart item
         const cartItem = this.createCartItem();
@@ -271,8 +404,27 @@ class ProductInfoManager {
      * @private
      */
     handleCheckout() {
+        // Check if out of stock
+        if (this.isOutOfStock()) {
+            if (window.toast) {
+                window.toast.warning('This product is currently out of stock. Please wait for restock.');
+            }
+            return;
+        }
+
         // Validate selections
         if (!this.validateSelections()) return;
+
+        // Get current real-time stock
+        const currentStock = this.getCurrentStock();
+        if (this.quantity > currentStock) {
+            if (window.toast) {
+                window.toast.warning(`Only ${currentStock} items available in stock`);
+            }
+            this.quantity = currentStock;
+            this.renderer.updateQuantityDisplay(this.quantity);
+            return;
+        }
 
         // Create the variant ID
         const size = this.selectedSize || 'Standard';

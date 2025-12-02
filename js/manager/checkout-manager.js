@@ -164,6 +164,23 @@ class CheckoutManager {
             // Simulate processing delay
             await new Promise(resolve => setTimeout(resolve, 1500));
 
+            // Update product stock in repository (this affects all users globally)
+            const stockUpdateItems = selectedItems.map(item => ({
+                productId: item.id,
+                quantity: item.qty
+            }));
+            
+            if (window.productRepository) {
+                const stockUpdateSuccess = window.productRepository.batchUpdateStock(stockUpdateItems);
+                if (!stockUpdateSuccess) {
+                    if (window.toastManager) {
+                        window.toastManager.show('Some items are out of stock. Please update your cart.', 'error');
+                    }
+                    return;
+                }
+                console.log('✓ Stock updated successfully for purchased items');
+            }
+
             // Only remove from cart if this is a cart-based checkout (not direct checkout)
             if (!isDirectCheckout) {
                 // Remove ordered items from cart (silent mode - no individual notifications)

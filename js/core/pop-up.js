@@ -91,6 +91,17 @@ class ProductPopup {
             return;
         }
 
+        // Check if product is out of stock using real-time data from repository
+        if (window.productRepository) {
+            const currentStock = window.productRepository.getStock(this.product.id);
+            if (currentStock <= 0) {
+                if (window.toast) {
+                    window.toast.warning('This product is currently out of stock. Please wait for restock.');
+                }
+                return;
+            }
+        }
+
         // Dispatch custom event for cart management
         // The CartManager will handle user feedback
         window.dispatchEvent(new CustomEvent('addToCart', {

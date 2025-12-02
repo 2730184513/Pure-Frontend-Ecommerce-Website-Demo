@@ -217,8 +217,20 @@ class CartDropdownRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
-        // Use remaining stock as max limit, fallback to 9999
-        const maxQty = item.number_of_remain || 9999;
+        // Check if out of stock using real-time data from repository
+        let maxQty = item.number_of_remain || 9999;
+        if (window.productRepository) {
+            const currentStock = window.productRepository.getStock(item.id);
+            if (currentStock <= 0) {
+                if (window.toast) {
+                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                }
+                input.value = item.qty; // Reset to current value
+                return;
+            }
+            maxQty = currentStock;
+        }
+
         let value = parseInt(input.value);
         let showToast = false;
         let toastMessage = '';
@@ -284,11 +296,62 @@ class CartDropdownRenderer {
     }
 
     /**
+     * Check if product is out of stock
+     * @param {string} productId - Product ID
+     * @returns {boolean}
+     * @private
+     */
+    isOutOfStock(productId) {
+        if (window.productRepository) {
+            return window.productRepository.isOutOfStock(productId);
+        }
+        return false;
+    }
+
+    /**
+     * Get wishlist storage key for current user
+     * @returns {string} Storage key
+     * @private
+     */
+    getWishlistStorageKey() {
+        const stored = localStorage.getItem('furniro_current_user');
+        let email = 'guest';
+        if (stored) {
+            try {
+                const user = JSON.parse(stored);
+                email = user.email || 'guest';
+            } catch (e) {
+                email = 'guest';
+            }
+        }
+        return 'furniro_wishlist_' + email;
+    }
+
+    /**
+     * Check if product is in wishlist
+     * @param {string} productId - Product ID
+     * @returns {boolean}
+     * @private
+     */
+    isInWishlist(productId) {
+        const wishlistData = localStorage.getItem(this.getWishlistStorageKey());
+        if (!wishlistData) return false;
+        try {
+            const wishlist = JSON.parse(wishlistData);
+            return wishlist.some(item => item.id === productId);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
      * Create cart item DOM element
      */
     createCartItemElement(item) {
         const el = document.createElement('div');
-        el.className = 'cart-item';
+        const isOutOfStock = this.isOutOfStock(item.id);
+        const isLiked = this.isInWishlist(item.id);
+        el.className = 'cart-item' + (isOutOfStock ? ' out-of-stock-item' : '');
         el.dataset.productId = item.id; // Store product ID for navigation
 
         const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
@@ -304,12 +367,20 @@ class CartDropdownRenderer {
             <span class="cart-item-variant">${item.selectedSize} / ${colorDisplay}</span>
             <span class="cart-item-price">RM ${item.price.toLocaleString()}</span>
             <div class="cart-controls">
-                <div class="cart-qty-group">
-                    <button class="qty-btn minus" data-id="${item.variantId}">-</button>
-                    <input type="number" class="qty-display qty-input" value="${item.qty}" min="1" max="9999" data-id="${item.variantId}">
-                    <button class="qty-btn plus" data-id="${item.variantId}">+</button>
+                <div class="cart-qty-wrapper">
+                    <div class="cart-qty-group ${isOutOfStock ? 'frozen' : ''}">
+                        <button class="qty-btn minus" data-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>-</button>
+                        <input type="number" class="qty-display qty-input" value="${item.qty}" min="1" max="9999" data-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>
+                        <button class="qty-btn plus" data-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>+</button>
+                    </div>
+                    ${isOutOfStock ? '<span class="dropdown-out-of-stock-label">Out of Stock</span>' : ''}
                 </div>
-                <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
+                <div class="cart-action-btns">
+                    <button class="cart-like-btn ${isLiked ? 'liked' : ''}" data-id="${item.variantId}" data-product-id="${item.id}" title="${isLiked ? 'Remove from wishlist' : 'Add to wishlist'}">
+                        <img src="/201-project/images/icons/${isLiked ? 'red-heart' : 'heart'}.png" alt="Like" class="like-icon">
+                    </button>
+                    <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
+                </div>
             </div>
         </div>
     `;
@@ -317,7 +388,7 @@ class CartDropdownRenderer {
         // Add double-click to navigate to product detail
         el.addEventListener('dblclick', (e) => {
             // Prevent navigation if clicking on buttons or inputs
-            if (e.target.closest('.qty-btn') || e.target.closest('.qty-input') || e.target.closest('.delete')) {
+            if (e.target.closest('.qty-btn') || e.target.closest('.qty-input') || e.target.closest('.delete') || e.target.closest('.cart-like-btn')) {
                 return;
             }
             this.navigateToProductDetail(item.id);
@@ -366,6 +437,80 @@ class CartDropdownRenderer {
                 this.handleQuantityInputChange(input);
             });
         });
+
+        // Like button handlers
+        container.querySelectorAll('.cart-like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.handleLikeToggle(btn);
+            });
+        });
+    }
+
+    /**
+     * Handle like button toggle
+     * @param {HTMLElement} btn - Like button element
+     */
+    handleLikeToggle(btn) {
+        const productId = btn.dataset.productId;
+        const item = this.cartManager.getCart().find(i => i.id === productId);
+        if (!item) return;
+
+        const isCurrentlyLiked = btn.classList.contains('liked');
+        const icon = btn.querySelector('.like-icon');
+
+        if (isCurrentlyLiked) {
+            // Remove from wishlist
+            this.removeFromWishlist(productId, item.name);
+            btn.classList.remove('liked');
+            icon.src = '/201-project/images/icons/heart.png';
+            btn.title = 'Add to wishlist';
+        } else {
+            // Add to wishlist
+            window.dispatchEvent(new CustomEvent('addToWishlist', {
+                detail: { product: item }
+            }));
+            btn.classList.add('liked');
+            icon.src = '/201-project/images/icons/red-heart.png';
+            btn.title = 'Remove from wishlist';
+        }
+
+        // Play heart animation
+        this.playHeartAnimation(btn);
+    }
+
+    /**
+     * Remove product from wishlist
+     * @param {string} productId - Product ID
+     * @param {string} productName - Product name for notification
+     */
+    removeFromWishlist(productId, productName) {
+        const storageKey = this.getWishlistStorageKey();
+        const wishlistData = localStorage.getItem(storageKey);
+        const wishlist = wishlistData ? JSON.parse(wishlistData) : [];
+        const updatedWishlist = wishlist.filter(item => item.id !== productId);
+        localStorage.setItem(storageKey, JSON.stringify(updatedWishlist));
+        
+        if (window.toast) {
+            window.toast.info(`${productName} removed from wishlist`);
+        }
+
+        // Dispatch event for wishlist manager to sync
+        window.dispatchEvent(new CustomEvent('wishlistUpdated'));
+    }
+
+    /**
+     * Play heart animation on like button
+     * @param {HTMLElement} btn - Like button element
+     */
+    playHeartAnimation(btn) {
+        btn.classList.remove('heart-animate');
+        void btn.offsetWidth; // Force reflow
+        btn.classList.add('heart-animate');
+        
+        setTimeout(() => {
+            btn.classList.remove('heart-animate');
+        }, 300);
     }
 
     /**
@@ -387,6 +532,17 @@ class CartDropdownRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
+        // Check if out of stock using real-time data from repository
+        if (window.productRepository) {
+            const currentStock = window.productRepository.getStock(item.id);
+            if (currentStock <= 0) {
+                if (window.toast) {
+                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                }
+                return;
+            }
+        }
+
         const newQty = item.qty - 1;
         if (newQty < 1) {
             if (window.toast) {
@@ -407,8 +563,19 @@ class CartDropdownRenderer {
         const item = this.cartManager.getCart().find(i => i.variantId === variantId);
         if (!item) return;
 
-        // Use remaining stock as max limit, fallback to 9999
-        const maxQty = item.number_of_remain || 9999;
+        // Check if out of stock using real-time data from repository
+        let maxQty = item.number_of_remain || 9999;
+        if (window.productRepository) {
+            const currentStock = window.productRepository.getStock(item.id);
+            if (currentStock <= 0) {
+                if (window.toast) {
+                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                }
+                return;
+            }
+            maxQty = currentStock;
+        }
+
         const newQty = item.qty + 1;
         
         if (newQty > maxQty) {

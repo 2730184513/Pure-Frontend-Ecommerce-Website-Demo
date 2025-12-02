@@ -128,7 +128,8 @@ class ProductCardRenderer {
      */
     renderCard(product, keyword) {
         const article = document.createElement('article');
-        article.className = 'product-card';
+        const isOutOfStock = this.isProductOutOfStock(product);
+        article.className = 'product-card' + (isOutOfStock ? ' out-of-stock' : '');
         article.dataset.productId = product.id;
 
         // Compose card from independent sections
@@ -139,6 +140,19 @@ class ProductCardRenderer {
         this.attachPopup(article, product);
 
         return article;
+    }
+
+    /**
+     * Check if product is out of stock
+     * @param {Object} product - Product data
+     * @returns {boolean} True if out of stock
+     * @private
+     */
+    isProductOutOfStock(product) {
+        if (window.productRepository) {
+            return window.productRepository.isOutOfStock(product.id);
+        }
+        return (product.number_of_remain || 0) <= 0;
     }
 
     /**
@@ -158,7 +172,31 @@ class ProductCardRenderer {
             imageDiv.appendChild(badges);
         }
 
+        // Add sold out overlay if product is out of stock
+        if (this.isProductOutOfStock(product)) {
+            const overlay = this.createSoldOutOverlay();
+            imageDiv.appendChild(overlay);
+        }
+
         return imageDiv;
+    }
+
+    /**
+     * Create sold out overlay for out of stock products
+     * @returns {HTMLElement} Overlay element
+     * @private
+     */
+    createSoldOutOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'sold-out-overlay';
+        
+        const icon = document.createElement('img');
+        icon.src = '/201-project/images/icons/sold-out.png';
+        icon.alt = 'Sold Out';
+        icon.className = 'sold-out-icon';
+        
+        overlay.appendChild(icon);
+        return overlay;
     }
 
     /**
