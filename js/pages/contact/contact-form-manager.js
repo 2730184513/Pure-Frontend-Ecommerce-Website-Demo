@@ -1,12 +1,65 @@
 /**
- * Contact Form Manager
- * Handles contact form validation, submission, and user interactions
+ * ContactFormManager - 联系表单管理器
+ * 使用 FormRenderer 和 FormFieldFactory 进行声明式表单渲染
+ * 负责联系表单的渲染、验证和提交逻辑
  */
 class ContactFormManager {
     constructor() {
+        this.formContainer = null;
+        this.formRenderer = null;
         this.form = null;
-        this.validator = null;
+        this.validators = new Map();
         this.isInitialized = false;
+    }
+
+    /**
+     * 获取表单字段配置
+     * @returns {Array} 字段配置数组
+     */
+    getFieldsConfig() {
+        return [
+            {
+                type: 'text',
+                id: 'name',
+                name: 'name',
+                label: 'Your Name',
+                required: true,
+                pattern: "^[A-Za-z\\s\\-']{2,100}$",
+                dataError: 'Name must be 2-100 letters only',
+                placeholder: 'Abc'
+            },
+            {
+                type: 'email',
+                id: 'email',
+                name: 'email',
+                label: 'Email Address',
+                required: true,
+                pattern: '^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$',
+                dataError: 'Please enter a valid email address',
+                placeholder: 'Abc@def.com'
+            },
+            {
+                type: 'text',
+                id: 'subject',
+                name: 'subject',
+                label: 'Subject',
+                required: false,
+                pattern: '^.{2,200}$',
+                dataError: 'Subject must be 2-200 characters',
+                placeholder: 'This is optional'
+            },
+            {
+                type: 'textarea',
+                id: 'message',
+                name: 'message',
+                label: 'Message',
+                required: true,
+                minlength: 10,
+                maxlength: 1000,
+                rows: 5,
+                placeholder: "Hi! I'd like to ask about"
+            }
+        ];
     }
 
     /**
@@ -16,19 +69,29 @@ class ContactFormManager {
         if (this.isInitialized) return;
 
         try {
-            this.form = document.getElementById('contactForm');
-            if (!this.form) {
-                throw new Error('Contact form not found');
+            // 获取表单容器
+            this.formContainer = document.querySelector('.contact-form-section');
+            if (!this.formContainer) {
+                throw new Error('Contact form section not found');
             }
 
-            // Initialize form validator
-            this.validator = new FieldValidator();
+            // 初始化表单渲染器
+            this.formRenderer = new FormRenderer(this.formContainer);
 
-            // Bind form events
+            // 渲染表单
+            this.renderForm();
+
+            // 获取表单元素
+            this.form = document.getElementById('contactForm');
+            if (!this.form) {
+                throw new Error('Contact form not found after rendering');
+            }
+
+            // 初始化验证器
+            this.initializeValidators();
+
+            // 绑定事件
             this.bindFormEvents();
-
-            // Initialize form validation
-            this.initializeValidation();
 
             this.isInitialized = true;
             console.log('Contact form manager initialized successfully');
@@ -40,117 +103,135 @@ class ContactFormManager {
     }
 
     /**
+     * 渲染表单
+     */
+    renderForm() {
+        const fieldsConfig = this.getFieldsConfig();
+        
+        // 表单头部
+        const headerHtml = `
+            <div class="contact-form-header">
+                <div class="form-title-row">
+                    <h2>Send us a message</h2>
+                    <span class="required-note"><span class="required">*</span> indicates required field</span>
+                </div>
+            </div>
+        `;
+
+        // 使用 FormFieldFactory 生成字段
+        const fieldsHtml = fieldsConfig.map(field => {
+            return this.formRenderer.renderField(field);
+        }).join('');
+
+        // 提交按钮
+        const submitBtnHtml = FormFieldFactory.createSubmitButton({
+            text: 'Submit',
+            id: 'contactSubmitBtn',
+            className: 'form-submit-btn'
+        });
+
+        // 组装表单
+        const formHtml = `
+            ${headerHtml}
+            <form id="contactForm" class="contact-form" novalidate>
+                ${fieldsHtml}
+                ${submitBtnHtml}
+            </form>
+        `;
+
+        this.formContainer.innerHTML = formHtml;
+    }
+
+    /**
+     * 初始化字段验证器
+     */
+    initializeValidators() {
+        this.validators.clear();
+        
+        if (!this.form) return;
+        
+        const fields = this.form.querySelectorAll('input, textarea');
+        fields.forEach(field => {
+            if (field.id) {
+                const validator = new window.FieldValidator(field);
+                this.validators.set(field.id, validator);
+                this.bindFieldValidation(field, validator);
+            }
+        });
+    }
+
+    /**
+     * 绑定字段验证事件
+     */
+    bindFieldValidation(field, validator) {
+        field.addEventListener('focus', () => {
+            this.formRenderer.clearFieldError(field);
+            this.formRenderer.flush();
+        });
+
+        field.addEventListener('blur', () => {
+            validator.markAsTouched();
+            this.validateField(field, validator);
+        });
+
+        field.addEventListener('input', () => {
+            if (field.classList.contains('invalid')) {
+                this.validateField(field, validator);
+            }
+        });
+    }
+
+    /**
+     * 验证单个字段
+     */
+    validateField(field, validator) {
+        const result = validator.validate();
+
+        if (!result.valid) {
+            this.formRenderer.showFieldError(field, result.message);
+        } else {
+            this.formRenderer.clearFieldError(field);
+        }
+
+        this.formRenderer.flush();
+        return result.valid;
+    }
+
+    /**
      * Bind form submission and validation events
      */
     bindFormEvents() {
         // Form submission
         this.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
-
-        // Real-time validation
-        const inputs = this.form.querySelectorAll('input[required], textarea[required]');
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => this.validateField(input));
-            input.addEventListener('input', () => this.clearFieldError(input));
-        });
-
-        // Optional field validation (for proper format even if not required)
-        const optionalInputs = this.form.querySelectorAll('input:not([required])');
-        optionalInputs.forEach(input => {
-            if (input.hasAttribute('pattern')) {
-                input.addEventListener('blur', () => this.validateField(input));
-                input.addEventListener('input', () => this.clearFieldError(input));
-            }
-        });
     }
 
     /**
-     * Initialize field validation setup (simplified - patterns are now in HTML)
-     */
-    initializeValidation() {
-        // Validation patterns and errors are now defined directly in HTML
-        // This method is kept for compatibility but no longer needed
-        console.log('✓ Field validation patterns loaded from HTML');
-    }
-
-    /**
-     * Validate a single form field
-     * @param {HTMLElement} field - The field to validate
-     */
-    validateField(field) {
-        if (!this.validator) return false;
-
-        const isValid = this.validator.validateField(field);
-
-        if (isValid) {
-            field.classList.remove('invalid');
-            field.classList.add('valid');
-        } else {
-            field.classList.remove('valid');
-            field.classList.add('invalid');
-        }
-
-        return isValid;
-    }
-
-    /**
-     * Clear field error state
-     * @param {HTMLElement} field - The field to clear errors for
-     */
-    clearFieldError(field) {
-        field.classList.remove('invalid', 'valid');
-        const errorSpan = field.parentNode.querySelector('.error-message');
-        if (errorSpan) {
-            errorSpan.classList.remove('show');
-            errorSpan.textContent = '';
-        }
-    }
-
-    /**
-     * Validate entire form
-     * @returns {boolean} - True if form is valid
-     */
-    validateForm() {
-        if (!this.validator) return false;
-
-        const requiredFields = this.form.querySelectorAll('input[required], textarea[required]');
-        const optionalFields = this.form.querySelectorAll('input:not([required])[pattern], textarea:not([required])[pattern]');
-
-        let isFormValid = true;
-
-        // Validate required fields
-        requiredFields.forEach(field => {
-            const isValid = this.validateField(field);
-            if (!isValid) {
-                isFormValid = false;
-            }
-        });
-
-        // Validate optional fields that have content
-        optionalFields.forEach(field => {
-            if (field.value.trim()) {
-                const isValid = this.validateField(field);
-                if (!isValid) {
-                    isFormValid = false;
-                }
-            }
-        });
-
-        return isFormValid;
-    }
-
-    /**
-     * Validate all form fields (simplified method like checkout)
+     * Validate all form fields
      * @returns {boolean} True if all fields are valid
      */
     validateAll() {
-        const allInputs = this.form.querySelectorAll('input, textarea');
         let isValid = true;
+        let firstInvalidField = null;
 
-        allInputs.forEach(input => {
-            if (!this.validateField(input)) {
+        this.validators.forEach((validator, fieldId) => {
+            validator.markAsTouched();
+            const field = document.getElementById(fieldId);
+            const result = validator.validate();
+
+            if (!result.valid) {
+                this.formRenderer.showFieldError(field, result.message);
                 isValid = false;
+                if (!firstInvalidField) firstInvalidField = field;
             }
         });
+
+        this.formRenderer.flush();
+
+        if (!isValid && firstInvalidField) {
+            setTimeout(() => {
+                this.formRenderer.scrollToField(firstInvalidField);
+            }, 100);
+        }
 
         return isValid;
     }
@@ -163,14 +244,11 @@ class ContactFormManager {
         e.preventDefault();
 
         // Show loading state
-        const submitBtn = this.form.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-        }
+        this.formRenderer.setButtonLoading('contactSubmitBtn', true, 'Sending...');
+        this.formRenderer.flush();
 
         try {
-            // Validate form (simplified validation like checkout)
+            // Validate form
             if (!this.validateAll()) {
                 // Show validation error toast
                 if (window.toastManager) {
@@ -180,12 +258,12 @@ class ContactFormManager {
             }
 
             // Get form data
-            const formData = new FormData(this.form);
+            const formData = this.formRenderer.getFormData();
             const contactData = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                subject: formData.get('subject') || 'General Inquiry',
-                message: formData.get('message'),
+                name: formData.name,
+                email: formData.email,
+                subject: formData.subject || 'General Inquiry',
+                message: formData.message,
                 timestamp: new Date().toISOString()
             };
 
@@ -196,7 +274,7 @@ class ContactFormManager {
             this.showSuccessMessage();
 
             // Reset form
-            this.resetForm();
+            this.formRenderer.resetForm();
 
         } catch (error) {
             console.error('Contact form submission error:', error);
@@ -205,10 +283,8 @@ class ContactFormManager {
             }
         } finally {
             // Restore button state
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit';
-            }
+            this.formRenderer.setButtonLoading('contactSubmitBtn', false, 'Sending...');
+            this.formRenderer.flush();
         }
     }
 
@@ -228,22 +304,6 @@ class ContactFormManager {
     }
 
     /**
-     * Show validation errors
-     */
-    showValidationErrors() {
-        const firstInvalidField = this.form.querySelector('.invalid');
-        if (firstInvalidField) {
-            firstInvalidField.focus();
-            firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // Show toast notification
-        if (window.toastManager) {
-            window.toastManager.show('Please check the form and fix any errors', 'error');
-        }
-    }
-
-    /**
      * Show success message and redirect to home
      */
     showSuccessMessage() {
@@ -255,36 +315,6 @@ class ContactFormManager {
         setTimeout(() => {
             window.location.href = '/201-project/index.html';
         }, 2000);
-    }
-
-    /**
-     * Show error message
-     * @param {string} message - Error message to show
-     */
-    showErrorMessage(message) {
-        if (window.toastManager) {
-            window.toastManager.show(message, 'error');
-        }
-    }
-
-    /**
-     * Reset form to initial state
-     */
-    resetForm() {
-        this.form.reset();
-
-        // Clear all validation classes
-        const fields = this.form.querySelectorAll('.valid, .invalid');
-        fields.forEach(field => {
-            field.classList.remove('valid', 'invalid');
-        });
-
-        // Clear all error messages
-        const errorMessages = this.form.querySelectorAll('.error-message.show');
-        errorMessages.forEach(error => {
-            error.classList.remove('show');
-            error.textContent = '';
-        });
     }
 }
 

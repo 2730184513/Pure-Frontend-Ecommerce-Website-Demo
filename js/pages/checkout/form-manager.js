@@ -1,20 +1,140 @@
 /**
- * Form Manager
- * Manages the billing details form (left side of checkout page)
+ * FormManager - 结账表单管理器
+ * 使用 FormRenderer 和 FormFieldFactory 进行声明式表单渲染
+ * 管理账单详情表单（结账页面左侧）
  */
 class FormManager {
     constructor(formElement) {
+        // 使用 querySelector 向下查找子元素（不是 closest 向上查找）
+        this.formContainer = formElement.querySelector('.billing-section');
         this.form = formElement;
-        this.renderer = new window.FormRenderer(this.form);
+        this.renderer = new window.FormRenderer(this.formContainer);
         this.countryDropdown = null;
         this.provinceDropdown = null;
         this.validators = new Map();
         this.dropdownValidators = new Map();
     }
 
+    /**
+     * 获取表单字段配置
+     * @returns {Array} 字段配置数组
+     */
+    getFieldsConfig() {
+        return [
+            {
+                row: {
+                    left: {
+                        type: 'text',
+                        id: 'firstName',
+                        name: 'firstName',
+                        label: 'First Name',
+                        required: true,
+                        pattern: "^[A-Za-z\\s\\-']{2,50}$",
+                        dataError: 'First name must be 2-50 letters only'
+                    },
+                    right: {
+                        type: 'text',
+                        id: 'lastName',
+                        name: 'lastName',
+                        label: 'Last Name',
+                        required: true,
+                        pattern: "^[A-Za-z\\s\\-']{2,50}$",
+                        dataError: 'Last name must be 2-50 letters only'
+                    }
+                }
+            },
+            {
+                type: 'text',
+                id: 'companyName',
+                name: 'companyName',
+                label: 'Company Name',
+                required: false,
+                pattern: '^[A-Za-z0-9\\s\\-.,&()]{2,100}$',
+                dataError: 'Company name contains invalid characters'
+            },
+            {
+                type: 'searchable-select',
+                id: 'country',
+                name: 'country',
+                label: 'Country / Region',
+                required: true
+            },
+            {
+                type: 'searchable-select',
+                id: 'province',
+                name: 'province',
+                label: 'Province / State',
+                required: true,
+                disabled: true
+            },
+            {
+                type: 'text',
+                id: 'city',
+                name: 'city',
+                label: 'Town / City',
+                required: true,
+                pattern: "^[A-Za-z\\s\\-']{2,50}$",
+                dataError: 'City name must be 2-50 letters only'
+            },
+            {
+                type: 'text',
+                id: 'streetAddress',
+                name: 'streetAddress',
+                label: 'Street Address',
+                required: true,
+                minlength: 5,
+                pattern: '^[A-Za-z0-9\\s\\-.,#/]{5,100}$',
+                dataError: 'Street address must be 5-100 characters (letters, numbers, spaces, and -.,#/ allowed)'
+            },
+            {
+                type: 'text',
+                id: 'zipCode',
+                name: 'zipCode',
+                label: 'ZIP code',
+                required: true,
+                pattern: '^[A-Za-z0-9\\s\\-]{3,10}$',
+                dataError: 'ZIP code must be 3-10 alphanumeric characters'
+            },
+            {
+                type: 'tel',
+                id: 'phone',
+                name: 'phone',
+                label: 'Phone',
+                required: true,
+                pattern: '^[\\+]?[0-9\\s\\-\\(\\)]{8,20}$',
+                dataError: 'Phone must be 8-20 characters (numbers, +, -, spaces, and parentheses allowed)'
+            },
+            {
+                type: 'email',
+                id: 'email',
+                name: 'email',
+                label: 'Email address',
+                required: true,
+                pattern: '^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$',
+                dataError: 'Please enter a valid email address'
+            },
+            {
+                type: 'textarea',
+                id: 'additionalInfo',
+                name: 'additionalInfo',
+                label: 'Additional information',
+                required: false,
+                maxlength: 500,
+                rows: 4,
+                placeholder: 'Notes about your order (max 500 characters)'
+            }
+        ];
+    }
+
     async initialize() {
         // Ensure location data is loaded
         await window.locationRepository.loadData();
+
+        // 渲染表单
+        this.renderForm();
+
+        // 重新获取表单引用（因为已被重新渲染）
+        this.form = document.getElementById('checkoutForm');
 
         // Initialize components
         this.initializeDropdowns();
@@ -22,6 +142,39 @@ class FormManager {
 
         // Bind events
         this.bindEvents();
+    }
+
+    /**
+     * 渲染表单
+     */
+    renderForm() {
+        const fieldsConfig = this.getFieldsConfig();
+        
+        // 表单头部
+        const headerHtml = `
+            <div class="billing-header">
+                <button type="button" class="back-button" title="Back to Cart">
+                    <img src="/201-project/images/icons/arrow-left.png" alt="Back">
+                </button>
+                <div class="billing-header-content">
+                    <h1>Billing details</h1>
+                    <p class="required-note"><span class="required">*</span> indicates required field</p>
+                </div>
+            </div>
+        `;
+
+        // 使用 FormFieldFactory 生成字段
+        const fieldsHtml = fieldsConfig.map(field => {
+            return this.renderer.renderField(field);
+        }).join('');
+
+        // 组装表单内容
+        const formContentHtml = `
+            ${headerHtml}
+            ${fieldsHtml}
+        `;
+
+        this.formContainer.innerHTML = formContentHtml;
     }
 
     /**
@@ -61,7 +214,7 @@ class FormManager {
      * Initialize field validators
      */
     initializeValidators() {
-        const fields = this.form.querySelectorAll(
+        const fields = this.formContainer.querySelectorAll(
             'input:not([type="radio"]):not([type="checkbox"]), textarea'
         );
 
