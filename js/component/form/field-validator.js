@@ -129,15 +129,22 @@ class FieldValidator {
         validator.markAsTouched();
         const result = validator.validate();
 
-        // Display error message
-        const errorSpan = field.parentNode.querySelector('.error-message');
+        // Display error message - search in closest .form-group first, then parentNode
+        const formGroup = field.closest('.form-group');
+        const errorSpan = formGroup?.querySelector('.error-message') || 
+                          field.parentNode?.querySelector('.error-message');
+        
         if (errorSpan) {
             if (result.valid) {
                 errorSpan.classList.remove('show');
                 errorSpan.textContent = '';
+                field.classList.remove('invalid');
+                field.classList.add('valid');
             } else {
                 errorSpan.textContent = result.message;
                 errorSpan.classList.add('show');
+                field.classList.add('invalid');
+                field.classList.remove('valid');
             }
         }
 

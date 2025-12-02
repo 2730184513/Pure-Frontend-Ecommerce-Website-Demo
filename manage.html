@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Furniro Admin</title>
+
+    <link rel="stylesheet" href="/201-project/css/layout/main.css">
+
+    <!-- Header component styles -->
+    <link rel="stylesheet" href="/201-project/css/layout/header.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/search.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/dropdown-base.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/cart.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/wishlist.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/user.css">
+
+    <link rel="stylesheet" href="/201-project/css/layout/footer.css">
+    <link rel="stylesheet" href="/201-project/css/core/toast.css">
+    <link rel="stylesheet" href="/201-project/css/core/confirm-dialog.css">
+    <link rel="stylesheet" href="/201-project/css/components/banners/page-banner.css">
+    <link rel="stylesheet" href="/201-project/css/components/banners/feature-banner.css">
+
+    <!-- Generic form component styles -->
+    <link rel="stylesheet" href="/201-project/css/components/forms/form.css">
+    <link rel="stylesheet" href="/201-project/css/components/forms/searchable-dropdown.css">
+    
+    <!-- Manage page specific styles -->
+    <link rel="stylesheet" href="/201-project/css/pages/manage/manage.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
+            rel="stylesheet">
+</head>
+<body>
+
+<!-- Header placeholder -->
+<div id="header-placeholder"></div>
+
+<div id="banner-placeholder"></div>
+
+<!-- Inventory Management Form -->
+<div class="manage-container">
+    <form id="inventoryForm" class="inventory-form" novalidate>
+        <h2 class="form-title">Add New Product</h2>
+        
+        <!-- Product Name -->
+        <div class="form-group">
+            <label for="productName">Product Name<span class="required">*</span></label>
+            <input type="text" id="productName" name="productName" required
+                   maxlength="50"
+                   placeholder="Enter product name (max 50 characters)"
+                   data-error="Product name is required">
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label for="category">Category<span class="required">*</span></label>
+            <input type="text" id="category" name="category" required
+                   placeholder="Select or search category"
+                   autocomplete="off"
+                   data-error="Category is required">
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Product Picture -->
+        <div class="form-group">
+            <label for="productPicture">Product Picture<span class="required">*</span></label>
+            <div class="file-input-wrapper">
+                <input type="file" id="productPicture" name="productPicture" 
+                       accept="image/*" required class="file-input">
+                <div class="file-input-display">
+                    <span class="file-placeholder">Choose an image file...</span>
+                    <button type="button" class="file-browse-btn">Browse</button>
+                </div>
+            </div>
+            <div class="image-preview" id="productPicturePreview"></div>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Description Picture -->
+        <div class="form-group">
+            <label for="descriptionPicture">Description Picture</label>
+            <div class="file-input-wrapper">
+                <input type="file" id="descriptionPicture" name="descriptionPicture" 
+                       accept="image/*" class="file-input">
+                <div class="file-input-display">
+                    <span class="file-placeholder">Choose an image file...</span>
+                    <button type="button" class="file-browse-btn">Browse</button>
+                </div>
+            </div>
+            <div class="image-preview" id="descriptionPicturePreview"></div>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Brief -->
+        <div class="form-group">
+            <label for="brief">Brief Description<span class="required">*</span></label>
+            <input type="text" id="brief" name="brief" required
+                   maxlength="100"
+                   placeholder="Short description (max 100 characters)"
+                   data-error="Brief description is required">
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+            <label for="price">Price (RM)<span class="required">*</span></label>
+            <input type="number" id="price" name="price" required
+                   min="0" max="99999" step="0.01"
+                   placeholder="Enter price (0 - 99999)"
+                   data-error="Price must be between 0 and 99999">
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Discount -->
+        <div class="form-group">
+            <label for="discount">Discount (%)</label>
+            <div class="discount-input-wrapper">
+                <span class="discount-prefix">-</span>
+                <input type="number" id="discount" name="discount"
+                       min="0" max="99" step="1"
+                       placeholder="0"
+                       data-error="Discount must be between 0 and 99">
+                <span class="discount-suffix">%</span>
+            </div>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Stock -->
+        <div class="form-group">
+            <label for="stock">Stock Quantity<span class="required">*</span></label>
+            <input type="number" id="stock" name="stock" required
+                   min="0" max="999" step="1"
+                   placeholder="Enter stock quantity (0 - 999)"
+                   data-error="Stock must be between 0 and 999">
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Size Section -->
+        <div class="form-group size-section">
+            <label>Sizes</label>
+            <p class="field-hint">Example: L : 80.00 * 35.00 * 45.00 cm</p>
+            <div class="size-rows-container" id="sizeRowsContainer">
+                <!-- Size rows will be added dynamically -->
+            </div>
+            <button type="button" class="add-row-btn" id="addSizeBtn">
+                <span class="plus-icon">+</span>
+            </button>
+        </div>
+
+        <!-- Color Section -->
+        <div class="form-group color-section">
+            <label>Colors</label>
+            <div class="color-rows-container" id="colorRowsContainer">
+                <!-- Color rows will be added dynamically -->
+            </div>
+            <button type="button" class="add-row-btn" id="addColorBtn">
+                <span class="plus-icon">+</span>
+            </button>
+        </div>
+
+        <!-- Detail -->
+        <div class="form-group">
+            <label for="detail">Product Detail</label>
+            <textarea id="detail" name="detail" rows="4"
+                      placeholder="Enter product details (leave empty for default text)"></textarea>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description">Product Description</label>
+            <textarea id="description" name="description" rows="4"
+                      placeholder="Enter product description (leave empty for default text)"></textarea>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+            <label for="tags">Tags</label>
+            <textarea id="tags" name="tags" rows="2"
+                      placeholder="Enter tags separated by commas (e.g., furniture, modern, living room)"
+                      pattern="^[a-zA-Z,\s]*$"
+                      data-error="Only letters, commas and spaces allowed"></textarea>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="form-group">
+            <label for="additionalInfo">Additional Information</label>
+            <textarea id="additionalInfo" name="additionalInfo" rows="4"
+                      placeholder="Enter additional information (leave empty for default text)"></textarea>
+            <span class="error-message"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+            <button type="submit" class="form-submit-btn">Add Product</button>
+            <!-- Clear All button (shown in add mode) -->
+            <button type="button" class="form-secondary-btn" id="clearAllBtn">Clear All</button>
+            <!-- Delete button (shown in edit mode, initially hidden) -->
+            <button type="button" class="form-danger-link" id="deleteProductBtn" style="display: none;">Delete this product</button>
+        </div>
+    </form>
+</div>
+
+<div id="feature-banner-placeholder"></div>
+
+<div id="footer-placeholder"></div>
+
+<!-- Core utilities -->
+<script src="/201-project/js/component/component-loader.js"></script>
+<script src="/201-project/js/core/page-utility.js"></script>
+<script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/confirm-dialog.js"></script>
+<script src="/201-project/js/core/auth-guard.js"></script>
+<script src="/201-project/js/core/navigate.js"></script>
+
+<!-- Data layer -->
+<script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/core/user-repository.js"></script>
+<script src="/201-project/js/pages/shop/product-filter.js"></script>
+
+<!-- Header components -->
+<script src="/201-project/js/component/header/search.js"></script>
+<script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/wishlist.js"></script>
+<script src="/201-project/js/component/header/cart.js"></script>
+<script src="/201-project/js/component/header/user-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/user.js"></script>
+
+<!-- Form components -->
+<script src="/201-project/js/component/form/searchable-dropdown.js"></script>
+<script src="/201-project/js/component/form/field-validator.js"></script>
+<script src="/201-project/js/component/form/form-field-factory.js"></script>
+<script src="/201-project/js/component/form/form-renderer.js"></script>
+
+<!-- Page managers -->
+<script src="/201-project/js/manager/header-manager.js"></script>
+
+<!-- Manage page specific -->
+<script src="/201-project/js/pages/manage/manage-form-renderer.js"></script>
+<script src="/201-project/js/pages/manage/manage-form-manager.js"></script>
+<script src="/201-project/js/manager/manage-manager.js"></script>
+
+<!-- Main controller -->
+<script src="/201-project/js/manager/main.js"></script>
+
+<script>
+    // Initialize manage page after main app initialization
+    (async function() {
+        // Wait for main app initialization
+        const waitForApp = () => {
+            return new Promise((resolve) => {
+                const checkInit = () => window.FurniroApp && window.FurniroApp.isInitialized === true;
+                let timeoutId = null;
+                let checkInterval = null;
+
+                if (checkInit()) {
+                    resolve();
+                    return;
+                }
+                
+                checkInterval = setInterval(() => {
+                    if (checkInit()) {
+                        clearInterval(checkInterval);
+                        if (timeoutId) clearTimeout(timeoutId);
+                        resolve();
+                    }
+                }, 50);
+
+                timeoutId = setTimeout(() => {
+                    if (checkInterval) clearInterval(checkInterval);
+                    console.warn('⚠️ Main app initialization timeout - proceeding anyway');
+                    resolve();
+                }, 10000);
+            });
+        };
+
+        await waitForApp();
+
+        // Check if user is admin
+        const currentUser = window.AuthGuard?.getCurrentUser();
+        const isAdmin = currentUser && (currentUser.isAdmin === true || currentUser.email?.toLowerCase() === 'admin@admin.com');
+        
+        if (!isAdmin) {
+            if (window.toast) {
+                window.toast.error('Access denied. Admin privileges required.');
+            }
+            setTimeout(() => {
+                window.location.href = '/201-project/index.html';
+            }, 1500);
+            return;
+        }
+
+        // Breadcrumb for manage page
+        const breadcrumb = [
+            { text: 'Home', href: '/201-project/index.html' },
+            { text: 'Inventory Management' }
+        ];
+
+        // Load page-specific components
+        await ComponentLoader.loadComponents([
+            {
+                name: 'page-banner',
+                target: '#banner-placeholder',
+                params: {
+                    'banner-title': 'Inventory Management',
+                    'banner-breadcrumb': breadcrumb
+                }
+            },
+            {
+                name: 'feature-banner',
+                target: '#feature-banner-placeholder'
+            }
+        ]);
+
+        // Initialize manage manager
+        try {
+            const manager = new ManageManager('inventoryForm');
+            await manager.initialize();
+        } catch (error) {
+            console.error('Failed to initialize manage page:', error);
+            if (window.toast) {
+                window.toast.error('Failed to load inventory management: ' + error.message);
+            }
+        }
+    })();
+</script>
+
+</body>
+</html>

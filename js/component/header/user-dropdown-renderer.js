@@ -274,11 +274,7 @@ class UserDropdownRenderer {
      * Navigate to inventory management page
      */
     handleManageInventory() {
-        // TODO: Navigate to inventory management page when implemented
-        if (window.toast) {
-            window.toast.info('Inventory Management feature coming soon!');
-        }
-        // Future: window.location.href = '/201-project/admin/inventory.html';
+        window.location.href = '/201-project/manage.html';
     }
 
     /**

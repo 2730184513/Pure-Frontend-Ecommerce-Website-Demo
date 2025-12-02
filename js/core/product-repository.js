@@ -17,6 +17,15 @@ class ProductRepository {
         this.dataPath = 'data/';
         this.categories = ['chair', 'lamp', 'sofa', 'table'];
         this.STORAGE_KEY = 'furniro_products_data';
+        
+        // SKU 管理 - 哈希表存储每个类别的最大 SKU 编号
+        this.skuPrefixes = {
+            'sofa': 'SS',
+            'lamp': 'LA',
+            'chair': 'CH',
+            'table': 'TB'
+        };
+        this.maxSkuNumbers = {}; // { 'SS': 10, 'LA': 8, ... }
     }
 
     /**
@@ -36,6 +45,10 @@ class ProductRepository {
                 // Use data from localStorage
                 this.products = JSON.parse(storedData);
                 this.dataLoaded = true;
+                
+                // 计算每个类别的 SKU 最大值
+                this._calculateMaxSkuNumbers();
+                
                 console.log(`✓ ProductRepository loaded ${this.products.length} products from localStorage`);
                 return;
             }
@@ -48,6 +61,9 @@ class ProductRepository {
             const results = await Promise.all(loadPromises);
             this.products = results.flat();
             this.dataLoaded = true;
+
+            // 计算每个类别的 SKU 最大值
+            this._calculateMaxSkuNumbers();
 
             // Save to localStorage for future use
             this.saveToLocalStorage();
@@ -140,7 +156,74 @@ class ProductRepository {
             id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
         };
         this.products.push(newProduct);
+        
+        // 更新该类别的 SKU 最大值
+        if (newProduct.SKU) {
+            this._updateMaxSkuFromProduct(newProduct);
+        }
+        
         return newProduct;
+    }
+
+    /**
+     * 计算所有类别的 SKU 最大编号
+     * @private
+     */
+    _calculateMaxSkuNumbers() {
+        // 初始化所有前缀为 0
+        Object.values(this.skuPrefixes).forEach(prefix => {
+            this.maxSkuNumbers[prefix] = 0;
+        });
+        
+        // 遍历所有产品，找出每个前缀的最大编号
+        this.products.forEach(product => {
+            this._updateMaxSkuFromProduct(product);
+        });
+        
+        console.log('✓ SKU max numbers calculated:', this.maxSkuNumbers);
+    }
+
+    /**
+     * 从单个产品更新 SKU 最大值
+     * @private
+     */
+    _updateMaxSkuFromProduct(product) {
+        if (!product.SKU) return;
+        
+        for (const [category, prefix] of Object.entries(this.skuPrefixes)) {
+            if (product.SKU.startsWith(prefix)) {
+                const num = parseInt(product.SKU.slice(prefix.length), 10);
+                if (!isNaN(num) && num > (this.maxSkuNumbers[prefix] || 0)) {
+                    this.maxSkuNumbers[prefix] = num;
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * 生成新的 SKU
+     * @param {string} category - 产品类别
+     * @returns {string} 新的 SKU
+     */
+    generateSKU(category) {
+        const prefix = this.skuPrefixes[category] || 'XX';
+        const currentMax = this.maxSkuNumbers[prefix] || 0;
+        const newNumber = currentMax + 1;
+        
+        // 更新最大值
+        this.maxSkuNumbers[prefix] = newNumber;
+        
+        return `${prefix}${String(newNumber).padStart(3, '0')}`;
+    }
+
+    /**
+     * 获取类别的 SKU 前缀
+     * @param {string} category - 产品类别
+     * @returns {string} SKU 前缀
+     */
+    getSkuPrefix(category) {
+        return this.skuPrefixes[category] || 'XX';
     }
 
     /**

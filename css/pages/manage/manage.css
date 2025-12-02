@@ -1,0 +1,453 @@
+/* manage.css - Inventory Management page styles */
+
+/* ========================================
+   MANAGE CONTAINER
+   ======================================== */
+
+.manage-container {
+    max-width: 1240px;
+    margin: 60px auto 100px;
+    padding: 0 20px;
+}
+
+.inventory-form {
+    background: #fff;
+    padding: 50px 60px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* ========================================
+   FILE INPUT STYLING
+   ======================================== */
+
+.file-input-wrapper {
+    position: relative;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.file-input-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 10px;
+    background: #fff;
+    min-height: 60px;
+}
+
+.file-placeholder {
+    color: var(--text-light-gray);
+    font-size: 14px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-placeholder.has-file {
+    color: var(--text-dark);
+}
+
+.file-browse-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+
+.file-browse-btn:hover {
+    background: #9A7328;
+}
+
+/* Image Preview */
+.image-preview {
+    margin-top: 15px;
+    display: none;
+}
+
+.image-preview.has-image {
+    display: block;
+}
+
+.image-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    object-fit: cover;
+}
+
+/* ========================================
+   DISCOUNT INPUT - Fixed border radius
+   ======================================== */
+
+.discount-input-wrapper {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    height: 75px;
+}
+
+.discount-input-wrapper input {
+    border: none !important;
+    border-radius: 0 !important;
+    min-height: 100% !important;
+    height: 100% !important;
+    text-align: center;
+    flex: 1;
+    padding: 0 10px !important;
+}
+
+.discount-input-wrapper input:focus {
+    box-shadow: none !important;
+    outline: none;
+}
+
+.discount-prefix,
+.discount-suffix {
+    padding: 0 20px;
+    font-size: 16px;
+    color: var(--text-dark);
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    min-width: 50px;
+    justify-content: center;
+}
+
+/* ========================================
+   SIZE SECTION - Improved layout
+   ======================================== */
+
+.size-section,
+.color-section {
+    margin-bottom: 36px;
+    position: relative;
+}
+
+.field-hint {
+    font-size: 13px;
+    color: var(--text-light-gray);
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.size-rows-container,
+.color-rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Section error message */
+.section-error-message {
+    display: block;
+    margin-top: 10px;
+}
+
+/* Size Row - Fill container with 1.5:1:1:1 ratio */
+.size-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    position: relative;
+    padding-right: 45px; /* Space for remove button */
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+/* Invalid row highlighting */
+.size-row.invalid-row,
+.color-row.invalid-row {
+    border-color: #ff6b6b;
+    background: #fff5f5;
+}
+
+/* Size name input - ratio 1.5 */
+.size-name-input {
+    flex: 1.5;
+    padding: 10px 15px;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: auto !important;
+    text-align: center;
+}
+
+.size-separator {
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+/* Dimension inputs - ratio 1:1:1 */
+.size-dimension-input {
+    flex: 1;
+    padding: 10px 8px;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    min-height: auto !important;
+}
+
+.size-unit {
+    font-size: 12px;
+    color: var(--text-light-gray);
+    flex-shrink: 0;
+}
+
+.remove-row-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: #ff6b6b;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.remove-row-btn:hover {
+    background: #ee5a5a;
+}
+
+/* ========================================
+   COLOR SECTION - 2 inputs + palette button
+   ======================================== */
+
+/* Color Row - Two inputs with 1:1 ratio, button after hex */
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    position: relative;
+    padding-right: 45px; /* Space for remove button */
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+/* Color name input - ratio 1 */
+.color-name-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: auto !important;
+}
+
+/* Color hex input - ratio 1 */
+.color-hex-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--text-light-gray);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: monospace;
+    text-transform: uppercase;
+    min-height: auto !important;
+    text-align: center;
+}
+
+/* Color picker wrapper - positioned after hex input */
+.color-picker-wrapper-new {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Color picker button - no border, just icon */
+.color-picker-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.color-picker-btn:hover {
+    transform: scale(1.1);
+}
+
+.palette-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+/* Hidden native color picker - positioned over the button */
+.color-picker-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Legacy color picker wrapper - remove */
+.color-picker-wrapper {
+    display: none;
+}
+
+/* Add Row Button */
+.add-row-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 2px dashed var(--primary-color);
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 15px auto 0;
+    transition: all 0.3s ease;
+}
+
+.add-row-btn:hover {
+    background: var(--primary-color);
+}
+
+.add-row-btn:hover .plus-icon {
+    color: white;
+}
+
+.plus-icon {
+    font-size: 24px;
+    color: var(--primary-color);
+    font-weight: 300;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+/* ========================================
+   FORM ACTIONS
+   ======================================== */
+
+.form-actions {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.form-actions .form-submit-btn {
+    max-width: 280px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .manage-container {
+        margin: 40px auto 60px;
+    }
+
+    .inventory-form {
+        padding: 30px 25px;
+    }
+
+    .form-title {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    /* Size row responsive */
+    .size-row {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-right: 15px;
+    }
+
+    .size-name-input {
+        flex: none;
+        width: 100%;
+        max-width: none;
+        min-width: auto;
+    }
+
+    .size-dimension-input {
+        flex: 1;
+        min-width: 60px;
+        max-width: none;
+    }
+
+    .size-row .remove-row-btn {
+        position: static;
+        transform: none;
+        margin-left: auto;
+    }
+
+    /* Color row responsive */
+    .color-row {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-right: 15px;
+    }
+
+    .color-name-input {
+        width: 100%;
+        flex: none;
+        min-width: auto;
+    }
+
+    .color-row .remove-row-btn {
+        position: static;
+        transform: none;
+        margin-left: auto;
+    }
+}

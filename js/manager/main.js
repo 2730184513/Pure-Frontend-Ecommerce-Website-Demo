@@ -15,7 +15,8 @@ class FurniroApp {
             contact: null,   // Contact page manager (initialized in contact.html)
             about: null,     // About page manager (initialized here)
             productDetail: null,  // Product detail page manager
-            login: null      // Login page manager (initialized in register-login.html)
+            login: null,     // Login page manager (initialized in register-login.html)
+            manage: null     // Manage page manager (initialized in manage.html)
         };
         this.config = {
             initialProductCount: 8,
@@ -32,7 +33,8 @@ class FurniroApp {
             [PageUtility.PAGE_IDS.CONTACT]: 'contact',
             [PageUtility.PAGE_IDS.ABOUT]: 'about',
             [PageUtility.PAGE_IDS.PRODUCT_DETAIL]: 'productDetail',
-            [PageUtility.PAGE_IDS.LOGIN]: 'login'
+            [PageUtility.PAGE_IDS.LOGIN]: 'login',
+            [PageUtility.PAGE_IDS.MANAGE]: 'manage'
         };
 
 
@@ -295,6 +297,10 @@ class FurniroApp {
                 break;
 
             case PageUtility.PAGE_IDS.LOGIN:
+                this._logExternalManagerInit(pageName);
+                break;
+
+            case PageUtility.PAGE_IDS.MANAGE:
                 this._logExternalManagerInit(pageName);
                 break;
 

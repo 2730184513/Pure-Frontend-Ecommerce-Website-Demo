@@ -186,15 +186,8 @@ class ProductPopup {
     handleModifyProduct(event) {
         event.stopPropagation();
 
-        // Dispatch custom event for product modification
-        window.dispatchEvent(new CustomEvent('modifyProduct', {
-            detail: { product: this.product }
-        }));
-
-        // TODO: Navigate to product edit page or open edit modal
-        if (window.toast) {
-            window.toast.info(`Modify Product: ${this.product.name} - Feature coming soon!`);
-        }
+        // Navigate to manage page with product ID
+        window.location.href = `/201-project/manage.html?edit=${this.product.id}`;
     }
 
     /**
