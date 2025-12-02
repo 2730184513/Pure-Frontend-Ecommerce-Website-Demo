@@ -172,6 +172,19 @@ body.login-page {
 }
 
 /* ========================================
+   FORM VALIDATION STATES
+   ======================================== */
+.login-form .form-group input.invalid {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.login-form .form-group input.valid {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+/* ========================================
    FORM FOOTER
    ======================================== */
 .login-form-footer {
@@ -224,6 +237,14 @@ body.login-page {
 .login-signup-link {
     font-weight: 600;
     cursor: pointer;
+    color: var(--text-gray);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+
+.login-signup-link:hover {
+    color: var(--primary-color);
 }
 
 /* ========================================
@@ -355,6 +376,105 @@ body.login-page {
     font-weight: bold;
     margin-bottom: 30px;
     text-align: center;
+}
+
+/* ========================================
+   PASSWORD STRENGTH INDICATOR
+   ======================================== */
+.password-strength {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 6px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 3px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* 强度级别颜色 */
+.strength-fill.strength-weak {
+    background-color: #e74c3c;
+}
+
+.strength-fill.strength-fair {
+    background-color: #f39c12;
+}
+
+.strength-fill.strength-good {
+    background-color: #8bc34a;
+}
+
+.strength-fill.strength-strong {
+    background-color: #27ae60;
+}
+
+.strength-text {
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 70px;
+    text-align: right;
+    transition: color 0.3s ease;
+}
+
+/* ========================================
+   PASSWORD REQUIREMENTS LIST
+   ======================================== */
+.password-requirements {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+    /* 默认隐藏，只在聚焦时显示 */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+
+/* 密码输入框聚焦时显示要求列表 */
+.form-group:focus-within .password-requirements {
+    max-height: 200px;
+    opacity: 1;
+    margin: 10px 0 0 0;
+}
+
+.password-requirements li {
+    font-size: 11px;
+    color: var(--text-gray);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.password-requirements li .req-icon {
+    font-size: 10px;
+    width: 14px;
+    text-align: center;
+    color: var(--text-light-gray);
+    transition: color 0.2s ease;
+}
+
+.password-requirements li.met {
+    color: #27ae60;
+}
+
+.password-requirements li.met .req-icon {
+    color: #27ae60;
 }
 
 /* ========================================

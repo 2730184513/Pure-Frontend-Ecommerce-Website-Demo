@@ -85,6 +85,12 @@ class ProductPopup {
     handleAddToCart(event) {
         event.stopPropagation();
 
+        // Check login status
+        if (window.AuthGuard && !window.AuthGuard.isLoggedIn()) {
+            window.AuthGuard.requireLogin('add items to cart');
+            return;
+        }
+
         // Dispatch custom event for cart management
         // The CartManager will handle user feedback
         window.dispatchEvent(new CustomEvent('addToCart', {
@@ -122,6 +128,12 @@ class ProductPopup {
      */
     handleLike(event) {
         event.stopPropagation();
+
+        // Check login status
+        if (window.AuthGuard && !window.AuthGuard.isLoggedIn()) {
+            window.AuthGuard.requireLogin('add items to wishlist');
+            return;
+        }
 
         // Dispatch custom event for wishlist management
         // The WishlistManager will handle user feedback

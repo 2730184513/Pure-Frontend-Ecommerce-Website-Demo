@@ -1,12 +1,39 @@
 /**
  * Wishlist Manager
  * Handles wishlist business logic - data management, storage, and state
+ * Wishlist data is isolated per user (by email)
  */
 class WishlistManager {
     constructor() {
         this.wishlist = [];
         this.dropdownRenderer = null;
         this.isInitialized = false;
+        this.STORAGE_KEY_PREFIX = 'furniro_wishlist_';
+    }
+
+    /**
+     * Get current user email for storage key
+     * @returns {string} User email or 'guest'
+     */
+    getCurrentUserEmail() {
+        const stored = localStorage.getItem('furniro_current_user');
+        if (stored) {
+            try {
+                const user = JSON.parse(stored);
+                return user.email || 'guest';
+            } catch (e) {
+                return 'guest';
+            }
+        }
+        return 'guest';
+    }
+
+    /**
+     * Get storage key for current user
+     * @returns {string} Storage key
+     */
+    getStorageKey() {
+        return this.STORAGE_KEY_PREFIX + this.getCurrentUserEmail();
     }
 
     init() {
@@ -23,11 +50,22 @@ class WishlistManager {
     }
 
     /**
-     * Load wishlist from localStorage
+     * Load wishlist from localStorage (user-specific)
      */
     loadWishlist() {
-        const stored = localStorage.getItem('furniro_wishlist');
+        const stored = localStorage.getItem(this.getStorageKey());
         this.wishlist = stored ? JSON.parse(stored) : [];
+    }
+
+    /**
+     * Reload wishlist for current user (call when user changes)
+     */
+    reloadForCurrentUser() {
+        this.loadWishlist();
+        if (this.dropdownRenderer) {
+            this.dropdownRenderer.updateBadge();
+            this.dropdownRenderer.render();
+        }
     }
 
     /**
@@ -45,6 +83,11 @@ class WishlistManager {
                 this.dropdownRenderer.updateBadge();
                 this.dropdownRenderer.render();
             }
+        });
+
+        // Listen for user state changes to reload wishlist
+        window.addEventListener('userStateChanged', () => {
+            this.reloadForCurrentUser();
         });
     }
 
@@ -83,10 +126,10 @@ class WishlistManager {
         this.saveWishlist();
     }
     /**
-     * Save wishlist to localStorage
+     * Save wishlist to localStorage (user-specific)
      */
     saveWishlist() {
-        localStorage.setItem('furniro_wishlist', JSON.stringify(this.wishlist));
+        localStorage.setItem(this.getStorageKey(), JSON.stringify(this.wishlist));
     }
 
     /**

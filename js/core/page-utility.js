@@ -23,13 +23,14 @@ class PageUtility {
     /**
      * Page detection selectors
      * Each page has unique identifiers used for detection
+     * Note: Use selectors that exist in HTML at page load time (before JS rendering)
      */
     static PAGE_SELECTORS = {
         [this.PAGE_IDS.HOME]: '#inspirationsCarousel, #browseRange',
         [this.PAGE_IDS.SHOP]: '#shop-product-grid',
         [this.PAGE_IDS.CART]: '#cart-items-container',
         [this.PAGE_IDS.CHECKOUT]: '#checkoutForm',
-        [this.PAGE_IDS.CONTACT]: '#contactForm',
+        [this.PAGE_IDS.CONTACT]: '.contact-form-section, #contactForm',
         [this.PAGE_IDS.ABOUT]: '.about-typewriter-section',
         [this.PAGE_IDS.PRODUCT_DETAIL]: '#product-breadcrumb, #related-products-grid',
         [this.PAGE_IDS.LOGIN]: '#login-container, .login-page'

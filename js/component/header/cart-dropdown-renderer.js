@@ -78,9 +78,13 @@ class CartDropdownRenderer {
             this.showDropdown();
         });
 
-        // Double-click to navigate to cart page
+        // Double-click to navigate to cart page (requires login)
         this.icon.addEventListener('dblclick', (e) => {
             e.stopPropagation();
+            if (window.AuthGuard && !window.AuthGuard.isLoggedIn()) {
+                window.AuthGuard.requireLogin('your shopping cart');
+                return;
+            }
             window.location.href = '/201-project/cart.html';
         });
 

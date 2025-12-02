@@ -10,7 +10,10 @@
     <!-- Header component styles -->
     <link rel="stylesheet" href="/201-project/css/layout/header.css">
     <link rel="stylesheet" href="/201-project/css/components/header/search.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/cart-wishlist.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/dropdown-base.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/cart.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/wishlist.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/user.css">
 
 
     <link rel="stylesheet" href="/201-project/css/layout/footer.css">
@@ -78,63 +81,7 @@
 
     <!-- Contact Form Section -->
     <section class="contact-form-section">
-        <div class="contact-form-header">
-            <div class="form-title-row">
-                <h2>Send us a message</h2>
-                <span class="required-note"><span class="required">*</span> indicates required field</span>
-            </div>
-        </div>
-
-        <form id="contactForm" class="contact-form" novalidate>
-            <div class="form-group">
-                <label for="name">Your Name<span class="required">*</span></label>
-                <input type="text"
-                       id="name"
-                       name="name"
-                       required
-                       pattern="^[A-Za-z\s\-']{2,100}$"
-                       data-error="Name must be 2-100 letters only"
-                       placeholder="Abc">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email Address<span class="required">*</span></label>
-                <input type="email"
-                       id="email"
-                       name="email"
-                       required
-                       pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
-                       data-error="Please enter a valid email address"
-                       placeholder="Abc@def.com">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group subject-group">
-                <label for="subject">Subject</label>
-                <input type="text"
-                       id="subject"
-                       name="subject"
-                       pattern="^.{2,200}$"
-                       data-error="Subject must be 2-200 characters"
-                       placeholder="This is an optional">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group message-group">
-                <label for="message">Message<span class="required">*</span></label>
-                <textarea id="message"
-                          name="message"
-                          required
-                          minlength="10"
-                          maxlength="1000"
-                          data-error="Message must be 10-1000 characters"
-                          placeholder="Hi! I'd like to ask about"></textarea>
-                <span class="error-message"></span>
-            </div>
-
-            <button type="submit" class="form-submit-btn">Submit</button>
-        </form>
+        <!-- 表单内容由 JS 动态渲染 -->
     </section>
     </div>
 </div>
@@ -147,6 +94,7 @@
 <script src="/201-project/js/component/component-loader.js"></script>
 <script src="/201-project/js/core/page-utility.js"></script>
 <script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/auth-guard.js"></script>
 <script src="/201-project/js/core/navigate.js"></script>
 
 <!-- Data layer -->
@@ -159,11 +107,15 @@
 <script src="/201-project/js/component/header/cart.js"></script>
 <script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
 <script src="/201-project/js/component/header/wishlist.js"></script>
+<script src="/201-project/js/component/header/user-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/user.js"></script>
 
 
 
 <!-- Form components -->
 <script src="/201-project/js/component/form/field-validator.js"></script>
+<script src="/201-project/js/component/form/form-field-factory.js"></script>
+<script src="/201-project/js/component/form/form-renderer.js"></script>
 
 <!-- Contact page components -->
 <script src="/201-project/js/pages/contact/contact-form-manager.js"></script>

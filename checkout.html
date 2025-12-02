@@ -10,7 +10,10 @@
     <!-- Header component styles (hidden but needed for cart manager) -->
     <link rel="stylesheet" href="/201-project/css/layout/header.css">
     <link rel="stylesheet" href="/201-project/css/components/header/search.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/cart-wishlist.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/dropdown-base.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/cart.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/wishlist.css">
+    <link rel="stylesheet" href="/201-project/css/components/header/user.css">
 
     <link rel="stylesheet" href="/201-project/css/layout/footer.css">
     <link rel="stylesheet" href="/201-project/css/core/toast.css">
@@ -40,138 +43,7 @@
 <div class="checkout-container">
     <form id="checkoutForm" class="checkout-form" novalidate>
         <section class="billing-section">
-            <div class="billing-header">
-                <button type="button" class="back-button" title="Back to Cart">
-                    <img src="/201-project/images/icons/arrow-left.png" alt="Back">
-                </button>
-                <div class="billing-header-content">
-                    <h1>Billing details</h1>
-                    <p class="required-note"><span class="required">*</span> indicates required field</p>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="firstName">First Name<span class="required">*</span></label>
-                    <input type="text"
-                            id="firstName"
-                            name="firstName"
-                            required
-                            pattern="^[A-Za-z\s\-']{2,50}$"
-                            data-error="First name must be 2-50 letters only">
-                    <span class="error-message"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="lastName">Last Name<span class="required">*</span></label>
-                    <input type="text"
-                            id="lastName"
-                            name="lastName"
-                            required
-                            pattern="^[A-Za-z\s\-']{2,50}$"
-                            data-error="Last name must be 2-50 letters only">
-                    <span class="error-message"></span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="companyName">Company Name</label>
-                <input type="text"
-                        id="companyName"
-                        name="companyName"
-                        pattern="^[A-Za-z0-9\s\-.,&()]{2,100}$"
-                        data-error="Company name contains invalid characters">
-                <span class="error-message"></span>
-            </div>
-
-            <!-- 国家输入框 -->
-            <div class="form-group">
-                <label for="country">Country / Region<span class="required">*</span></label>
-                <input type="text"
-                        id="country"
-                        name="country"
-                        class="searchable-input"
-                        required>
-                <span class="error-message"></span>
-            </div>
-
-            <!-- 省份输入框 -->
-            <div class="form-group">
-                <label for="province">Province / State<span class="required">*</span></label>
-                <input type="text"
-                        id="province"
-                        name="province"
-                        class="searchable-input"
-                        required
-                        disabled>
-                <span class="error-message"></span>
-            </div>
-
-            <!-- 城市 -->
-            <div class="form-group">
-                <label for="city">Town / City<span class="required">*</span></label>
-                <input type="text"
-                        id="city"
-                        name="city"
-                        required
-                        pattern="^[A-Za-z\s\-']{2,50}$"
-                        data-error="City name must be 2-50 letters only">
-                <span class="error-message"></span>
-            </div>
-
-            <!-- 街道 -->
-            <div class="form-group">
-                <label for="streetAddress">Street Address<span class="required">*</span></label>
-                <input type="text"
-                        id="streetAddress"
-                        name="streetAddress"
-                        required
-                        minlength="5"
-                        pattern="^[A-Za-z0-9\s\-.,#/]{5,100}$"
-                        data-error="Street address must be 5-100 characters (letters, numbers, spaces, and -.,#/ allowed)">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="zipCode">ZIP code<span class="required">*</span></label>
-                <input type="text"
-                        id="zipCode"
-                        name="zipCode"
-                        required
-                        pattern="^[A-Za-z0-9\s\-]{3,10}$"
-                        data-error="ZIP code must be 3-10 alphanumeric characters">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Phone<span class="required">*</span></label>
-                <input type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        pattern="^[\+]?[0-9\s\-\(\)]{8,20}$"
-                        data-error="Phone must be 8-20 characters (numbers, +, -, spaces, and parentheses allowed)">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email address<span class="required">*</span></label>
-                <input type="email"
-                        id="email"
-                        name="email"
-                        required
-                        pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
-                        data-error="Please enter a valid email address">
-                <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="additionalInfo">Additional information</label>
-                <textarea id="additionalInfo"
-                        name="additionalInfo"
-                        maxlength="500"
-                        placeholder="Notes about your order (max 500 characters)"></textarea>
-            </div>
+            <!-- 表单内容由 JS 动态渲染 -->
         </section>
 
         <aside class="order-summary">
@@ -245,6 +117,7 @@
 <script src="/201-project/js/component/component-loader.js"></script>
 <script src="/201-project/js/core/page-utility.js"></script>
 <script src="/201-project/js/core/toast.js"></script>
+<script src="/201-project/js/core/auth-guard.js"></script>
 <script src="/201-project/js/core/navigate.js"></script>
 
 <!-- Data layer -->
@@ -257,11 +130,14 @@
 <script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
 <script src="/201-project/js/component/header/wishlist.js"></script>
 <script src="/201-project/js/component/header/cart.js"></script>
+<script src="/201-project/js/component/header/user-dropdown-renderer.js"></script>
+<script src="/201-project/js/component/header/user.js"></script>
 
 <!-- Checkout page specific components -->
 <script src="/201-project/js/core/location-repository.js"></script>
 <script src="/201-project/js/component/form/searchable-dropdown.js"></script>
 <script src="/201-project/js/component/form/field-validator.js"></script>
+<script src="/201-project/js/component/form/form-field-factory.js"></script>
 <script src="/201-project/js/component/form/form-renderer.js"></script>
 
 <!-- Checkout managers -->

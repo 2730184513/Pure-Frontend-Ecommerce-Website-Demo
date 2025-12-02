@@ -38,7 +38,7 @@ class SearchManager {
      * Bind event listeners
      */
     bindEvents() {
-        // Open search overlay
+        // Open search overlay (always allowed, login check happens on search)
         this.searchIcon.addEventListener('click', () => this.openSearch());
 
         // Close on overlay click
@@ -83,10 +83,26 @@ class SearchManager {
 
     /**
      * Perform search
+     * 未登录用户：保存关键词到 filter，直接跳转登录页
+     * 已登录用户：正常搜索
      */
     performSearch() {
         const term = this.input.value.trim();
 
+        // 检查登录状态
+        const isLoggedIn = window.AuthGuard ? window.AuthGuard.isLoggedIn() : false;
+
+        if (!isLoggedIn) {
+            // 未登录：保存搜索关键词到 productFilter，然后直接跳转登录页
+            this._saveSearchKeywordForLater(term);
+            this.closeSearch();
+
+            // 直接跳转到登录页
+            window.location.href = '/201-project/register-login.html';
+            return;
+        }
+
+        // 已登录：正常搜索流程
         // Check if we're already on shop page
         if (window.location.pathname.includes('shop.html')) {
             // Direct search on shop page
@@ -126,6 +142,24 @@ class SearchManager {
     _redirectToShop(term) {
         localStorage.setItem('shop_search_query', term);
         window.location.href = 'shop.html';
+    }
+
+    /**
+     * Save search keyword for later (when user logs in)
+     * @param {string} term - Search term
+     * @private
+     */
+    _saveSearchKeywordForLater(term) {
+        if (!term) return;
+
+        // 保存到 productFilter（如果存在）
+        if (window.productFilter) {
+            window.productFilter.setSearchKeyword(term);
+        }
+
+        // 同时保存到 sessionStorage 作为备份
+        // 因为 productFilter 可能在跳转页面后丢失
+        sessionStorage.setItem('pending_search_keyword', term);
     }
 }
 

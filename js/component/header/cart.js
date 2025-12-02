@@ -1,12 +1,39 @@
 /**
  * Cart Manager
  * Handles cart business logic - data management, storage, and state
+ * Cart data is isolated per user (by email)
  */
 class CartManager {
     constructor() {
         this.cart = [];
         this.dropdownRenderer = null;
         this.isInitialized = false;
+        this.STORAGE_KEY_PREFIX = 'furniro_cart_';
+    }
+
+    /**
+     * Get current user email for storage key
+     * @returns {string} User email or 'guest'
+     */
+    getCurrentUserEmail() {
+        const stored = localStorage.getItem('furniro_current_user');
+        if (stored) {
+            try {
+                const user = JSON.parse(stored);
+                return user.email || 'guest';
+            } catch (e) {
+                return 'guest';
+            }
+        }
+        return 'guest';
+    }
+
+    /**
+     * Get storage key for current user
+     * @returns {string} Storage key
+     */
+    getStorageKey() {
+        return this.STORAGE_KEY_PREFIX + this.getCurrentUserEmail();
     }
 
     init() {
@@ -23,11 +50,22 @@ class CartManager {
     }
 
     /**
-     * Load cart from localStorage
+     * Load cart from localStorage (user-specific)
      */
     loadCart() {
-        const stored = localStorage.getItem('furniro_cart');
+        const stored = localStorage.getItem(this.getStorageKey());
         this.cart = stored ? JSON.parse(stored) : [];
+    }
+
+    /**
+     * Reload cart for current user (call when user changes)
+     */
+    reloadForCurrentUser() {
+        this.loadCart();
+        if (this.dropdownRenderer) {
+            this.dropdownRenderer.updateBadge();
+            this.dropdownRenderer.render();
+        }
     }
 
     /**
@@ -36,6 +74,11 @@ class CartManager {
     setupEventListeners() {
         window.addEventListener('addToCart', (e) => {
             this.addProduct(e.detail.product);
+        });
+
+        // Listen for user state changes to reload cart
+        window.addEventListener('userStateChanged', () => {
+            this.reloadForCurrentUser();
         });
     }
 
@@ -148,10 +191,10 @@ class CartManager {
     }
 
     /**
-     * Save cart to localStorage
+     * Save cart to localStorage (user-specific)
      */
     saveCart() {
-        localStorage.setItem('furniro_cart', JSON.stringify(this.cart));
+        localStorage.setItem(this.getStorageKey(), JSON.stringify(this.cart));
     }
 
 

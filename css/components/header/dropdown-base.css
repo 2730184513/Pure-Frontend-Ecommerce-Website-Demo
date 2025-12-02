@@ -1,0 +1,22 @@
+/* dropdown-base.css - Shared dropdown base styles for header components */
+
+/* ========================================
+   DROPDOWN BASE
+   ======================================== */
+
+.header-dropdown {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 0;
+    border-radius: 8px;
+    z-index: 1001;
+    display: none;
+    width: 380px;
+}
+
+.header-dropdown.active {
+    display: block;
+}

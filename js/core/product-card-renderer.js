@@ -404,6 +404,12 @@ class ProductCardRenderer {
                 return;
             }
 
+            // Check login status
+            if (window.AuthGuard && !window.AuthGuard.isLoggedIn()) {
+                window.AuthGuard.requireLogin('view product details');
+                return;
+            }
+
             // Store product ID and source page to sessionStorage
             sessionStorage.setItem('productDetailId', product.id);
             

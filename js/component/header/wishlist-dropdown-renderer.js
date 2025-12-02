@@ -78,6 +78,19 @@ class WishlistDropdownRenderer {
             this.showDropdown();
         });
 
+        // Double-click to navigate to wishlist page (requires login)
+        this.icon.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            if (window.AuthGuard && !window.AuthGuard.isLoggedIn()) {
+                window.AuthGuard.requireLogin('your wishlist');
+                return;
+            }
+            // TODO: Navigate to wishlist page when available
+            if (window.toast) {
+                window.toast.info('Wishlist page coming soon!');
+            }
+        });
+
         // Hover to show (0.5s delay)
         this.icon.addEventListener('mouseenter', () => {
             this.hoverTimer = setTimeout(() => {
