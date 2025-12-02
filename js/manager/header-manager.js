@@ -1,6 +1,6 @@
 /**
  * Header Manager
- * Manages header components: Navigation, Search, Cart, and Wishlist
+ * Manages header components: Navigation, Search, Cart, Wishlist, and User
  * Follows Single Responsibility Principle: Only handles header-related functionality
  */
 
@@ -10,7 +10,8 @@ class HeaderManager {
             navigation: null,
             search: null,
             cart: null,
-            wishlist: null
+            wishlist: null,
+            user: null
         };
         this.isInitialized = false;
     }
@@ -45,6 +46,7 @@ class HeaderManager {
         this._initSearch();
         this._initCart();
         this._initWishlist();
+        this._initUser();
     }
 
     // ============================================================================
@@ -110,6 +112,19 @@ class HeaderManager {
         }
     }
 
+    /**
+     * Initialize user component
+     * @private
+     */
+    _initUser() {
+        if (window.UserManager) {
+            this.components.user = new UserManager();
+            this.components.user.init();
+        } else {
+            console.warn('UserManager not found');
+        }
+    }
+
     // ============================================================================
     // Public Accessors
     // ============================================================================
@@ -147,8 +162,16 @@ class HeaderManager {
     }
 
     /**
+     * Get user manager instance
+     * @returns {UserManager|null}
+     */
+    getUser() {
+        return this.components.user;
+    }
+
+    /**
      * Get specific component by name
-     * @param {string} componentName - Name of component ('navigation', 'search', 'cart', 'wishlist')
+     * @param {string} componentName - Name of component ('navigation', 'search', 'cart', 'wishlist', 'user')
      * @returns {Object|null}
      */
     getComponent(componentName) {
