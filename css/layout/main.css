@@ -27,6 +27,19 @@ body {
     padding-top: 100px;
 }
 
+/* Body padding responsive - synced with header height */
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-top: 60px;
+    }
+}
+
 ul { list-style: none; }
 a { text-decoration: none; color: inherit; }
 

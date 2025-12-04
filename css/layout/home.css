@@ -1,0 +1,822 @@
+/* ========================================
+   HOME PAGE - Responsive Layout
+   ======================================== */
+
+/* ========================================
+   HERO SECTION RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .hero {
+        padding-right: 3%;
+    }
+
+    .hero-card {
+        max-width: 550px;
+        padding: 50px 35px 30px 35px;
+    }
+
+    .hero-title {
+        font-size: 46px;
+        line-height: 58px;
+    }
+}
+
+@media (max-width: 992px) {
+    .hero {
+        justify-content: center;
+        padding: 0 20px;
+    }
+
+    .hero-card {
+        max-width: 90%;
+        padding: 40px 30px 25px 30px;
+    }
+
+    .hero-title {
+        font-size: 40px;
+        line-height: 50px;
+    }
+
+    .hero-text {
+        font-size: 16px;
+    }
+
+    .hero-text-wrapper {
+        margin-bottom: 35px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: auto;
+        min-height: 500px;
+        padding: 60px 15px;
+    }
+
+    .hero-card {
+        max-width: 100%;
+        padding: 30px 25px 25px 25px;
+    }
+
+    .hero-subtitle {
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+        line-height: 42px;
+    }
+
+    .hero-title-wrapper {
+        margin: 4px 0 12px 0;
+    }
+
+    .hero-text {
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    .hero-text-wrapper {
+        margin-bottom: 25px;
+    }
+
+    .btn-primary {
+        padding: 18px 50px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        min-height: 450px;
+        padding: 40px 10px;
+    }
+
+    .hero-card {
+        padding: 25px 20px 20px 20px;
+    }
+
+    .hero-title {
+        font-size: 26px;
+        line-height: 34px;
+    }
+
+    .hero-text {
+        font-size: 13px;
+        line-height: 20px;
+    }
+
+    .btn-primary {
+        padding: 15px 40px;
+        font-size: 13px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ========================================
+   BROWSE THE RANGE SECTION RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .section-header {
+        margin-bottom: 50px;
+    }
+
+    .section-main-title {
+        font-size: 28px;
+    }
+
+    .section-subtitle {
+        font-size: 18px;
+    }
+
+    .category-image-wrapper {
+        height: 400px;
+    }
+}
+
+@media (max-width: 992px) {
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .category-image-wrapper {
+        height: 350px;
+    }
+
+    .category-name {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .browse-range.section-padding {
+        padding: 40px 0;
+    }
+
+    .section-header {
+        margin-bottom: 35px;
+    }
+
+    .section-main-title {
+        font-size: 24px;
+    }
+
+    .section-subtitle {
+        font-size: 16px;
+        padding: 0 10px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .category-image-wrapper {
+        height: 280px;
+    }
+
+    .category-name {
+        font-size: 18px;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .category-image-wrapper {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .browse-range.section-padding {
+        padding: 30px 0;
+    }
+
+    .section-header {
+        margin-bottom: 25px;
+    }
+
+    .section-main-title {
+        font-size: 22px;
+    }
+
+    .section-subtitle {
+        font-size: 14px;
+    }
+
+    .category-image-wrapper {
+        height: 250px;
+    }
+
+    .category-name {
+        font-size: 16px;
+        margin-top: 12px;
+    }
+}
+
+/* ========================================
+   OUR PRODUCTS SECTION RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .products {
+        padding: 50px 0 60px 0;
+    }
+
+    .section-title {
+        font-size: 36px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 992px) {
+    .products {
+        padding: 45px 0 55px 0;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .product-image {
+        height: 260px;
+    }
+
+    .product-name {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .products {
+        padding: 40px 0 50px 0;
+    }
+
+    .products-title-wrapper {
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .product-image {
+        height: 220px;
+    }
+
+    .product-name {
+        font-size: 18px;
+    }
+
+    .product-desc {
+        font-size: 14px;
+    }
+
+    .current-price {
+        font-size: 18px;
+    }
+
+    .old-price {
+        font-size: 14px;
+    }
+
+    .btn-outline {
+        padding: 10px 50px;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .product-image {
+        height: 180px;
+    }
+
+    .product-info {
+        padding: 12px 12px 20px 12px;
+    }
+
+    .product-name {
+        font-size: 16px;
+    }
+
+    .product-desc {
+        font-size: 13px;
+    }
+
+    .badge {
+        width: 40px;
+        height: 40px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products {
+        padding: 30px 0 40px 0;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .product-image {
+        height: 250px;
+    }
+
+    .product-info {
+        padding: 14px 14px 22px 14px;
+    }
+
+    .product-name {
+        font-size: 18px;
+    }
+
+    .btn-outline {
+        padding: 10px 40px;
+        font-size: 14px;
+    }
+}
+
+/* ========================================
+   INSPIRATIONS CAROUSEL SECTION RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1440px) {
+    .inspirations-wrapper {
+        gap: 60px;
+    }
+
+    .inspiration-content {
+        flex: 0 0 380px;
+    }
+
+    .carousel-main {
+        width: 350px;
+        height: 500px;
+    }
+
+    .carousel-side {
+        width: 320px;
+        height: 420px;
+    }
+
+    .carousel-peek {
+        width: 320px;
+        height: 420px;
+    }
+
+    .carousel-container {
+        height: 500px;
+    }
+
+    .next-btn {
+        right: -280px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .inspirations {
+        padding: 40px 0 80px 0;
+    }
+
+    .inspirations-wrapper {
+        gap: 40px;
+        margin: 0 30px;
+    }
+
+    .inspiration-content {
+        flex: 0 0 320px;
+    }
+
+    .title-span {
+        font-size: 32px;
+        line-height: 40px;
+    }
+
+    .subtitle-span {
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    .carousel-main {
+        width: 300px;
+        height: 440px;
+    }
+
+    .carousel-side {
+        width: 280px;
+        height: 360px;
+    }
+
+    .carousel-peek {
+        width: 280px;
+        height: 360px;
+    }
+
+    .carousel-container {
+        height: 440px;
+    }
+
+    .image-info-overlay {
+        width: 190px;
+        padding: 24px 20px;
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .innerpeace-span {
+        font-size: 24px;
+        line-height: 30px;
+    }
+
+    .next-btn {
+        right: -220px;
+    }
+
+    .prev-btn {
+        bottom: 200px;
+    }
+
+    .next-btn {
+        bottom: 200px;
+    }
+}
+
+@media (max-width: 992px) {
+    .inspirations {
+        padding: 40px 0 100px 0;
+    }
+
+    .inspirations-wrapper {
+        flex-direction: column;
+        gap: 40px;
+        margin: 0 20px;
+        align-items: flex-start;
+    }
+
+    .inspiration-content {
+        flex: none;
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .title-span {
+        font-size: 28px;
+        line-height: 36px;
+    }
+
+    .explore-more {
+        margin: 0 auto;
+    }
+
+    .carousel-container {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .carousel-track {
+        gap: 16px;
+    }
+
+    .carousel-main {
+        width: 280px;
+        height: 400px;
+    }
+
+    .carousel-side {
+        width: 250px;
+        height: 330px;
+        margin-top: 35px;
+    }
+
+    .carousel-peek {
+        width: 250px;
+        height: 330px;
+        margin-top: 35px;
+    }
+
+    .image-info-overlay {
+        width: 170px;
+        padding: 20px 16px;
+        left: 16px;
+        bottom: 16px;
+    }
+
+    .category-number,
+    .category-name-text {
+        font-size: 14px;
+    }
+
+    .innerpeace-span {
+        font-size: 20px;
+        line-height: 26px;
+    }
+
+    .carousel-nav-btn {
+        width: 40px;
+        height: 40px;
+        background-size: contain;
+    }
+
+    .prev-btn {
+        left: 16px;
+        bottom: 180px;
+    }
+
+    .next-btn {
+        right: 16px;
+        bottom: 180px;
+    }
+
+    .indicator {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .inspirations {
+        padding: 30px 0 80px 0;
+    }
+
+    .inspirations-wrapper {
+        gap: 30px;
+        margin: 0 15px;
+    }
+
+    .title-span {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    .subtitle-span {
+        font-size: 13px;
+        line-height: 20px;
+    }
+
+    .subtitle {
+        margin-bottom: 20px;
+    }
+
+    .explore-more {
+        width: 150px;
+        height: 42px;
+    }
+
+    .exploremore-span {
+        font-size: 14px;
+    }
+
+    .carousel-container {
+        height: 350px;
+    }
+
+    .carousel-main {
+        width: 240px;
+        height: 350px;
+    }
+
+    .carousel-side {
+        width: 200px;
+        height: 280px;
+        margin-top: 35px;
+    }
+
+    .carousel-peek {
+        display: none;
+    }
+
+    .image-info-overlay {
+        width: 150px;
+        padding: 16px 14px;
+        left: 12px;
+        bottom: 12px;
+    }
+
+    .category-number,
+    .category-name-text {
+        font-size: 12px;
+    }
+
+    .innerpeace-span {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .carousel-nav-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .prev-btn {
+        left: 12px;
+        bottom: 160px;
+    }
+
+    .next-btn {
+        right: 12px;
+        bottom: 160px;
+    }
+
+    .indicator {
+        gap: 15px;
+        bottom: -45px;
+    }
+
+    .indicator-item {
+        width: 9px;
+        height: 9px;
+    }
+
+    .indicator-active {
+        width: 22px;
+        height: 22px;
+    }
+
+    .indicator-inner {
+        width: 9px;
+        height: 9px;
+    }
+}
+
+@media (max-width: 576px) {
+    .inspirations {
+        padding: 25px 0 70px 0;
+    }
+
+    .title {
+        margin-bottom: 15px;
+    }
+
+    .title-span {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    .carousel-container {
+        height: 300px;
+    }
+
+    .carousel-track {
+        gap: 12px;
+    }
+
+    .carousel-main {
+        width: 200px;
+        height: 300px;
+    }
+
+    .carousel-side {
+        width: 170px;
+        height: 240px;
+        margin-top: 30px;
+    }
+
+    .image-info-overlay {
+        width: 130px;
+        padding: 12px 10px;
+        left: 10px;
+        bottom: 10px;
+    }
+
+    .info-category {
+        margin-bottom: 4px;
+    }
+
+    .category-number,
+    .category-name-text {
+        font-size: 11px;
+    }
+
+    .innerpeace-span {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .carousel-nav-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .prev-btn {
+        left: 8px;
+        bottom: 140px;
+    }
+
+    .next-btn {
+        right: 8px;
+        bottom: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inspirations {
+        padding: 20px 0 60px 0;
+    }
+
+    .inspirations-wrapper {
+        margin: 0 10px;
+    }
+
+    .title-span {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .subtitle-span {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .explore-more {
+        width: 140px;
+        height: 38px;
+    }
+
+    .exploremore-span {
+        font-size: 13px;
+    }
+
+    .carousel-container {
+        height: 260px;
+    }
+
+    .carousel-main {
+        width: 180px;
+        height: 260px;
+    }
+
+    .carousel-side {
+        width: 150px;
+        height: 200px;
+        margin-top: 30px;
+    }
+
+    .image-info-overlay {
+        width: 120px;
+        padding: 10px 8px;
+    }
+
+    .innerpeace-span {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    .indicator {
+        gap: 12px;
+        bottom: -40px;
+    }
+
+    .indicator-item {
+        width: 8px;
+        height: 8px;
+    }
+
+    .indicator-active {
+        width: 20px;
+        height: 20px;
+    }
+
+    .indicator-inner {
+        width: 8px;
+        height: 8px;
+    }
+}

@@ -179,3 +179,143 @@
     background: #dd3333;
 }
 
+/* ========================================
+   CART SUMMARY RESPONSIVE
+   ======================================== */
+
+@media (max-width: 992px) {
+    .summary-bar {
+        padding: 12px 15px;
+    }
+
+    .summary-details {
+        gap: 15px;
+    }
+
+    .total-price .price {
+        font-size: 20px;
+    }
+
+    .checkout-btn {
+        padding: 10px 30px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .summary-bar {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 15px;
+    }
+
+    .select-all-container {
+        margin-right: 15px;
+    }
+
+    .select-all-label {
+        font-size: 13px;
+    }
+
+    .selected-count-btn {
+        font-size: 13px;
+        margin-right: 0;
+    }
+
+    .summary-details {
+        width: 100%;
+        order: 1;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .summary-item {
+        font-size: 13px;
+    }
+
+    .total-price {
+        font-size: 13px;
+    }
+
+    .total-price .price {
+        font-size: 18px;
+        margin-left: 5px;
+    }
+
+    .checkout-btn {
+        order: 2;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 5px;
+        padding: 12px;
+    }
+
+    /* Preview section */
+    .selected-items-preview {
+        padding: 12px 15px;
+    }
+
+    .carousel-track .preview-item {
+        width: 50px;
+        height: 74px;
+    }
+}
+
+@media (max-width: 576px) {
+    .summary-bar {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .select-all-container {
+        margin-right: 10px;
+    }
+
+    .select-all-label {
+        font-size: 12px;
+    }
+
+    .selected-count-btn {
+        font-size: 12px;
+    }
+
+    .arrow-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .summary-details {
+        gap: 6px;
+    }
+
+    .summary-item {
+        font-size: 12px;
+    }
+
+    .total-price {
+        font-size: 12px;
+    }
+
+    .total-price .price {
+        font-size: 16px;
+    }
+
+    .checkout-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    /* Preview section */
+    .carousel-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    .carousel-track .preview-item {
+        width: 45px;
+        height: 66px;
+    }
+}
+

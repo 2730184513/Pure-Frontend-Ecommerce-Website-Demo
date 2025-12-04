@@ -28,6 +28,7 @@
     <!-- Checkout-specific styles -->
     <link rel="stylesheet" href="/201-project/css/pages/checkout/form-billing.css">
     <link rel="stylesheet" href="/201-project/css/pages/checkout/checkout-summary.css">
+    <link rel="stylesheet" href="/201-project/css/pages/checkout/checkout-payment.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
             rel="stylesheet">
@@ -46,66 +47,70 @@
             <!-- 表单内容由 JS 动态渲染 -->
         </section>
 
-        <aside class="order-summary">
-            <div class="summary-header">
-                <h2>Product</h2>
-                <span class="summary-item-count">(0 items)</span>
-            </div>
-
-            <!-- Products container with scrolling -->
-            <div class="summary-products">
-                <!-- Products will be dynamically rendered here -->
-            </div>
-
-            <div class="summary-row">
-                <p>Subtotal</p>
-                <p id="summary-subtotal">RM 0.0</p>
-            </div>
-
-            <div class="summary-row">
-                <p>Discount Amount</p>
-                <p id="summary-discount">RM 0.0</p>
-            </div>
-
-            <div class="summary-row total">
-                <p>Grand Total</p>
-                <p class="total-price" id="summary-total">RM 0.0</p>
-            </div>
-
-            <hr>
-
-            <div class="payment-methods">
-                <!-- 银行转账选项 -->
-                <div class="payment-option">
-                    <input type="radio" id="bankTransfer" name="paymentMethod" value="bank-transfer" checked>
-                    <label for="bankTransfer">Direct Bank Transfer</label>
+        <div class="checkout-right-column">
+            <aside class="order-summary">
+                <div class="summary-header">
+                    <h2>Product</h2>
+                    <span class="summary-item-count">(0 items)</span>
                 </div>
 
-                <!-- 银行转账说明 -->
-                <p class="payment-description bank-description">
-                    Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                </p>
-
-                <!-- 货到付款选项 -->
-                <div class="payment-option">
-                    <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cash-on-delivery">
-                    <label for="cashOnDelivery">Cash On Delivery</label>
+                <!-- Products container with scrolling -->
+                <div class="summary-products">
+                    <!-- Products will be dynamically rendered here -->
                 </div>
 
-                <!-- 货到付款说明 -->
-                <p class="payment-description cash-description">
-                    Pay with cash upon delivery. Please prepare exact change if possible. Our delivery person will provide you with a receipt.
+                <div class="summary-row">
+                    <p>Subtotal</p>
+                    <p id="summary-subtotal">RM 0.0</p>
+                </div>
+
+                <div class="summary-row">
+                    <p>Discount Amount</p>
+                    <p id="summary-discount">RM 0.0</p>
+                </div>
+
+                <div class="summary-row total">
+                    <p>Grand Total</p>
+                    <p class="total-price" id="summary-total">RM 0.0</p>
+                </div>
+            </aside>
+
+            <aside class="payment-section">
+                <h3 class="payment-section-title">Payment Method</h3>
+                
+                <div class="payment-methods">
+                    <!-- 银行转账选项 -->
+                    <div class="payment-option">
+                        <input type="radio" id="bankTransfer" name="paymentMethod" value="bank-transfer" checked>
+                        <label for="bankTransfer">Direct Bank Transfer</label>
+                    </div>
+
+                    <!-- 银行转账说明 -->
+                    <p class="payment-description bank-description">
+                        Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                    </p>
+
+                    <!-- 货到付款选项 -->
+                    <div class="payment-option">
+                        <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cash-on-delivery">
+                        <label for="cashOnDelivery">Cash On Delivery</label>
+                    </div>
+
+                    <!-- 货到付款说明 -->
+                    <p class="payment-description cash-description">
+                        Pay with cash upon delivery. Please prepare exact change if possible. Our delivery person will provide you with a receipt.
+                    </p>
+                </div>
+
+                <p class="privacy-notice">
+                    Your personal data will be used to support your experience throughout this website,
+                    to manage access to your account, and for other purposes described in our
+                    <strong>privacy policy.</strong>
                 </p>
-            </div>
 
-            <p class="privacy-notice">
-                Your personal data will be used to support your experience throughout this website,
-                to manage access to your account, and for other purposes described in our
-                <strong>privacy policy.</strong>
-            </p>
-
-            <button type="submit" class="form-submit-btn place-order-btn">Place order</button>
-        </aside>
+                <button type="submit" class="form-submit-btn place-order-btn">Place order</button>
+            </aside>
+        </div>
     </form>
 </div>
 

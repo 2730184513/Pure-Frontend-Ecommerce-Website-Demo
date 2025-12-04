@@ -255,3 +255,229 @@ body {
     color: #999;
 }
 
+/* ========================================
+   CART PRODUCT LINE RESPONSIVE
+   ======================================== */
+
+@media (max-width: 992px) {
+    .cart-container {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .product-image {
+        width: 90px;
+        height: 130px;
+    }
+
+    .image-zoom {
+        display: none !important; /* Disable zoom on smaller screens */
+    }
+
+    .product-title {
+        font-size: 18px;
+    }
+
+    .price-section {
+        margin-right: 25px;
+    }
+
+    .current-price {
+        font-size: 18px;
+    }
+
+    .quantity-controls-wrapper {
+        margin-right: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 200px;
+    }
+
+    .cart-container {
+        padding: 12px;
+        margin: 10px;
+        border-radius: 6px;
+    }
+
+    .cart-item {
+        display: grid;
+        grid-template-columns: auto auto 1fr auto;
+        grid-template-rows: auto auto auto;
+        grid-template-areas:
+            "checkbox image info actions"
+            "checkbox image price actions"
+            "checkbox image qty actions";
+        gap: 4px 12px;
+        padding: 15px 0;
+        align-items: start;
+    }
+
+    .checkbox-container {
+        grid-area: checkbox;
+        align-self: center;
+    }
+
+    .product-image-container {
+        grid-area: image;
+        margin-right: 0;
+        align-self: stretch;
+    }
+
+    .product-image {
+        width: 100px;
+        height: 100%;
+        min-height: 140px;
+        object-fit: cover;
+    }
+
+    .image-zoom {
+        display: none !important;
+    }
+
+    .product-info {
+        grid-area: info;
+        flex: none;
+        margin-right: 0;
+        min-width: 0;
+    }
+
+    .product-title {
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .product-variant {
+        font-size: 12px;
+    }
+
+    .product-warranty {
+        font-size: 11px;
+    }
+
+    /* Price section in second row */
+    .price-section {
+        grid-area: price;
+        margin-right: 0;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        min-width: auto;
+        justify-self: start;
+        align-self: center;
+    }
+
+    .current-price {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    .original-price {
+        font-size: 11px;
+    }
+
+    /* Quantity controls in third row */
+    .quantity-controls-wrapper {
+        grid-area: qty;
+        margin-right: 0;
+        justify-self: start;
+        align-self: center;
+    }
+
+    .quantity-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    .quantity-input {
+        width: 40px;
+        height: 28px;
+        font-size: 13px;
+    }
+
+    /* Actions on the right side, spanning all rows */
+    .actions {
+        grid-area: actions;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        justify-self: end;
+        align-self: center;
+    }
+
+    .action-link {
+        font-size: 13px;
+        padding: 4px 6px;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-bottom: 220px;
+    }
+
+    .cart-container {
+        padding: 10px;
+        margin: 8px;
+    }
+
+    .cart-item {
+        grid-template-columns: auto 85px 1fr auto;
+        gap: 3px 10px;
+        padding: 12px 0;
+    }
+
+    .product-image {
+        width: 85px;
+        min-height: 130px;
+    }
+
+    .product-title {
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+
+    .product-variant {
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+
+    .product-warranty {
+        font-size: 10px;
+    }
+
+    .current-price {
+        font-size: 13px;
+    }
+
+    .original-price {
+        font-size: 10px;
+    }
+
+    .quantity-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+
+    .quantity-input {
+        width: 36px;
+        height: 26px;
+        font-size: 12px;
+    }
+
+    .out-of-stock-label {
+        font-size: 10px;
+    }
+
+    .action-link {
+        font-size: 11px;
+        padding: 3px 5px;
+    }
+}
+

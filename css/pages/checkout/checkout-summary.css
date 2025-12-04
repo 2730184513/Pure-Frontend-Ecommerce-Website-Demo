@@ -6,10 +6,22 @@
 
 .order-summary {
     background: #fff;
-    padding: 87px 38px 86px 38px;
+    padding: 87px 38px 0px 38px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+}
+
+.order-summary::after{
+    content: '';
+        position: relative;
+        bottom: -5px;
+        left: 10%;
+        width: 80%;
+        /* 调节长度 */
+        height: 2px;
+        /* 粗细 */
+        background-color: var(--bg-light);
 }
 
 /* ========================================
@@ -197,114 +209,82 @@ hr {
 }
 
 /* ========================================
-   PAYMENT METHODS
-   ======================================== */
-
-.payment-methods {
-    margin: 23px 0 32px 0;
-}
-
-.payment-option {
-    display: flex;
-    align-items: center;
-    margin: 12px 0;
-}
-
-.payment-option input[type="radio"] {
-    width: 14px;
-    height: 14px;
-    margin-right: 17px;
-    cursor: pointer;
-    accent-color: var(--primary-color);
-}
-
-.payment-option label {
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--text-light-gray);
-    transition: all 0.3s ease;
-}
-
-.payment-option input[type="radio"]:checked + label {
-    color: var(--text-dark);
-    font-weight: 600;
-}
-
-/* Payment method descriptions */
-.payment-description {
-    color: var(--text-light-gray);
-    font-size: 16px;
-    font-weight: 300;
-    text-align: justify;
-    line-height: 1.5;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.payment-description.visible {
-    height: auto;
-    opacity: 1;
-    margin-top: 12px;
-    margin-bottom: 20px;
-}
-
-.payment-description.hidden {
-    height: 0;
-    opacity: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.bank-description {
-    height: auto;
-    opacity: 1;
-    margin-top: 12px;
-    margin-bottom: 20px;
-}
-
-.cash-description {
-    height: 0;
-    opacity: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-/* ========================================
-   PRIVACY NOTICE
-   ======================================== */
-
-.privacy-notice {
-    font-size: 16px;
-    font-weight: 300;
-    text-align: justify;
-    margin: 24px 0;
-    line-height: 1.5;
-    color: var(--text-gray);
-}
-
-.privacy-notice strong {
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-/* ========================================
-   PLACE ORDER BUTTON
-   ======================================== */
-
-/* Button styles moved to form.css as .form-submit-btn */
-/* Keep class alias for backward compatibility */
-.place-order-btn {
-    /* All styles inherited from .form-submit-btn in form.css */
-}
-
-/* ========================================
    RESPONSIVE
    ======================================== */
+
+@media (max-width: 1200px) {
+    .order-summary {
+        padding: 30px;
+    }
+
+    .summary-products {
+        max-height: 400px;
+    }
+}
 
 @media (max-width: 768px) {
     .order-summary {
         padding: 20px;
+    }
+
+    .summary-header h2 {
+        font-size: 20px;
+    }
+
+    .summary-product-name {
+        font-size: 16px;
+    }
+
+    .summary-product-img {
+        width: 70px;
+        height: 100px;
+        min-width: 70px;
+    }
+
+    .summary-products {
+        max-height: 300px;
+    }
+
+    .total-price {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-summary {
+        padding: 15px;
+    }
+
+    .summary-header h2 {
+        font-size: 18px;
+    }
+
+    .summary-product-name {
+        font-size: 14px;
+    }
+
+    .summary-product-variant {
+        font-size: 12px;
+    }
+
+    .summary-product-price {
+        font-size: 14px;
+    }
+
+    .summary-product-price .discounted-price {
+        font-size: 16px;
+    }
+
+    .summary-row {
+        font-size: 14px;
+    }
+
+    .total-price {
+        font-size: 18px;
+    }
+
+    hr {
+        margin: 20px 0;
     }
 }
 

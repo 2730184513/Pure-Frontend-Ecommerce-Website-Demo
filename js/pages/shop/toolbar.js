@@ -33,6 +33,7 @@ class ToolbarManager {
      */
     bindFilterButtonToggle() {
         const filterBtn = document.getElementById('filter-toggle-btn');
+        const filterCloseBtn = document.getElementById('filter-close-btn');
         const layoutWrapper = document.getElementById('shop-layout');
         const iconMain = filterBtn ? filterBtn.querySelector('.icon-filter-main') : null;
         const iconAlt = filterBtn ? filterBtn.querySelector('.icon-filter-alt') : null;
@@ -42,10 +43,8 @@ class ToolbarManager {
             return;
         }
 
-        // Click event handler with animations
-        filterBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-
+        // Toggle sidebar function
+        const toggleSidebar = () => {
             if (this.isAnimating) return;
 
             const isCurrentlyOpen = layoutWrapper.classList.contains('sidebar-open');
@@ -61,7 +60,40 @@ class ToolbarManager {
 
             // Update button active state
             filterBtn.classList.toggle('active', willBeOpen);
+        };
+
+        // Close sidebar function (for close button)
+        const closeSidebar = () => {
+            if (this.isAnimating) return;
+
+            const isCurrentlyOpen = layoutWrapper.classList.contains('sidebar-open');
+            if (!isCurrentlyOpen) return;
+
+            // Start animation (closing)
+            this.animateIconSwitch(iconMain, iconAlt, false, () => {
+                this.isAnimating = false;
+            });
+
+            // Close sidebar
+            layoutWrapper.classList.remove('sidebar-open');
+
+            // Update button active state
+            filterBtn.classList.remove('active');
+        };
+
+        // Click event handler for filter toggle button
+        filterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSidebar();
         });
+
+        // Click event handler for close button in sidebar
+        if (filterCloseBtn) {
+            filterCloseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeSidebar();
+            });
+        }
 
         // Create MutationObserver to watch for class changes
         const observer = new MutationObserver((mutations) => {

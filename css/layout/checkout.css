@@ -21,6 +21,17 @@ body {
     align-items: start;
 }
 
+.billing-section {
+    /* Left column */
+}
+
+/* Right column - contains summary and payment stacked */
+.checkout-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
 /* ========================================
    RESPONSIVE
    ======================================== */
@@ -32,6 +43,69 @@ body {
 
     .checkout-container {
         padding: 40px 20px;
+    }
+
+    /* Reorder: summary first, then billing, then payment */
+    .checkout-right-column {
+        display: contents; /* Let children participate in parent grid */
+    }
+
+    .order-summary {
+        order: -2;
+    }
+
+    .billing-section {
+        order: -1;
+    }
+
+    .payment-section {
+        order: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 30px 15px;
+    }
+
+    .checkout-form {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .checkout-container {
+        padding: 20px 10px;
+    }
+
+    .checkout-form {
+        gap: 15px;
+    }
+}
+    }
+
+    .checkout-container {
+        padding: 40px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 30px 15px;
+    }
+
+    .checkout-form {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .checkout-container {
+        padding: 20px 10px;
+    }
+
+    .checkout-form {
+        gap: 15px;
     }
 }
 

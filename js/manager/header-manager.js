@@ -47,6 +47,7 @@ class HeaderManager {
         this._initCart();
         this._initWishlist();
         this._initUser();
+        this._initMobileMenu();
     }
 
     // ============================================================================
@@ -122,6 +123,41 @@ class HeaderManager {
             this.components.user.init();
         } else {
             console.warn('UserManager not found');
+        }
+    }
+
+    /**
+     * Initialize mobile menu toggle
+     * @private
+     */
+    _initMobileMenu() {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const navbar = document.getElementById('navbar');
+
+        if (mobileMenuToggle && navbar) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuToggle.classList.toggle('active');
+                navbar.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking on a nav link
+            const navLinks = navbar.querySelectorAll('.nav-link-text');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuToggle.classList.remove('active');
+                    navbar.classList.remove('active');
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!navbar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    mobileMenuToggle.classList.remove('active');
+                    navbar.classList.remove('active');
+                }
+            });
+
+            console.log('✓ Mobile menu initialized');
         }
     }
 

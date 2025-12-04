@@ -133,14 +133,132 @@
 
 /* RESPONSIVE */
 @media (max-width: 1440px) {
-    .inspirations-wrapper {
+    .footer-wrapper {
         padding: 0 50px;
+    }
+
+    .footer-content {
+        gap: 80px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 50px 60px;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+        text-align: center;
+        align-items: center;
     }
 }
 
 @media (max-width: 768px) {
+    .footer {
+        padding: 40px 0;
+    }
+
+    .footer-wrapper {
+        padding: 0 20px;
+    }
+
     .footer-content {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 0;
+        text-align: center;
+    }
+
+    .footer-brand {
+        padding-bottom: 30px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #E0E0E0;
+        gap: 30px;
+    }
+
+    .footer-column {
+        padding: 25px 0;
+        border-bottom: 1px solid #E0E0E0;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .footer-column:last-of-type {
+        border-bottom: none;
+    }
+
+    .footer-title {
+        font-size: 22px;
+        letter-spacing: 1px;
+    }
+
+    .footer-column a {
+        margin-bottom: 15px;
+    }
+
+    .footer-newsletter {
+        padding-top: 25px;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .newsletter-form {
+        align-items: center;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .email-input {
+        width: 100%;
+        text-align: center;
+    }
+
+    .subscribe-btn {
+        align-self: center;
+    }
+
+    .footer-bottom {
+        padding-top: 25px;
+        text-align: center;
+    }
+
+    .copyright-span {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer {
+        padding: 30px 0;
+    }
+
+    .footer-wrapper {
+        padding: 0 15px;
+    }
+
+    .footer-content {
+        margin-bottom: 30px;
+    }
+
+    .brand-name {
+        font-size: 22px;
+    }
+
+    .brand-address {
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    .footer-link {
+        font-size: 15px;
+    }
+
+    .footer-column {
+        padding: 20px 0;
+    }
+
+    .footer-column a {
+        margin-bottom: 12px;
     }
 }

@@ -42,12 +42,39 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
+}
+
+.filter-close-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+}
+
+.filter-close-btn:hover {
+    background: rgba(184, 142, 47, 0.1);
+}
+
+.filter-close-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 .filter-title {
     font-size: 24px;
     font-weight: 700;
     color: #000;
+    flex: 1;
 }
 
 .clear-all-btn {
@@ -253,4 +280,98 @@
 
 .date-picker:focus {
     border-color: var(--primary-color);
+}
+
+/* ========================================
+   FILTER SIDEBAR RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .filter-sidebar {
+        width: 350px;
+        left: -350px;
+    }
+
+    .filter-inner-content {
+        min-width: 350px;
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 992px) {
+    .filter-sidebar {
+        top: 70px;
+        width: 100%;
+        max-width: 400px;
+        left: -100%;
+    }
+
+    .filter-inner-content {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .filter-close-btn {
+        display: flex;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-sidebar {
+        top: 70px;
+        max-width: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .filter-inner-content {
+        padding: 25px 20px;
+    }
+
+    .filter-title {
+        font-size: 20px;
+    }
+
+    .filter-label {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .category-btn span {
+        padding: 8px 4px;
+        font-size: 13px;
+    }
+
+    .range-inputs input {
+        height: 44px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .filter-sidebar {
+        top: 60px;
+    }
+
+    .filter-inner-content {
+        padding: 20px 15px;
+    }
+
+    .filter-header {
+        margin-bottom: 20px;
+    }
+
+    .filter-group {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+    }
+
+    .filter-close-btn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .filter-close-btn img {
+        width: 18px;
+        height: 18px;
+    }
 }

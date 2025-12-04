@@ -205,3 +205,137 @@
     padding: 0 2px;
     border-radius: 2px;
 }
+
+/* ========================================
+   TOOLBAR RESPONSIVE
+   ======================================== */
+
+@media (max-width: 992px) {
+    .shop-toolbar {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .toolbar-left {
+        gap: 15px;
+    }
+
+    .toolbar-right {
+        gap: 20px;
+    }
+
+    .control-label {
+        font-size: 16px;
+    }
+
+    .custom-dropdown {
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 768px) {
+    .shop-toolbar {
+        top: 70px;
+        padding: 12px 15px;
+        margin: 20px 15px 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .toolbar-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .control-group {
+        flex: 1;
+        gap: 8px;
+    }
+
+    .control-label {
+        font-size: 14px;
+    }
+
+    .custom-dropdown {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .selected-option {
+        padding: 10px 12px;
+    }
+
+    .filter-span {
+        font-size: 16px;
+    }
+
+    .results-text {
+        font-size: 14px;
+    }
+
+    .divider {
+        height: 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .shop-toolbar {
+        top: 60px;
+        padding: 10px 12px;
+        margin: 15px 10px 0;
+        border-radius: 8px;
+    }
+
+    .toolbar-left {
+        gap: 10px;
+    }
+
+    .filter-btn {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+
+    .icon-filter-container {
+        width: 20px;
+        height: 20px;
+    }
+
+    .icon-filter {
+        width: 20px;
+        height: 20px;
+    }
+
+    .filter-span {
+        font-size: 14px;
+    }
+
+    .results-text {
+        font-size: 12px;
+    }
+
+    .divider {
+        height: 20px;
+    }
+
+    .control-label {
+        font-size: 12px;
+    }
+
+    .selected-option {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    .dropdown-item {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}

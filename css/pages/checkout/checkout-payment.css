@@ -1,0 +1,181 @@
+/* checkout-payment.css - Checkout payment methods and place order section */
+
+/* ========================================
+   PAYMENT SECTION CONTAINER
+   ======================================== */
+
+.payment-section {
+    background: #fff;
+    padding: 30px 38px 40px 38px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+/* ========================================
+   PAYMENT METHODS
+   ======================================== */
+
+.payment-methods {
+    margin-bottom: 24px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+}
+
+.payment-option input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    margin-right: 17px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.payment-option label {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-light-gray);
+    transition: all 0.3s ease;
+}
+
+.payment-option input[type="radio"]:checked + label {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Payment method descriptions */
+.payment-description {
+    color: var(--text-light-gray);
+    font-size: 16px;
+    font-weight: 300;
+    text-align: justify;
+    line-height: 1.5;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.payment-description.visible {
+    height: auto;
+    opacity: 1;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+.payment-description.hidden {
+    height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.bank-description {
+    height: auto;
+    opacity: 1;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+.cash-description {
+    height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* ========================================
+   PRIVACY NOTICE
+   ======================================== */
+
+.privacy-notice {
+    font-size: 16px;
+    font-weight: 300;
+    text-align: justify;
+    margin: 20px 0;
+    line-height: 1.5;
+    color: var(--text-gray);
+}
+
+.privacy-notice strong {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* ========================================
+   PLACE ORDER BUTTON
+   ======================================== */
+
+.place-order-btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1200px) {
+    .payment-section {
+        padding: 25px 30px 35px 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .payment-section {
+        padding: 20px;
+    }
+
+    .payment-section-title {
+        font-size: 18px;
+    }
+
+    .payment-option label {
+        font-size: 15px;
+    }
+
+    .payment-description {
+        font-size: 14px;
+    }
+
+    .privacy-notice {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .payment-section {
+        padding: 15px;
+    }
+
+    .payment-section-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .payment-option {
+        margin: 10px 0;
+    }
+
+    .payment-option label {
+        font-size: 14px;
+    }
+
+    .payment-description {
+        font-size: 13px;
+    }
+
+    .privacy-notice {
+        font-size: 13px;
+        margin: 15px 0;
+    }
+}
