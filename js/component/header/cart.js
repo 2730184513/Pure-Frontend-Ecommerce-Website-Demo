@@ -52,10 +52,14 @@ class CartManager {
     /**
      * Load cart from localStorage (user-specific)
      * Also validates cart items against current stock levels
+     * And syncs with product repository for data consistency
      */
     loadCart() {
         const stored = localStorage.getItem(this.getStorageKey());
         this.cart = stored ? JSON.parse(stored) : [];
+        
+        // Sync with repository for data consistency (handles product updates/deletions)
+        this.syncWithRepository();
         
         // Validate and adjust cart quantities based on current stock
         this.validateCartStock();
@@ -152,6 +156,16 @@ class CartManager {
             if (this.dropdownRenderer) {
                 this.dropdownRenderer.render();
             }
+        });
+
+        // Listen for product updates from manage page
+        window.addEventListener('productUpdated', (e) => {
+            this.handleProductUpdated(e.detail);
+        });
+
+        // Listen for product deletions from manage page
+        window.addEventListener('productDeleted', (e) => {
+            this.handleProductDeleted(e.detail);
         });
     }
 
@@ -315,6 +329,210 @@ class CartManager {
      */
     getCount() {
         return this.cart.length;
+    }
+
+    /**
+     * Handle product updated event from ProductRepository
+     * Syncs cart items with updated product data
+     * @param {Object} detail - Event detail containing productId, oldProduct, newProduct
+     */
+    handleProductUpdated(detail) {
+        const { productId, oldProduct, newProduct } = detail;
+        
+        if (!window.DataSyncUtils) {
+            console.warn('DataSyncUtils not available for cart sync');
+            return;
+        }
+
+        // Check if cart-relevant fields have changed using hash comparison
+        if (!window.DataSyncUtils.hasCartFieldsChanged(oldProduct, newProduct)) {
+            // No cart-relevant changes, skip update
+            return;
+        }
+
+        let cartModified = false;
+        const updatedItems = [];
+        const frozenItems = [];
+
+        this.cart.forEach((item, index) => {
+            if (item.id === productId && !item.is_deleted) {
+                // Update item with new product data
+                const updatedItem = window.DataSyncUtils.mergeCartItemWithProduct(item, newProduct);
+                
+                // Validate selected size and color still exist
+                const validation = window.DataSyncUtils.validateCartItemOptions(item, newProduct);
+                
+                if (!validation.bothValid) {
+                    // Selected size or color no longer exists, mark as logically deleted
+                    updatedItem.is_deleted = true;
+                    updatedItem.deletion_reason = 'variant_unavailable';
+                    frozenItems.push({
+                        name: item.name,
+                        reason: !validation.sizeValid ? 'size' : 'color'
+                    });
+                }
+                
+                this.cart[index] = updatedItem;
+                cartModified = true;
+                updatedItems.push(item.name);
+            }
+        });
+
+        if (cartModified) {
+            this.saveCart();
+            
+            // Update UI
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.updateBadge();
+                this.dropdownRenderer.render();
+            }
+            
+            // Dispatch event for cart page to sync
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+            // Show notifications
+            setTimeout(() => {
+                if (updatedItems.length > 0 && window.toast) {
+                    window.toast.info(`Cart updated: ${updatedItems.join(', ')}`);
+                }
+                if (frozenItems.length > 0 && window.toast) {
+                    frozenItems.forEach(item => {
+                        window.toast.warning(
+                            `"${item.name}" has been frozen: selected ${item.reason} is no longer available.`
+                        );
+                    });
+                }
+            }, 100);
+        }
+    }
+
+    /**
+     * Handle product deleted event from ProductRepository
+     * Marks cart items as logically deleted (frozen)
+     * @param {Object} detail - Event detail containing productId, deletedProduct
+     */
+    handleProductDeleted(detail) {
+        const { productId } = detail;
+        
+        let cartModified = false;
+        const deletedItems = [];
+
+        this.cart.forEach((item, index) => {
+            if (item.id === productId && !item.is_deleted) {
+                // Mark as logically deleted
+                this.cart[index].is_deleted = true;
+                this.cart[index].deletion_reason = 'product_deleted';
+                cartModified = true;
+                deletedItems.push(item.name);
+            }
+        });
+
+        if (cartModified) {
+            this.saveCart();
+            
+            // Update UI
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.updateBadge();
+                this.dropdownRenderer.render();
+            }
+            
+            // Dispatch event for cart page to sync
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+            // Show notification
+            setTimeout(() => {
+                if (deletedItems.length > 0 && window.toast) {
+                    deletedItems.forEach(name => {
+                        window.toast.warning(`"${name}" has been removed from store and frozen in your cart.`);
+                    });
+                }
+            }, 100);
+        }
+    }
+
+    /**
+     * Sync cart data with ProductRepository on initialization
+     * Uses hash comparison for efficient O(1) change detection
+     * Called when user switches accounts or on page load
+     */
+    syncWithRepository() {
+        if (!window.productRepository || !window.productRepository.dataLoaded || !window.DataSyncUtils) {
+            return;
+        }
+
+        let cartModified = false;
+        const updatedItems = [];
+        const frozenItems = [];
+
+        this.cart.forEach((item, index) => {
+            // Skip already deleted items
+            if (item.is_deleted) return;
+            
+            // Get current product from repository
+            const currentProduct = window.productRepository.getById(item.id);
+            
+            if (!currentProduct) {
+                // Product no longer exists, mark as deleted
+                this.cart[index].is_deleted = true;
+                this.cart[index].deletion_reason = 'product_deleted';
+                cartModified = true;
+                frozenItems.push({ name: item.name, reason: 'Product no longer available' });
+                return;
+            }
+            
+            // Check if cart-relevant fields have changed
+            if (window.DataSyncUtils.hasCartFieldsChanged(item, currentProduct)) {
+                // Update item with new product data
+                const updatedItem = window.DataSyncUtils.mergeCartItemWithProduct(item, currentProduct);
+                
+                // Validate selected size and color still exist
+                const validation = window.DataSyncUtils.validateCartItemOptions(item, currentProduct);
+                
+                if (!validation.bothValid) {
+                    updatedItem.is_deleted = true;
+                    updatedItem.deletion_reason = 'variant_unavailable';
+                    frozenItems.push({
+                        name: item.name,
+                        reason: !validation.sizeValid ? 'Selected size no longer available' : 'Selected color no longer available'
+                    });
+                }
+                
+                this.cart[index] = updatedItem;
+                cartModified = true;
+                updatedItems.push(item.name);
+            }
+        });
+
+        if (cartModified) {
+            this.saveCart();
+            
+            // Show notifications after a delay
+            setTimeout(() => {
+                if (updatedItems.length > 0 && window.toast) {
+                    window.toast.info(`Cart synced: ${updatedItems.length} item(s) updated.`);
+                }
+                if (frozenItems.length > 0 && window.toast) {
+                    frozenItems.forEach(item => {
+                        window.toast.warning(`"${item.name}": ${item.reason}`);
+                    });
+                }
+            }, 500);
+        }
+
+        console.log(`✓ Cart sync completed: ${updatedItems.length} updated, ${frozenItems.length} frozen`);
+    }
+
+    /**
+     * Check if a cart item is frozen (logically deleted or out of stock)
+     * @param {Object} item - Cart item
+     * @returns {boolean} True if item is frozen
+     */
+    isItemFrozen(item) {
+        if (item.is_deleted) return true;
+        if (window.productRepository) {
+            return window.productRepository.isOutOfStock(item.id);
+        }
+        return false;
     }
 }
 

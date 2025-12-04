@@ -7,9 +7,9 @@ class CheckoutSummaryRenderer {
     constructor() {
         this.productContainer = document.querySelector('.summary-products');
         this.itemCountSpan = document.querySelector('.summary-item-count');
-        this.subtotalElement = document.querySelector('.summary-row:nth-of-type(1) p:last-child');
-        this.discountElement = document.querySelector('.summary-row:nth-of-type(2) p:last-child');
-        this.totalElement = document.querySelector('.total-price');
+        this.subtotalElement = document.getElementById('summary-subtotal');
+        this.discountElement = document.getElementById('summary-discount');
+        this.totalElement = document.getElementById('summary-total');
         this.bankDescription = document.querySelector('.bank-description');
         this.cashDescription = document.querySelector('.cash-description');
     }
@@ -52,13 +52,13 @@ class CheckoutSummaryRenderer {
      */
     renderCalculations(calculations) {
         if (this.subtotalElement) {
-            this.subtotalElement.textContent = `RM ${calculations.subtotal.toFixed(2)}`;
+            this.subtotalElement.textContent = `RM ${calculations.subtotal.toFixed(1)}`;
         }
         if (this.discountElement) {
-            this.discountElement.textContent = `RM ${calculations.discount.toFixed(2)}`;
+            this.discountElement.textContent = `RM ${calculations.discount.toFixed(1)}`;
         }
         if (this.totalElement) {
-            this.totalElement.textContent = `RM ${calculations.grandTotal.toFixed(2)}`;
+            this.totalElement.textContent = `RM ${calculations.grandTotal.toFixed(1)}`;
         }
     }
 
@@ -127,6 +127,24 @@ class CheckoutSummaryRenderer {
         // Use placeholder first
         const placeholderSrc = '/201-project/images/products/placeholder.jpg';
 
+        // Calculate prices
+        const originalPrice = item.price;
+        const discountedPrice = this._calculateDisplayPrice(item);
+        const hasDiscount = discountedPrice < originalPrice;
+
+        // Build price HTML - show both original and discounted if applicable
+        let priceHtml;
+        if (hasDiscount) {
+            priceHtml = `
+                <span class="summary-product-price">
+                    <span class="discounted-price">RM ${discountedPrice.toFixed(1)}</span>
+                    <span class="original-price">RM ${originalPrice.toFixed(1)}</span>
+                </span>
+            `;
+        } else {
+            priceHtml = `<span class="summary-product-price">RM ${originalPrice.toFixed(1)}</span>`;
+        }
+
         el.innerHTML = `
             <img src="${placeholderSrc}" 
                  class="summary-product-img" 
@@ -138,11 +156,29 @@ class CheckoutSummaryRenderer {
                     <span class="summary-product-qty">x${item.qty}</span>
                 </div>
                 <span class="summary-product-variant">${item.selectedSize} / ${colorDisplay}</span>
-                <span class="summary-product-price">RM ${item.price.toLocaleString()}</span>
+                ${priceHtml}
             </div>
         `;
 
         return el;
+    }
+
+    /**
+     * Calculate the display price for an item (applying discount if available)
+     * @param {Object} item - Cart item
+     * @returns {number} The discounted price
+     * @private
+     */
+    _calculateDisplayPrice(item) {
+        if (!item.discount || item.discount === '0') {
+            return item.price;
+        }
+        const match = item.discount.match(/-?(\d+)%/);
+        if (match) {
+            const discountPercent = parseInt(match[1]);
+            return Math.round(item.price * (1 - discountPercent / 100) * 10) / 10;
+        }
+        return item.price;
     }
 
     /**

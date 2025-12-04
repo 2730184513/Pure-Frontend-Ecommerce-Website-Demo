@@ -141,6 +141,22 @@
     color: #B88E2F;
     font-weight: 600;
     white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.summary-product-price .original-price {
+    font-size: 13px;
+    color: #9F9F9F;
+    text-decoration: line-through;
+    font-weight: 400;
+}
+
+.summary-product-price .discounted-price {
+    font-size: 18px;
+    color: #B88E2F;
+    font-weight: 600;
 }
 
 /* Empty state */

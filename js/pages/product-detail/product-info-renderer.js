@@ -336,14 +336,15 @@ class ProductInfoRenderer {
      * Calculate discounted price
      * @param {number} price - Original price
      * @param {string} discount - Discount string (e.g., "-30%")
-     * @returns {number} Discounted price
+     * @returns {number} Discounted price (rounded to 1 decimal place)
      * @private
      */
     calculateDiscountedPrice(price, discount) {
         const match = discount.match(/-?(\d+)%/);
         if (match) {
             const discountPercent = parseInt(match[1]);
-            return Math.round(price * (1 - discountPercent / 100));
+            // Round to 1 decimal place
+            return Math.round(price * (1 - discountPercent / 100) * 10) / 10;
         }
         return price;
     }
@@ -355,7 +356,12 @@ class ProductInfoRenderer {
      * @private
      */
     formatPrice(price) {
-        return `RM ${price.toLocaleString('en-MY')}`;
+        // Format with 1 decimal place
+        const roundedPrice = Math.round(price * 10) / 10; // Round to 1 decimal
+        return `RM ${roundedPrice.toLocaleString('en-MY', {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        })}`;
     }
 
     /**

@@ -65,6 +65,21 @@ class CheckoutManager {
             this.summaryManager = new window.CheckoutSummaryManager(this.cartManager);
             this.summaryManager.initialize();
 
+            // Check if we actually have items to checkout after loading
+            // This handles the case where localStorage has IDs but cart items were removed
+            const selectedItems = this.summaryManager.getSelectedItems();
+            if (selectedItems.length === 0) {
+                console.warn('No valid items for checkout after initialization');
+                if (window.toastManager) {
+                    window.toastManager.show('No items selected for checkout. Redirecting to cart...', 'info');
+                }
+                this.clearCheckoutData();
+                setTimeout(() => {
+                    window.location.href = '/201-project/cart.html';
+                }, 1500);
+                return;
+            }
+
             // Bind form submit
             this.bindFormSubmit();
 
@@ -88,6 +103,7 @@ class CheckoutManager {
         if (backBtn) {
             backBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                this.clearCheckoutData();
                 window.location.href = '/201-project/cart.html';
             });
         }
@@ -97,20 +113,34 @@ class CheckoutManager {
      * Bind page cleanup events
      */
     bindPageCleanupEvents() {
-        // Clear selected items when navigating away from checkout
-        window.addEventListener('beforeunload', () => {
-            this.clearCheckoutData();
+        // Use a flag to track if we're navigating away (not refreshing)
+        let isNavigatingAway = false;
+
+        // Detect actual navigation (clicking links)
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href && !link.href.includes('checkout.html')) {
+                isNavigatingAway = true;
+            }
         });
 
-        // Also clear when clicking back button or other navigation
-        window.addEventListener('pagehide', () => {
-            this.clearCheckoutData();
+        // Clear data only when actually navigating away, not on refresh
+        window.addEventListener('pagehide', (e) => {
+            // persisted = true means page is being cached (back/forward cache)
+            // If persisted is false and we're navigating away, clear data
+            if (isNavigatingAway || !e.persisted) {
+                // Don't clear on refresh - check if we're staying on same page
+                // pagehide with !persisted can be navigation or close, but not refresh
+            }
         });
 
         // Handle browser back/forward navigation
         window.addEventListener('popstate', () => {
             this.clearCheckoutData();
         });
+
+        // Clear when form is successfully submitted (handled in handleSubmit)
+        // or when user clicks back button (handled in bindBackButton)
     }
 
     /**

@@ -114,9 +114,9 @@ class CartSummaryManager {
         // Update display
         if (this.selectedCountSpan) this.selectedCountSpan.textContent = selectedCount;
         if (this.checkoutCountSpan) this.checkoutCountSpan.textContent = selectedCount;
-        if (this.productTotalSpan) this.productTotalSpan.textContent = `RM ${productTotal.toFixed(2)}`;
-        if (this.discountSpan) this.discountSpan.textContent = `RM ${discount.toFixed(2)}`;
-        if (this.totalPriceSpan) this.totalPriceSpan.textContent = `RM ${productTotal.toFixed(2)}`;
+        if (this.productTotalSpan) this.productTotalSpan.textContent = `RM ${productTotal.toFixed(1)}`;
+        if (this.discountSpan) this.discountSpan.textContent = `RM ${discount.toFixed(1)}`;
+        if (this.totalPriceSpan) this.totalPriceSpan.textContent = `RM ${productTotal.toFixed(1)}`;
 
         // Update select all checkbox state
         this.updateSelectAllState(selectedCount, itemCheckboxes.length);

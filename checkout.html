@@ -59,17 +59,17 @@
 
             <div class="summary-row">
                 <p>Subtotal</p>
-                <p>RM 0.00</p>
+                <p id="summary-subtotal">RM 0.0</p>
             </div>
 
             <div class="summary-row">
                 <p>Discount Amount</p>
-                <p>RM 0.00</p>
+                <p id="summary-discount">RM 0.0</p>
             </div>
 
             <div class="summary-row total">
                 <p>Grand Total</p>
-                <p class="total-price">RM 0.00</p>
+                <p class="total-price" id="summary-total">RM 0.0</p>
             </div>
 
             <hr>
@@ -122,6 +122,7 @@
 
 <!-- Data layer -->
 <script src="/201-project/js/core/product-repository.js"></script>
+<script src="/201-project/js/core/data-sync-utils.js"></script>
 <script src="/201-project/js/pages/shop/product-filter.js"></script>
 
 <!-- Header components (required for cart manager) -->

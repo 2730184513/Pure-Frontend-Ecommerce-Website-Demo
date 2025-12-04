@@ -199,6 +199,16 @@ class WishlistDropdownRenderer {
     }
 
     /**
+     * Check if wishlist item is frozen (logically deleted)
+     * @param {Object} item - Wishlist item
+     * @returns {boolean}
+     * @private
+     */
+    isItemFrozen(item) {
+        return item.is_deleted === true;
+    }
+
+    /**
      * Render wishlist items in dropdown
      */
     render() {
@@ -216,11 +226,15 @@ class WishlistDropdownRenderer {
 
         wishlist.forEach(item => {
             const el = document.createElement('div');
-            el.className = 'wishlist-item';
+            const isFrozen = this.isItemFrozen(item);
+            el.className = 'wishlist-item' + (isFrozen ? ' out-of-stock-item' : '');
             el.dataset.productId = item.id; // Store product ID for navigation
 
             // Use placeholder first for instant display
             const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+
+            // Brief text handling
+            const briefText = item.brief ? item.brief.substring(0, 30) + '...' : 'No description';
 
             el.innerHTML = `
                 <img src="${placeholderSrc}" 
@@ -229,7 +243,7 @@ class WishlistDropdownRenderer {
                      data-src="${item.product_picture}">
                 <div class="cart-item-info">
                     <span class="cart-item-title">${item.name}</span>
-                    <span class="cart-item-variant" style="font-size:12px">${item.brief.substring(0, 30)}...</span>
+                    <span class="cart-item-variant" style="font-size:12px">${isFrozen ? '<span style="color:#ff6b6b">Product Unavailable</span>' : briefText}</span>
                 </div>
                 <button class="remove-wish-btn" 
                         data-id="${item.id}" 
@@ -240,6 +254,13 @@ class WishlistDropdownRenderer {
             el.addEventListener('dblclick', (e) => {
                 // Prevent navigation if clicking on remove button
                 if (e.target.closest('.remove-wish-btn')) {
+                    return;
+                }
+                // Don't navigate if item is frozen
+                if (isFrozen) {
+                    if (window.toast) {
+                        window.toast.warning('This product is no longer available.');
+                    }
                     return;
                 }
                 this.navigateToProductDetail(item.id);

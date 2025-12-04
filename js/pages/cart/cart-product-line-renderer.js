@@ -31,6 +31,52 @@ class CartProductLineRenderer {
     }
 
     /**
+     * Check if cart item is frozen (logically deleted or out of stock)
+     * @param {Object} item - Cart item
+     * @returns {boolean}
+     * @private
+     */
+    isItemFrozen(item) {
+        // Check if item is logically deleted
+        if (item.is_deleted) return true;
+        // Check if product is out of stock
+        return this.isOutOfStock(item.id);
+    }
+
+    /**
+     * Get frozen label text for an item
+     * @param {Object} item - Cart item
+     * @returns {string} Label text
+     * @private
+     */
+    getFrozenLabel(item) {
+        if (item.is_deleted) {
+            return item.deletion_reason === 'variant_unavailable' 
+                ? 'Variant Unavailable' 
+                : 'Product Unavailable';
+        }
+        return 'Out of Stock';
+    }
+
+    /**
+     * Calculate the display price for a cart item (applying discount if available)
+     * @param {Object} item - Cart item
+     * @returns {number} The price to display
+     * @private
+     */
+    calculateDisplayPrice(item) {
+        if (!item.discount || item.discount === '0') {
+            return item.price;
+        }
+        const match = item.discount.match(/-?(\d+)%/);
+        if (match) {
+            const discountPercent = parseInt(match[1]);
+            return Math.round(item.price * (1 - discountPercent / 100) * 10) / 10;
+        }
+        return item.price;
+    }
+
+    /**
      * Render all cart items to a container
      * @param {HTMLElement} container - Target container
      * @param {Array} cartItems - Cart items from CartManager
@@ -60,9 +106,9 @@ class CartProductLineRenderer {
             const lineElement = this.createProductLine(item, index);
             container.appendChild(lineElement);
 
-            // Restore checkbox state
+            // Restore checkbox state (only for non-frozen items)
             const checkbox = lineElement.querySelector('.item-checkbox');
-            if (checkbox && checkboxStates[item.variantId] !== undefined) {
+            if (checkbox && checkboxStates[item.variantId] !== undefined && !this.isItemFrozen(item)) {
                 checkbox.checked = checkboxStates[item.variantId];
             }
         });
@@ -76,18 +122,22 @@ class CartProductLineRenderer {
      */
     createProductLine(item, index) {
         const cartItem = document.createElement('div');
-        const isOutOfStock = this.isOutOfStock(item.id);
-        cartItem.className = 'cart-item' + (isOutOfStock ? ' out-of-stock-item' : '');
+        const isFrozen = this.isItemFrozen(item);
+        const isLogicallyDeleted = item.is_deleted === true;
+        cartItem.className = 'cart-item' + (isFrozen ? ' out-of-stock-item' : '');
         cartItem.dataset.variantId = item.variantId;
         cartItem.dataset.productId = item.id; // Store product ID for navigation
 
         // Get color display name
         const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
+        
+        // Get frozen label
+        const frozenLabel = isFrozen ? this.getFrozenLabel(item) : '';
 
         cartItem.innerHTML = `
             <div class="checkbox-container">
-                <input type="checkbox" id="item${index}" class="item-checkbox" data-variant-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>
-                <label for="item${index}" class="custom-checkbox ${isOutOfStock ? 'disabled' : ''}"></label>
+                <input type="checkbox" id="item${index}" class="item-checkbox" data-variant-id="${item.variantId}" ${isFrozen ? 'disabled' : ''}>
+                <label for="item${index}" class="custom-checkbox ${isFrozen ? 'disabled' : ''}"></label>
             </div>
             
             <div class="product-image-container">
@@ -107,21 +157,25 @@ class CartProductLineRenderer {
             </div>
             
             <div class="price-section">
-                <div class="current-price" data-price="${item.price}">RM ${item.price.toLocaleString()}</div>
-                <div class="original-price" data-original="${item.price * 1.2}">RM ${(item.price * 1.2).toLocaleString()}</div>
+                <div class="current-price" data-price="${this.calculateDisplayPrice(item)}">
+                    RM ${this.calculateDisplayPrice(item).toFixed(1)}
+                </div>
+                <div class="original-price" data-original="${item.price}">
+                    RM ${item.price.toFixed(1)}
+                </div>
             </div>
             
             <div class="quantity-controls-wrapper">
-                <div class="quantity-controls ${isOutOfStock ? 'frozen' : ''}">
-                    <button class="quantity-btn decrease" ${isOutOfStock ? 'disabled' : ''}>-</button>
-                    <input type="number" class="quantity-input" value="${item.qty}" min="1" max="9999" data-variant-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>
-                    <button class="quantity-btn increase" ${isOutOfStock ? 'disabled' : ''}>+</button>
+                <div class="quantity-controls ${isFrozen ? 'frozen' : ''}">
+                    <button class="quantity-btn decrease" ${isFrozen ? 'disabled' : ''}>-</button>
+                    <input type="number" class="quantity-input" value="${item.qty}" min="1" max="9999" data-variant-id="${item.variantId}" ${isFrozen ? 'disabled' : ''}>
+                    <button class="quantity-btn increase" ${isFrozen ? 'disabled' : ''}>+</button>
                 </div>
-                ${isOutOfStock ? '<span class="out-of-stock-label">Out of Stock</span>' : ''}
+                ${isFrozen ? `<span class="out-of-stock-label">${frozenLabel}</span>` : ''}
             </div>
             
             <div class="actions">
-                <a href="#" class="action-link wishlist-link" data-variant-id="${item.variantId}">Add to wishlist</a>
+                <a href="#" class="action-link wishlist-link" data-variant-id="${item.variantId}" ${isLogicallyDeleted ? 'style="pointer-events:none;opacity:0.5"' : ''}>Add to wishlist</a>
                 <a href="#" class="action-link delete-link" data-variant-id="${item.variantId}">Delete</a>
             </div>
         `;
@@ -137,12 +191,21 @@ class CartProductLineRenderer {
      * @param {Object} item - Cart item data
      */
     attachEventListeners(cartItem, item) {
+        const isLogicallyDeleted = item.is_deleted === true;
+        
         // Double-click to navigate to product detail
         cartItem.addEventListener('dblclick', (e) => {
             // Prevent navigation if clicking on interactive elements
             if (e.target.closest('.checkbox-container') || 
                 e.target.closest('.quantity-controls') || 
                 e.target.closest('.actions')) {
+                return;
+            }
+            // Don't navigate if product is logically deleted
+            if (isLogicallyDeleted) {
+                if (window.toast) {
+                    window.toast.warning('This product is no longer available.');
+                }
                 return;
             }
             this.navigateToProductDetail(item.id);
@@ -160,10 +223,10 @@ class CartProductLineRenderer {
         const quantityInput = cartItem.querySelector('.quantity-input');
 
         decreaseBtn.addEventListener('click', () => {
-            // Check if out of stock
-            if (this.isOutOfStock(item.id)) {
+            // Check if item is frozen (logically deleted or out of stock)
+            if (this.isItemFrozen(item)) {
                 if (window.toast) {
-                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                    window.toast.show(item.is_deleted ? 'This product is no longer available.' : 'This product is currently out of stock. Please wait for restock.', 'warning');
                 }
                 return;
             }
@@ -179,10 +242,10 @@ class CartProductLineRenderer {
         });
 
         increaseBtn.addEventListener('click', () => {
-            // Check if out of stock
-            if (this.isOutOfStock(item.id)) {
+            // Check if item is frozen (logically deleted or out of stock)
+            if (this.isItemFrozen(item)) {
                 if (window.toast) {
-                    window.toast.show('This product is currently out of stock. Please wait for restock.', 'warning');
+                    window.toast.show(item.is_deleted ? 'This product is no longer available.' : 'This product is currently out of stock. Please wait for restock.', 'warning');
                 }
                 return;
             }
@@ -218,6 +281,13 @@ class CartProductLineRenderer {
         const wishlistBtn = cartItem.querySelector('.wishlist-link');
         wishlistBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            // Don't add to wishlist if product is logically deleted
+            if (isLogicallyDeleted) {
+                if (window.toast) {
+                    window.toast.warning('This product is no longer available.');
+                }
+                return;
+            }
             this.handleAddToWishlist(item);
         });
 

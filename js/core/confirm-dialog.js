@@ -102,8 +102,8 @@ class ConfirmDialog {
                 <div class="preview-info-section">
                     <h3 class="preview-product-name">${this._escapeHTML(product.name)}</h3>
                     <div class="preview-price-section">
-                        <span class="preview-current-price">RM ${currentPrice.toLocaleString('en-MY')}</span>
-                        ${hasDiscount ? `<span class="preview-original-price">RM ${product.price.toLocaleString('en-MY')}</span>` : ''}
+                        <span class="preview-current-price">RM ${currentPrice.toFixed(1)}</span>
+                        ${hasDiscount ? `<span class="preview-original-price">RM ${product.price.toFixed(1)}</span>` : ''}
                     </div>
                     <div class="preview-rating-section">
                         <div class="preview-stars">${stars}</div>
@@ -285,14 +285,15 @@ class ConfirmDialog {
     }
 
     /**
-     * 计算折扣价
+     * 计算折扣价 (rounded to 1 decimal place)
      * @private
      */
     _calculateDiscountedPrice(price, discount) {
         const match = discount.match(/-?(\d+)%/);
         if (match) {
             const discountPercent = parseInt(match[1]);
-            return Math.round(price * (1 - discountPercent / 100));
+            // Round to 1 decimal place
+            return Math.round(price * (1 - discountPercent / 100) * 10) / 10;
         }
         return price;
     }

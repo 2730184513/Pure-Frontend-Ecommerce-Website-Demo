@@ -296,6 +296,25 @@ class CartDropdownRenderer {
     }
 
     /**
+     * Calculate display price (with discount applied)
+     * @param {Object} item - Cart item
+     * @returns {number} Display price (discounted if applicable)
+     * @private
+     */
+    calculateDisplayPrice(item) {
+        if (!item.discount || item.discount === '0') {
+            return item.price;
+        }
+        const match = item.discount.match(/-?(\d+)%/);
+        if (match) {
+            const discountPercent = parseInt(match[1]);
+            // Round to 1 decimal place
+            return Math.round(item.price * (1 - discountPercent / 100) * 10) / 10;
+        }
+        return item.price;
+    }
+
+    /**
      * Check if product is out of stock
      * @param {string} productId - Product ID
      * @returns {boolean}
@@ -306,6 +325,19 @@ class CartDropdownRenderer {
             return window.productRepository.isOutOfStock(productId);
         }
         return false;
+    }
+
+    /**
+     * Check if cart item is frozen (logically deleted or out of stock)
+     * @param {Object} item - Cart item
+     * @returns {boolean}
+     * @private
+     */
+    isItemFrozen(item) {
+        // Check if item is logically deleted
+        if (item.is_deleted) return true;
+        // Check if product is out of stock
+        return this.isOutOfStock(item.id);
     }
 
     /**
@@ -349,13 +381,26 @@ class CartDropdownRenderer {
      */
     createCartItemElement(item) {
         const el = document.createElement('div');
-        const isOutOfStock = this.isOutOfStock(item.id);
+        const isFrozen = this.isItemFrozen(item);
+        const isLogicallyDeleted = item.is_deleted === true;
         const isLiked = this.isInWishlist(item.id);
-        el.className = 'cart-item' + (isOutOfStock ? ' out-of-stock-item' : '');
+        el.className = 'cart-item' + (isFrozen ? ' out-of-stock-item' : '');
         el.dataset.productId = item.id; // Store product ID for navigation
 
         const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
         const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+
+        // Determine the frozen label text
+        let frozenLabel = '';
+        if (isFrozen) {
+            if (isLogicallyDeleted) {
+                frozenLabel = item.deletion_reason === 'variant_unavailable' 
+                    ? 'Variant Unavailable' 
+                    : 'Product Unavailable';
+            } else {
+                frozenLabel = 'Out of Stock';
+            }
+        }
 
         el.innerHTML = `
         <img src="${placeholderSrc}" 
@@ -365,18 +410,18 @@ class CartDropdownRenderer {
         <div class="cart-item-info">
             <span class="cart-item-title">${item.name}</span>
             <span class="cart-item-variant">${item.selectedSize} / ${colorDisplay}</span>
-            <span class="cart-item-price">RM ${item.price.toLocaleString()}</span>
+            <span class="cart-item-price">RM ${this.calculateDisplayPrice(item).toFixed(1)}</span>
             <div class="cart-controls">
                 <div class="cart-qty-wrapper">
-                    <div class="cart-qty-group ${isOutOfStock ? 'frozen' : ''}">
-                        <button class="qty-btn minus" data-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>-</button>
-                        <input type="number" class="qty-display qty-input" value="${item.qty}" min="1" max="9999" data-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>
-                        <button class="qty-btn plus" data-id="${item.variantId}" ${isOutOfStock ? 'disabled' : ''}>+</button>
+                    <div class="cart-qty-group ${isFrozen ? 'frozen' : ''}">
+                        <button class="qty-btn minus" data-id="${item.variantId}" ${isFrozen ? 'disabled' : ''}>-</button>
+                        <input type="number" class="qty-display qty-input" value="${item.qty}" min="1" max="9999" data-id="${item.variantId}" ${isFrozen ? 'disabled' : ''}>
+                        <button class="qty-btn plus" data-id="${item.variantId}" ${isFrozen ? 'disabled' : ''}>+</button>
                     </div>
-                    ${isOutOfStock ? '<span class="dropdown-out-of-stock-label">Out of Stock</span>' : ''}
+                    ${isFrozen ? `<span class="dropdown-out-of-stock-label">${frozenLabel}</span>` : ''}
                 </div>
                 <div class="cart-action-btns">
-                    <button class="cart-like-btn ${isLiked ? 'liked' : ''}" data-id="${item.variantId}" data-product-id="${item.id}" title="${isLiked ? 'Remove from wishlist' : 'Add to wishlist'}">
+                    <button class="cart-like-btn ${isLiked ? 'liked' : ''}" data-id="${item.variantId}" data-product-id="${item.id}" title="${isLiked ? 'Remove from wishlist' : 'Add to wishlist'}" ${isLogicallyDeleted ? 'disabled' : ''}>
                         <img src="/201-project/images/icons/${isLiked ? 'red-heart' : 'heart'}.png" alt="Like" class="like-icon">
                     </button>
                     <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
@@ -385,10 +430,17 @@ class CartDropdownRenderer {
         </div>
     `;
 
-        // Add double-click to navigate to product detail
+        // Add double-click to navigate to product detail (only if not logically deleted)
         el.addEventListener('dblclick', (e) => {
             // Prevent navigation if clicking on buttons or inputs
             if (e.target.closest('.qty-btn') || e.target.closest('.qty-input') || e.target.closest('.delete') || e.target.closest('.cart-like-btn')) {
+                return;
+            }
+            // Don't navigate if product is logically deleted
+            if (isLogicallyDeleted) {
+                if (window.toast) {
+                    window.toast.warning('This product is no longer available.');
+                }
                 return;
             }
             this.navigateToProductDetail(item.id);

@@ -84,24 +84,47 @@ class CheckoutSummaryManager {
 
     /**
      * Calculate totals (subtotal, discount, grand total)
+     * Subtotal = sum of all original prices
+     * Discount = sum of all discount amounts
+     * Grand Total = Subtotal - Discount
      * @returns {Object} {subtotal, discount, grandTotal}
      */
     calculateTotals() {
         let subtotal = 0;
-        let originalTotal = 0;
+        let discount = 0;
 
         this.selectedItems.forEach(item => {
-            const currentPrice = item.price;
-            const originalPrice = item.original_price || item.price;
+            const originalPrice = item.price;
+            const discountedPrice = this._calculateDisplayPrice(item);
+            const discountAmount = originalPrice - discountedPrice;
 
-            subtotal += currentPrice * item.qty;
-            originalTotal += originalPrice * item.qty;
+            // Subtotal = sum of original prices × qty
+            subtotal += originalPrice * item.qty;
+            // Discount = sum of discount amounts × qty
+            discount += discountAmount * item.qty;
         });
 
-        const discount = originalTotal - subtotal;
-        const grandTotal = subtotal;
+        const grandTotal = subtotal - discount;
 
         return { subtotal, discount, grandTotal };
+    }
+
+    /**
+     * Calculate the display price for an item (applying discount if available)
+     * @param {Object} item - Cart item
+     * @returns {number} The discounted price
+     * @private
+     */
+    _calculateDisplayPrice(item) {
+        if (!item.discount || item.discount === '0') {
+            return item.price;
+        }
+        const match = item.discount.match(/-?(\d+)%/);
+        if (match) {
+            const discountPercent = parseInt(match[1]);
+            return Math.round(item.price * (1 - discountPercent / 100) * 10) / 10;
+        }
+        return item.price;
     }
 
     /**

@@ -238,8 +238,19 @@ class ProductRepository {
             return null;
         }
 
+        const oldProduct = { ...this.products[index] };
         this.products[index] = { ...this.products[index], ...updates };
         this.saveToLocalStorage();
+        
+        // Dispatch product updated event for Cart and Wishlist synchronization
+        window.dispatchEvent(new CustomEvent('productUpdated', {
+            detail: { 
+                productId: id, 
+                oldProduct: oldProduct,
+                newProduct: this.products[index]
+            }
+        }));
+        
         return this.products[index];
     }
 
@@ -254,8 +265,18 @@ class ProductRepository {
             return false;
         }
 
+        const deletedProduct = { ...this.products[index] };
         this.products.splice(index, 1);
         this.saveToLocalStorage();
+        
+        // Dispatch product deleted event for Cart and Wishlist synchronization
+        window.dispatchEvent(new CustomEvent('productDeleted', {
+            detail: { 
+                productId: id,
+                deletedProduct: deletedProduct
+            }
+        }));
+        
         return true;
     }
 

@@ -51,10 +51,14 @@ class WishlistManager {
 
     /**
      * Load wishlist from localStorage (user-specific)
+     * And syncs with product repository for data consistency
      */
     loadWishlist() {
         const stored = localStorage.getItem(this.getStorageKey());
         this.wishlist = stored ? JSON.parse(stored) : [];
+        
+        // Sync with repository for data consistency
+        this.syncWithRepository();
     }
 
     /**
@@ -88,6 +92,16 @@ class WishlistManager {
         // Listen for user state changes to reload wishlist
         window.addEventListener('userStateChanged', () => {
             this.reloadForCurrentUser();
+        });
+
+        // Listen for product updates from manage page
+        window.addEventListener('productUpdated', (e) => {
+            this.handleProductUpdated(e.detail);
+        });
+
+        // Listen for product deletions from manage page
+        window.addEventListener('productDeleted', (e) => {
+            this.handleProductDeleted(e.detail);
         });
     }
 
@@ -146,6 +160,165 @@ class WishlistManager {
      */
     getCount() {
         return this.wishlist.length;
+    }
+
+    /**
+     * Handle product updated event from ProductRepository
+     * Syncs wishlist items with updated product data
+     * @param {Object} detail - Event detail containing productId, oldProduct, newProduct
+     */
+    handleProductUpdated(detail) {
+        const { productId, oldProduct, newProduct } = detail;
+        
+        if (!window.DataSyncUtils) {
+            console.warn('DataSyncUtils not available for wishlist sync');
+            return;
+        }
+
+        // Check if wishlist-relevant fields have changed using hash comparison
+        if (!window.DataSyncUtils.hasWishlistFieldsChanged(oldProduct, newProduct)) {
+            // No wishlist-relevant changes, skip update
+            return;
+        }
+
+        let wishlistModified = false;
+        const updatedItems = [];
+
+        this.wishlist.forEach((item, index) => {
+            if (item.id === productId && !item.is_deleted) {
+                // Update item with new product data
+                const updatedItem = window.DataSyncUtils.mergeWishlistItemWithProduct(item, newProduct);
+                this.wishlist[index] = updatedItem;
+                wishlistModified = true;
+                updatedItems.push(item.name);
+            }
+        });
+
+        if (wishlistModified) {
+            this.saveWishlist();
+            
+            // Update UI
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.updateBadge();
+                this.dropdownRenderer.render();
+            }
+
+            // Show notification
+            setTimeout(() => {
+                if (updatedItems.length > 0 && window.toast) {
+                    window.toast.info(`Wishlist updated: ${updatedItems.join(', ')}`);
+                }
+            }, 100);
+        }
+    }
+
+    /**
+     * Handle product deleted event from ProductRepository
+     * Marks wishlist items as logically deleted (frozen)
+     * @param {Object} detail - Event detail containing productId, deletedProduct
+     */
+    handleProductDeleted(detail) {
+        const { productId } = detail;
+        
+        let wishlistModified = false;
+        const deletedItems = [];
+
+        this.wishlist.forEach((item, index) => {
+            if (item.id === productId && !item.is_deleted) {
+                // Mark as logically deleted
+                this.wishlist[index].is_deleted = true;
+                this.wishlist[index].deletion_reason = 'product_deleted';
+                wishlistModified = true;
+                deletedItems.push(item.name);
+            }
+        });
+
+        if (wishlistModified) {
+            this.saveWishlist();
+            
+            // Update UI
+            if (this.dropdownRenderer) {
+                this.dropdownRenderer.updateBadge();
+                this.dropdownRenderer.render();
+            }
+
+            // Show notification
+            setTimeout(() => {
+                if (deletedItems.length > 0 && window.toast) {
+                    deletedItems.forEach(name => {
+                        window.toast.warning(`"${name}" has been removed from store and frozen in your wishlist.`);
+                    });
+                }
+            }, 100);
+        }
+    }
+
+    /**
+     * Sync wishlist data with ProductRepository on initialization
+     * Uses hash comparison for efficient O(1) change detection
+     * Called when user switches accounts or on page load
+     */
+    syncWithRepository() {
+        if (!window.productRepository || !window.productRepository.dataLoaded || !window.DataSyncUtils) {
+            return;
+        }
+
+        let wishlistModified = false;
+        const updatedItems = [];
+        const frozenItems = [];
+
+        this.wishlist.forEach((item, index) => {
+            // Skip already deleted items
+            if (item.is_deleted) return;
+            
+            // Get current product from repository
+            const currentProduct = window.productRepository.getById(item.id);
+            
+            if (!currentProduct) {
+                // Product no longer exists, mark as deleted
+                this.wishlist[index].is_deleted = true;
+                this.wishlist[index].deletion_reason = 'product_deleted';
+                wishlistModified = true;
+                frozenItems.push({ name: item.name, reason: 'Product no longer available' });
+                return;
+            }
+            
+            // Check if wishlist-relevant fields have changed
+            if (window.DataSyncUtils.hasWishlistFieldsChanged(item, currentProduct)) {
+                // Update item with new product data
+                const updatedItem = window.DataSyncUtils.mergeWishlistItemWithProduct(item, currentProduct);
+                this.wishlist[index] = updatedItem;
+                wishlistModified = true;
+                updatedItems.push(item.name);
+            }
+        });
+
+        if (wishlistModified) {
+            this.saveWishlist();
+            
+            // Show notifications after a delay
+            setTimeout(() => {
+                if (updatedItems.length > 0 && window.toast) {
+                    window.toast.info(`Wishlist synced: ${updatedItems.length} item(s) updated.`);
+                }
+                if (frozenItems.length > 0 && window.toast) {
+                    frozenItems.forEach(item => {
+                        window.toast.warning(`"${item.name}": ${item.reason}`);
+                    });
+                }
+            }, 500);
+        }
+
+        console.log(`✓ Wishlist sync completed: ${updatedItems.length} updated, ${frozenItems.length} frozen`);
+    }
+
+    /**
+     * Check if a wishlist item is frozen (logically deleted)
+     * @param {Object} item - Wishlist item
+     * @returns {boolean} True if item is frozen
+     */
+    isItemFrozen(item) {
+        return item.is_deleted === true;
     }
 }
 
