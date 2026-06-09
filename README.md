@@ -14,7 +14,7 @@ This project is merely a school course assignment outcome, a pure front-end furn
 >
 >   Admin Password: Admin@admin
 
-Since the image resources are not stored in an external OSS but are instead stored in the form of files in the "images" folder, loading them for the first time without caching can be rather slow. 
+Because image resources take up a large amount of storage space, they may load rather slowly when used for the first time without cache
 
 User data and transaction data are cached in the browser in the form of sessions. Therefore, using different browsers or accessing across platforms will result in the loss of previous operation history and the restoration to the initial state of the project.
 
@@ -32,5 +32,5 @@ User data and transaction data are cached in the browser in the form of sessions
 >
 >   管理员密码：Admin@admin
 
-由于图片资源没有使用外部OSS进行存储，而是以文件形式存储在images文件夹下，因此初次使用没有缓存的情况下可能加载较为缓慢。用户数据、商品交易数据以session形式在浏览器中缓存。因此使用不同的浏览器，或跨平台访问将丢失之前的操作历史，还原为项目初始状态。
+由于图片资源占用存储空间较大,因此初次使用没有缓存的情况下可能加载较为缓慢。用户数据、商品交易数据以session形式在浏览器中缓存。因此使用不同的浏览器，或跨平台访问将丢失之前的操作历史，还原为项目初始状态。
 
