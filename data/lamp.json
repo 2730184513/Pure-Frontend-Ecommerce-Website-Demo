@@ -2,8 +2,8 @@
   "products": [
     {
       "name": "Arc Elegance",
-      "product_picture": "..//products/Arc Elegance.jpg",
-      "description_picture": "..//products/Arc Elegance description.jpg",
+      "product_picture": "../images/products/Arc Elegance.jpg",
+      "description_picture": "../images/products/Arc Elegance description.jpg",
       "brief": "modern arched floor lamp",
       "detail": "The Arc Elegance floor lamp features a graceful curved design that extends light over seating areas without requiring ceiling installation. Finished in brushed brass with a marble base for stability, this statement piece includes an adjustable shade and dimmer switch. Perfect for creating ambient lighting in living rooms and reading corners.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -41,8 +41,8 @@
     },
     {
       "name": "Tripod Modern",
-      "product_picture": "..//products/Tripod Modern.jpg",
-      "description_picture": "..//products/Tripod Modern description.jpg",
+      "product_picture": "../images/products/Tripod Modern.jpg",
+      "description_picture": "../images/products/Tripod Modern description.jpg",
       "brief": "minimalist tripod standing lamp",
       "detail": "The Tripod Modern floor lamp combines mid-century aesthetics with contemporary functionality. Featuring three solid wood legs and a linen drum shade, this lamp provides warm diffused lighting. The adjustable height and stable tripod base make it versatile for various room configurations and design styles.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -80,8 +80,8 @@
     },
     {
       "name": "Reading Gooseneck",
-      "product_picture": "..//products/Reading Gooseneck.jpg",
-      "description_picture": "..//products/Reading Gooseneck description.jpg",
+      "product_picture": "../images/products/Reading Gooseneck.jpg",
+      "description_picture": "../images/products/Reading Gooseneck description.jpg",
       "brief": "adjustable task reading lamp",
       "detail": "The Reading Gooseneck floor lamp is designed for precision lighting with its flexible gooseneck arm and focused LED bulb. Features touch controls, stepless dimming, and three color temperature settings from warm to cool white. Energy-efficient LED technology and a slim profile make it ideal for home offices and reading nooks.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -119,8 +119,8 @@
     },
     {
       "name": "Torchiere Uplighter",
-      "product_picture": "..//products/Torchiere Uplighter.jpg",
-      "description_picture": "..//products/Torchiere Uplighter description.jpg",
+      "product_picture": "../images/products/Torchiere Uplighter.jpg",
+      "description_picture": "../images/products/Torchiere Uplighter description.jpg",
       "brief": "classic upward lighting lamp",
       "detail": "The Torchiere Uplighter floor lamp creates ambient room illumination by directing light toward the ceiling for soft reflection. Features a sleek metal column design with a frosted glass shade that diffuses light evenly. Includes a rotary dimmer for adjustable brightness and complements both traditional and contemporary interiors.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -158,8 +158,8 @@
     },
     {
       "name": "Tree Multi-Arm",
-      "product_picture": "..//products/Tree Multi-Arm.jpg",
-      "description_picture": "..//products/Tree Multi-Arm description.jpg",
+      "product_picture": "../images/products/Tree Multi-Arm.jpg",
+      "description_picture": "../images/products/Tree Multi-Arm description.jpg",
       "brief": "contemporary multi-light floor lamp",
       "detail": "The Tree Multi-Arm floor lamp features five adjustable arms with individual LED bulbs, providing versatile lighting for large spaces. Each arm can be positioned independently to direct light where needed. Modern industrial design with a matte black finish and weighted base ensures stability while creating dramatic lighting effects.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
@@ -197,8 +197,8 @@
     },
     {
       "name": "Sculptural Statement",
-      "product_picture": "..//products/Sculptural Statement.jpg",
-      "description_picture": "..//products/Sculptural Statement description.jpg",
+      "product_picture": "../images/products/Sculptural Statement.jpg",
+      "description_picture": "../images/products/Sculptural Statement description.jpg",
       "brief": "artistic designer floor lamp",
       "detail": "The Sculptural Statement floor lamp doubles as functional art with its abstract geometric design and premium materials. Featuring a handcrafted metal frame with integrated LED strips, this lamp creates unique light patterns and shadows. A bold focal point that combines artistic expression with sophisticated lighting technology.",
       "description": "this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,\nthis is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,this is a product description,",
