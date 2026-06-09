@@ -2,8 +2,6 @@
 
 [中文说明](#项目说明)
 
-Demonstration Link: https://pure-frontend-ecommerce-website-demo-89mz1jrha.vercel.app
-
 >   [!Note]
 >
 >    **It is recommended to pull the project to your local machine for running**. After pulling to the local machine, simply open any.html file in the root directory with your browser to use it. There is no need to deploy or start any other dependencies.
@@ -19,8 +17,6 @@ Because image resources take up a large amount of storage space, they may load r
 User data and transaction data are cached in the browser in the form of sessions. Therefore, using different browsers or accessing across platforms will result in the loss of previous operation history and the restoration to the initial state of the project.
 
 # 项目说明
-
-演示链接：https://pure-frontend-ecommerce-website-demo-89mz1jrha.vercel.app
 
 >   [!Note]
 >
