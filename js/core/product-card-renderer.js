@@ -191,7 +191,7 @@ class ProductCardRenderer {
         overlay.className = 'sold-out-overlay';
         
         const icon = document.createElement('img');
-        icon.src = '/201-project/images/icons/sold-out.png';
+        icon.src = './images/icons/sold-out.png';
         icon.alt = 'Sold Out';
         icon.className = 'sold-out-icon';
         
@@ -219,7 +219,7 @@ class ProductCardRenderer {
         }
 
         img.onerror = () => {
-            img.src = '/201-project/images/products/placeholder.jpg';
+            img.src = './images/products/placeholder.jpg';
         };
 
         return img;
@@ -462,7 +462,7 @@ class ProductCardRenderer {
             sessionStorage.setItem('productDetailSource', sourcePage);
 
             // Navigate to product detail page
-            window.location.href = '/201-project/product-detail.html';
+            window.location.href = './product-detail.html';
         });
     }
 

@@ -86,10 +86,10 @@ class ToastManager {
      */
     getIcon(type) {
         const icons = {
-            success: '/201-project/images/icons/success.png',
-            error: '/201-project/images/icons/error.png',
-            info: '/201-project/images/icons/info.png',
-            warning: '/201-project/images/icons/attention.png'
+            success: './images/icons/success.png',
+            error: './images/icons/error.png',
+            info: './images/icons/info.png',
+            warning: './images/icons/attention.png'
         };
         return icons[type] || icons.info;
     }

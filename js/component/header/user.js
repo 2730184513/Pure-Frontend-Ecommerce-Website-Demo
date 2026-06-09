@@ -156,7 +156,7 @@ class UserManager {
         }
 
         // 直接跳转到登录页
-        window.location.href = '/201-project/register-login.html';
+        window.location.href = './register-login.html';
         return false;
     }
 

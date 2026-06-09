@@ -64,12 +64,12 @@ class FurniroApp {
             'register-login.html': 'Login'
         };
 
-        let breadcrumb = [{text: 'Home', href: '/201-project/index.html'}];
+        let breadcrumb = [{text: 'Home', href: './index.html'}];
 
         if (currentPage === 'cart.html') {
             breadcrumb.push({text: 'Cart'});
         } else if (currentPage === 'checkout.html') {
-            breadcrumb.push({text: 'Cart', href: '/201-project/cart.html'});
+            breadcrumb.push({text: 'Cart', href: './cart.html'});
             breadcrumb.push({text: 'Checkout'});
         } else if (currentPage === 'contact.html') {
             breadcrumb.push({text: 'Contact'});

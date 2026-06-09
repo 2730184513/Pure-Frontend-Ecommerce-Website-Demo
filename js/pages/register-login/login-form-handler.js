@@ -79,7 +79,7 @@ class LoginFormHandler extends BaseFormHandler {
         // 自定义头部（包含 logo）
         const headerHtml = `
             <header class="login-header">
-                <img src="/201-project/images/icons/Logo.png" alt="Furniro Logo" class="login-logo-img">
+                <img src="./images/icons/Logo.png" alt="Furniro Logo" class="login-logo-img">
                 <div class="login-logo-text">Furniro.</div>
             </header>
             <h1 class="login-greeting">Hi there!</h1>
@@ -200,12 +200,12 @@ class LoginFormHandler extends BaseFormHandler {
                     sessionStorage.removeItem('pending_search_keyword');
                     
                     setTimeout(() => {
-                        window.location.href = '/201-project/shop.html';
+                        window.location.href = './shop.html';
                     }, 1500);
                 } else {
                     // 没有待搜索关键词，跳转到首页
                     setTimeout(() => {
-                        window.location.href = '/201-project/index.html';
+                        window.location.href = './index.html';
                     }, 1500);
                 }
             } else {

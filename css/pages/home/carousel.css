@@ -168,13 +168,13 @@
 .prev-btn {
     left: 24px;
     bottom: 267px; /* 居中对齐 */
-    background-image: url('/201-project/images/icons/prev-btn.png');
+    background-image: url('./images/icons/prev-btn.png');
 }
 
 .next-btn {
     right: -344px;
     bottom: 267px; /* 居中对齐 */
-    background-image: url('/201-project/images/icons/next-btn.png');
+    background-image: url('./images/icons/next-btn.png');
 }
 
 .carousel-nav-btn:hover {

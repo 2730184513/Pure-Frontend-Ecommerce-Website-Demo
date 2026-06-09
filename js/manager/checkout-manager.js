@@ -37,7 +37,7 @@ class CheckoutManager {
                 window.toast.show('Please access checkout from your cart or product page', 'info');
             }
             setTimeout(() => {
-                window.location.href = '/201-project/cart.html';
+                window.location.href = './cart.html';
             }, 1000);
             return;
         }
@@ -75,7 +75,7 @@ class CheckoutManager {
                 }
                 this.clearCheckoutData();
                 setTimeout(() => {
-                    window.location.href = '/201-project/cart.html';
+                    window.location.href = './cart.html';
                 }, 1500);
                 return;
             }
@@ -104,7 +104,7 @@ class CheckoutManager {
             backBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.clearCheckoutData();
-                window.location.href = '/201-project/cart.html';
+                window.location.href = './cart.html';
             });
         }
     }
@@ -234,7 +234,7 @@ class CheckoutManager {
 
             // Redirect to home page after 2 seconds
             setTimeout(() => {
-                window.location.href = '/201-project/index.html';
+                window.location.href = './index.html';
             }, 2000);
 
         } catch (error) {

@@ -165,7 +165,7 @@ class UserDropdownRenderer {
         container.innerHTML = `
             <div class="user-info">
                 <div class="user-avatar">
-                    <img src="/201-project/images/icons/user_avatar.png" alt="User Avatar">
+                    <img src="./images/icons/user_avatar.png" alt="User Avatar">
                 </div>
                 <div class="user-details">
                     <span class="user-name">${this.escapeHtml(user.username || 'User')}${isAdmin ? ' <span class="admin-badge">Admin</span>' : ''}</span>
@@ -189,7 +189,7 @@ class UserDropdownRenderer {
         container.innerHTML = `
             <div class="user-guest-message">
                 <div class="guest-icon">
-                    <img src="/201-project/images/icons/user_avatar.png" alt="Guest">
+                    <img src="./images/icons/user_avatar.png" alt="Guest">
                 </div>
                 <p class="guest-text">You are not logged in.</p>
                 <p class="guest-subtext">Please log in for the complete user experience.</p>
@@ -208,7 +208,7 @@ class UserDropdownRenderer {
         if (loginBtn) {
             loginBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                window.location.href = '/201-project/register-login.html';
+                window.location.href = './register-login.html';
             });
         }
 
@@ -256,7 +256,7 @@ class UserDropdownRenderer {
     handleChangeAccount() {
         // 不清除 localStorage，只是跳转到登录页
         // 用户可以通过浏览器返回按钮回到之前的页面
-        window.location.href = '/201-project/register-login.html';
+        window.location.href = './register-login.html';
     }
 
     /**
@@ -266,7 +266,7 @@ class UserDropdownRenderer {
     handleChangePassword() {
         // 设置标记，让 register-login 页面直接显示 forgot password 表单
         sessionStorage.setItem('show_forgot_password', 'true');
-        window.location.href = '/201-project/register-login.html';
+        window.location.href = './register-login.html';
     }
 
     /**
@@ -274,7 +274,7 @@ class UserDropdownRenderer {
      * Navigate to inventory management page
      */
     handleManageInventory() {
-        window.location.href = '/201-project/manage.html';
+        window.location.href = './manage.html';
     }
 
     /**

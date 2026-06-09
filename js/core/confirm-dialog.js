@@ -97,7 +97,7 @@ class ConfirmDialog {
                 <div class="preview-image-section">
                     <img src="${product.product_picture}" alt="${this._escapeHTML(product.name)}" 
                          class="preview-product-image" 
-                         onerror="this.onerror=null;this.src='/201-project/images/products/placeholder.jpg';">
+                         onerror="this.onerror=null;this.src='./images/products/placeholder.jpg';">
                 </div>
                 <div class="preview-info-section">
                     <h3 class="preview-product-name">${this._escapeHTML(product.name)}</h3>
@@ -312,12 +312,12 @@ class ConfirmDialog {
         
         // 完整星
         for (let i = 0; i < fullStars && i < 5; i++) {
-            html += '<img src="/201-project/images/icons/star.png" alt="star" class="preview-star-icon">';
+            html += '<img src="./images/icons/star.png" alt="star" class="preview-star-icon">';
         }
         
         // 半星（只要有小数部分就显示）
         if (hasHalfStar && fullStars < 5) {
-            html += '<img src="/201-project/images/icons/half-star.png" alt="half star" class="preview-star-icon">';
+            html += '<img src="./images/icons/half-star.png" alt="half star" class="preview-star-icon">';
         }
         
         return html;

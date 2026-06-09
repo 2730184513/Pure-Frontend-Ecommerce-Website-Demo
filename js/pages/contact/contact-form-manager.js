@@ -313,7 +313,7 @@ class ContactFormManager {
 
         // Redirect to home page after 2 seconds
         setTimeout(() => {
-            window.location.href = '/201-project/index.html';
+            window.location.href = './index.html';
         }, 2000);
     }
 }

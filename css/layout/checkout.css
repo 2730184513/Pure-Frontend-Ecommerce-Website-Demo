@@ -82,12 +82,12 @@ body {
         gap: 15px;
     }
 }
-    }
+
 
     .checkout-container {
         padding: 40px 20px;
     }
-}
+
 
 @media (max-width: 768px) {
     .checkout-container {

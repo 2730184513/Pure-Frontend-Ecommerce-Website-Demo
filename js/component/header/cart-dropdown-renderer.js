@@ -85,7 +85,7 @@ class CartDropdownRenderer {
                 window.AuthGuard.requireLogin('your shopping cart');
                 return;
             }
-            window.location.href = '/201-project/cart.html';
+            window.location.href = './cart.html';
         });
 
         // Hover to show (0.5s delay)
@@ -388,7 +388,7 @@ class CartDropdownRenderer {
         el.dataset.productId = item.id; // Store product ID for navigation
 
         const colorDisplay = Object.keys(item.color || {}).find(k => item.color[k] === item.selectedColor) || item.selectedColor;
-        const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+        const placeholderSrc = './images/products/placeholder.jpg';
 
         // Determine the frozen label text
         let frozenLabel = '';
@@ -422,7 +422,7 @@ class CartDropdownRenderer {
                 </div>
                 <div class="cart-action-btns">
                     <button class="cart-like-btn ${isLiked ? 'liked' : ''}" data-id="${item.variantId}" data-product-id="${item.id}" title="${isLiked ? 'Remove from wishlist' : 'Add to wishlist'}" ${isLogicallyDeleted ? 'disabled' : ''}>
-                        <img src="/201-project/images/icons/${isLiked ? 'red-heart' : 'heart'}.png" alt="Like" class="like-icon">
+                        <img src="./images/icons/${isLiked ? 'red-heart' : 'heart'}.png" alt="Like" class="like-icon">
                     </button>
                     <button class="qty-btn delete" data-id="${item.variantId}" title="Remove from cart">Delete</button>
                 </div>
@@ -459,7 +459,7 @@ class CartDropdownRenderer {
     navigateToProductDetail(productId) {
         sessionStorage.setItem('productDetailId', productId);
         sessionStorage.setItem('productDetailSource', 'cart');
-        window.location.href = '/201-project/product-detail.html';
+        window.location.href = './product-detail.html';
     }
 
     /**
@@ -515,7 +515,7 @@ class CartDropdownRenderer {
             // Remove from wishlist
             this.removeFromWishlist(productId, item.name);
             btn.classList.remove('liked');
-            icon.src = '/201-project/images/icons/heart.png';
+            icon.src = './images/icons/heart.png';
             btn.title = 'Add to wishlist';
         } else {
             // Add to wishlist
@@ -523,7 +523,7 @@ class CartDropdownRenderer {
                 detail: { product: item }
             }));
             btn.classList.add('liked');
-            icon.src = '/201-project/images/icons/red-heart.png';
+            icon.src = './images/icons/red-heart.png';
             btn.title = 'Remove from wishlist';
         }
 

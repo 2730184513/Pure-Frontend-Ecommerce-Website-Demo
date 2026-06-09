@@ -98,7 +98,7 @@ class ProductDetailManager {
 
         // Redirect to shop page after a delay
         setTimeout(() => {
-            window.location.href = '/201-project/shop.html';
+            window.location.href = './shop.html';
         }, 2000);
     }
 

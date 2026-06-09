@@ -34,12 +34,12 @@ class BreadcrumbRenderer {
      * @private
      */
     buildBreadcrumbHTML(sourcePage, productName) {
-        let html = '<a href="/201-project/index.html" class="breadcrumb-link">Home</a>';
+        let html = '<a href="./index.html" class="breadcrumb-link">Home</a>';
 
         // Add Shop link if coming from shop or another product detail page
         if (sourcePage === 'shop' || sourcePage === 'product-detail') {
             html += '<span class="breadcrumb-separator">&gt;</span>';
-            html += '<a href="/201-project/shop.html" class="breadcrumb-link">Shop</a>';
+            html += '<a href="./shop.html" class="breadcrumb-link">Shop</a>';
         }
 
         // Add separator and product name

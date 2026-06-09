@@ -112,7 +112,7 @@ class ManageManager {
 
                         // Redirect to home page
                         setTimeout(() => {
-                            window.location.href = '/201-project/index.html';
+                            window.location.href = './index.html';
                         }, 1500);
                     } else {
                         if (window.toast) {
@@ -184,7 +184,7 @@ class ManageManager {
 
         // Store product ID in sessionStorage and redirect to manage page
         sessionStorage.setItem('editProductId', product.id);
-        window.location.href = `/201-project/manage.html?edit=${product.id}`;
+        window.location.href = `./manage.html?edit=${product.id}`;
     }
 
     /**
@@ -230,7 +230,7 @@ class ManageManager {
 
                 // 成功后延迟返回首页
                 setTimeout(() => {
-                    window.location.href = '/201-project/index.html';
+                    window.location.href = './index.html';
                 }, 1500);
                 return;
 
@@ -247,7 +247,7 @@ class ManageManager {
 
                 // 成功后延迟返回首页
                 setTimeout(() => {
-                    window.location.href = '/201-project/index.html';
+                    window.location.href = './index.html';
                 }, 1500);
                 return;
             }

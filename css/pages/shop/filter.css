@@ -262,7 +262,7 @@
     color: #333;
     background: white;
     outline: none;
-    background-image: url('/201-project/images/icons/calendar.png');
+    background-image: url('./images/icons/calendar.png');
     background-repeat: no-repeat;
     background-position: right 15px center;
     background-size: 16px;

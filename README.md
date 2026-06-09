@@ -2,7 +2,7 @@
 
 [中文说明](#项目说明)
 
-Demonstration Link: https://2730184513.github.io/201-project/
+Demonstration Link: https://2730184513.github.io./
 
 >   [!Note]
 >
@@ -20,7 +20,7 @@ User data and transaction data are cached in the browser in the form of sessions
 
 # 项目说明
 
-演示链接：https://2730184513.github.io/201-project/
+演示链接：https://2730184513.github.io./
 
 >   [!Note]
 >

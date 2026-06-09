@@ -183,7 +183,7 @@ class CartSummaryCarousel {
         }
 
         // Fallback: use placeholder if cart item not found
-        const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+        const placeholderSrc = './images/products/placeholder.jpg';
         const img = document.createElement('img');
         img.src = placeholderSrc;
         img.alt = 'Selected product';

@@ -177,7 +177,7 @@ class WishlistDropdownRenderer {
 
         // Store original src
         const originalSrc = heartImg.src;
-        const redHeartSrc = '/201-project/images/icons/red-heart.png';
+        const redHeartSrc = './images/icons/red-heart.png';
 
         // Remove animation class if already exists
         this.icon.classList.remove('wishlist-icon-animate');
@@ -231,7 +231,7 @@ class WishlistDropdownRenderer {
             el.dataset.productId = item.id; // Store product ID for navigation
 
             // Use placeholder first for instant display
-            const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+            const placeholderSrc = './images/products/placeholder.jpg';
 
             // Brief text handling
             const briefText = item.brief ? item.brief.substring(0, 30) + '...' : 'No description';
@@ -298,7 +298,7 @@ class WishlistDropdownRenderer {
     navigateToProductDetail(productId) {
         sessionStorage.setItem('productDetailId', productId);
         sessionStorage.setItem('productDetailSource', 'wishlist');
-        window.location.href = '/201-project/product-detail.html';
+        window.location.href = './product-detail.html';
     }
 
     /**

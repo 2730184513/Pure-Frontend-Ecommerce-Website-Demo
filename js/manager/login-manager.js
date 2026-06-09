@@ -178,7 +178,7 @@ class LoginManager {
         const joinUsBtn = document.getElementById('joinUsBtn');
         if (joinUsBtn) {
             joinUsBtn.addEventListener('click', () => {
-                window.location.href = '/201-project/about.html';
+                window.location.href = './about.html';
             });
         }
     }

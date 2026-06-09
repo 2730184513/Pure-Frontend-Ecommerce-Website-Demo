@@ -164,10 +164,10 @@ class PagingManager {
 
         const icon = document.createElement('img');
         if (type === 'prev') {
-            icon.src = '/201-project/images/icons/left.png';
+            icon.src = './images/icons/left.png';
             icon.alt = 'Previous page';
         } else {
-            icon.src = '/201-project/images/icons/right.png';
+            icon.src = './images/icons/right.png';
             icon.alt = 'Next page';
         }
         icon.className = 'page-icon';

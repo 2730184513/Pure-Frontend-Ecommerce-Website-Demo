@@ -176,7 +176,7 @@ class HomeManager {
      */
     _handleShowMore() {
         console.log('🔄 Redirecting to shop page...');
-        window.location.href = '/201-project/shop.html';
+        window.location.href = './shop.html';
     }
 
 

@@ -154,7 +154,7 @@ class FormManager {
         const headerHtml = `
             <div class="billing-header">
                 <button type="button" class="back-button" title="Back to Cart">
-                    <img src="/201-project/images/icons/arrow-left.png" alt="Back">
+                    <img src="./images/icons/arrow-left.png" alt="Back">
                 </button>
                 <div class="billing-header-content">
                     <h1>Billing details</h1>

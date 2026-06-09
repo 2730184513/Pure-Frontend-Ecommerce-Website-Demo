@@ -125,7 +125,7 @@ class CheckoutSummaryRenderer {
             || item.selectedColor;
 
         // Use placeholder first
-        const placeholderSrc = '/201-project/images/products/placeholder.jpg';
+        const placeholderSrc = './images/products/placeholder.jpg';
 
         // Calculate prices
         const originalPrice = item.price;

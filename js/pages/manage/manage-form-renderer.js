@@ -228,7 +228,7 @@ class ManageFormRenderer {
                    pattern="^#[0-9A-Fa-f]{6}$">
             <div class="color-picker-wrapper-new">
                 <button type="button" class="color-picker-btn" title="Pick color">
-                    <img src="/201-project/images/icons/platte.png" alt="Color picker" class="palette-icon">
+                    <img src="./images/icons/platte.png" alt="Color picker" class="palette-icon">
                 </button>
                 <input type="color" class="color-picker-hidden" value="${colorHex}">
             </div>

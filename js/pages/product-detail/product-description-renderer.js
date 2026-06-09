@@ -109,7 +109,7 @@ class ProductDescriptionRenderer {
 
         const imagesHTML = pictures.map(pic => `
             <div class="description-image">
-                <img src="${pic}" alt="Product description" loading="lazy" onerror="this.onerror=null;this.src='/201-project/images/products/placeholder.jpg';">
+                <img src="${pic}" alt="Product description" loading="lazy" onerror="this.onerror=null;this.src='./images/products/placeholder.jpg';">
             </div>
         `).join('');
 
@@ -229,11 +229,11 @@ class ProductDescriptionRenderer {
         const totalFull = roundUp ? fullStars + 1 : fullStars;
         
         for (let i = 0; i < totalFull && i < 5; i++) {
-            html += '<img src="/201-project/images/icons/star.png" alt="star" class="star-icon" onerror="this.onerror=null;this.src=\'/201-project/images/products/placeholder.jpg\';">';
+            html += '<img src="./images/icons/star.png" alt="star" class="star-icon" onerror="this.onerror=null;this.src=\'./images/products/placeholder.jpg\';">';
         }
         
         if (hasHalfStar && totalFull < 5) {
-            html += '<img src="/201-project/images/icons/half-star.png" alt="half star" class="star-icon" onerror="this.onerror=null;this.src=\'/201-project/images/products/placeholder.jpg\';">';
+            html += '<img src="./images/icons/half-star.png" alt="half star" class="star-icon" onerror="this.onerror=null;this.src=\'./images/products/placeholder.jpg\';">';
         }
 
         return html;

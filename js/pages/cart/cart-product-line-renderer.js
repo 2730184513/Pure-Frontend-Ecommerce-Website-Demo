@@ -394,7 +394,7 @@ class CartProductLineRenderer {
     navigateToProductDetail(productId) {
         sessionStorage.setItem('productDetailId', productId);
         sessionStorage.setItem('productDetailSource', 'cart');
-        window.location.href = '/201-project/product-detail.html';
+        window.location.href = './product-detail.html';
     }
 }
 

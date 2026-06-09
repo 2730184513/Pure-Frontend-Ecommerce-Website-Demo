@@ -187,7 +187,7 @@ class ProductPopup {
         event.stopPropagation();
 
         // Navigate to manage page with product ID
-        window.location.href = `/201-project/manage.html?edit=${this.product.id}`;
+        window.location.href = `./manage.html?edit=${this.product.id}`;
     }
 
     /**

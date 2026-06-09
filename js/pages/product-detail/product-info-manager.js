@@ -450,7 +450,7 @@ class ProductInfoManager {
         localStorage.removeItem('checkout_selected_items');
 
         // Navigate to checkout
-        window.location.href = '/201-project/checkout.html';
+        window.location.href = './checkout.html';
     }
 
     /**
