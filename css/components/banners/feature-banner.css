@@ -33,10 +33,10 @@
 }
 
 /* Define icons via CSS */
-.icon-trophy { background-image: url('./images/icons/trophy.png'); }
-.icon-guarantee { background-image: url('./images/icons/guarantee.png'); }
-.icon-shipping { background-image: url('./images/icons/shipping.png'); }
-.icon-support { background-image: url('./images/icons/customer-support.png'); }
+.icon-trophy { background-image: url('../../../images/icons/trophy.png'); }
+.icon-guarantee { background-image: url('../../../images/icons/guarantee.png'); }
+.icon-shipping { background-image: url('../../../images/icons/shipping.png'); }
+.icon-support { background-image: url('../../../images/icons/customer-support.png'); }
 
 .feature-text {
     display: flex;

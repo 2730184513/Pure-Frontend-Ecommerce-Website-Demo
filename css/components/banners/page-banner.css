@@ -3,7 +3,7 @@
 .banner {
     position: relative;
     height: 316px;
-    background-image: url('./images/shop_banner.png');
+    background-image: url('../../../images/shop_banner.png');
     background-size: cover;
     background-position: center;
     display: flex;
