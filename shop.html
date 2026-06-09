@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Furniro</title>
 
-    <link rel="stylesheet" href="/201-project/css/layout/main.css">
+    <link rel="stylesheet" href="./css/layout/main.css">
 
     <!-- Header component styles -->
-    <link rel="stylesheet" href="/201-project/css/layout/header.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/search.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/dropdown-base.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/cart.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/wishlist.css">
-    <link rel="stylesheet" href="/201-project/css/components/header/user.css">
+    <link rel="stylesheet" href="./css/layout/header.css">
+    <link rel="stylesheet" href="./css/components/header/search.css">
+    <link rel="stylesheet" href="./css/components/header/dropdown-base.css">
+    <link rel="stylesheet" href="./css/components/header/cart.css">
+    <link rel="stylesheet" href="./css/components/header/wishlist.css">
+    <link rel="stylesheet" href="./css/components/header/user.css">
 
-    <link rel="stylesheet" href="/201-project/css/layout/footer.css">
-    <link rel="stylesheet" href="/201-project/css/core/products.css">
-    <link rel="stylesheet" href="/201-project/css/core/pop-up.css">
-    <link rel="stylesheet" href="/201-project/css/core/toast.css">
-    <link rel="stylesheet" href="/201-project/css/components/banners/page-banner.css">
-    <link rel="stylesheet" href="/201-project/css/layout/shop.css">
-    <link rel="stylesheet" href="/201-project/css/pages/shop/toolbar.css">
-    <link rel="stylesheet" href="/201-project/css/pages/shop/pagination.css">
-    <link rel="stylesheet" href="/201-project/css/pages/shop/filter.css">
-    <link rel="stylesheet" href="/201-project/css/components/banners/feature-banner.css">
+    <link rel="stylesheet" href="./css/layout/footer.css">
+    <link rel="stylesheet" href="./css/core/products.css">
+    <link rel="stylesheet" href="./css/core/pop-up.css">
+    <link rel="stylesheet" href="./css/core/toast.css">
+    <link rel="stylesheet" href="./css/components/banners/page-banner.css">
+    <link rel="stylesheet" href="./css/layout/shop.css">
+    <link rel="stylesheet" href="./css/pages/shop/toolbar.css">
+    <link rel="stylesheet" href="./css/pages/shop/pagination.css">
+    <link rel="stylesheet" href="./css/pages/shop/filter.css">
+    <link rel="stylesheet" href="./css/components/banners/feature-banner.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap"
             rel="stylesheet">
@@ -41,7 +41,7 @@
         <div class="filter-inner-content">
             <div class="filter-header">
                 <button id="filter-close-btn" class="filter-close-btn" aria-label="Close filter">
-                    <img src="/201-project/images/icons/arrow-left.png" alt="Close">
+                    <img src="./images/icons/arrow-left.png" alt="Close">
                 </button>
                 <div class="filter-title">Filters</div>
                 <button id="clear-all-filters-btn" class="clear-all-btn">Clear All</button>
@@ -118,8 +118,8 @@
             <div class="toolbar-left">
                 <button class="filter-btn" id="filter-toggle-btn">
                     <div class="icon-filter-container">
-                        <img class="icon-filter icon-filter-main" src="/201-project/images/icons/filter.png" alt="Filter">
-                        <img class="icon-filter icon-filter-alt" src="/201-project/images/icons/arrow-left.png" alt="Close Filter">
+                        <img class="icon-filter icon-filter-main" src="./images/icons/filter.png" alt="Filter">
+                        <img class="icon-filter icon-filter-alt" src="./images/icons/arrow-left.png" alt="Close Filter">
                     </div>
                     <span class="filter-span">Filter</span>
                 </button>
@@ -134,7 +134,7 @@
                     <div class="custom-dropdown" id="show-dropdown">
                         <div class="selected-option">
                             <span id="current-show-label">16</span>
-                            <img src="/201-project/images/icons/down.png" class="dropdown-arrow" alt="arrow">
+                            <img src="./images/icons/down.png" class="dropdown-arrow" alt="arrow">
                         </div>
                         <div class="dropdown-options">
                             <div class="dropdown-item" data-value="4">
@@ -160,7 +160,7 @@
                     <div class="custom-dropdown" id="sort-dropdown">
                         <div class="selected-option">
                             <span id="current-sort-label">Default</span>
-                            <img src="/201-project/images/icons/down.png" class="dropdown-arrow" alt="arrow">
+                            <img src="./images/icons/down.png" class="dropdown-arrow" alt="arrow">
                         </div>
                         <div class="dropdown-options">
                             <div class="dropdown-item" data-key="name">
@@ -194,43 +194,43 @@
 <div id="footer-placeholder"></div>
 
 <!-- Core utilities -->
-<script src="/201-project/js/component/component-loader.js"></script>
-<script src="/201-project/js/core/page-utility.js"></script>
-<script src="/201-project/js/core/toast.js"></script>
-<script src="/201-project/js/core/auth-guard.js"></script>
-<script src="/201-project/js/core/navigate.js"></script>
+<script src="./js/component/component-loader.js"></script>
+<script src="./js/core/page-utility.js"></script>
+<script src="./js/core/toast.js"></script>
+<script src="./js/core/auth-guard.js"></script>
+<script src="./js/core/navigate.js"></script>
 
 <!-- Data layer -->
-<script src="/201-project/js/core/product-repository.js"></script>
-<script src="/201-project/js/core/data-sync-utils.js"></script>
-<script src="/201-project/js/pages/shop/product-filter.js"></script>
+<script src="./js/core/product-repository.js"></script>
+<script src="./js/core/data-sync-utils.js"></script>
+<script src="./js/pages/shop/product-filter.js"></script>
 
 <!-- Header components -->
-<script src="/201-project/js/component/header/search.js"></script>
-<script src="/201-project/js/component/header/cart-dropdown-renderer.js"></script>
-<script src="/201-project/js/component/header/cart.js"></script>
-<script src="/201-project/js/component/header/wishlist-dropdown-renderer.js"></script>
-<script src="/201-project/js/component/header/wishlist.js"></script>
-<script src="/201-project/js/component/header/user-dropdown-renderer.js"></script>
-<script src="/201-project/js/component/header/user.js"></script>
+<script src="./js/component/header/search.js"></script>
+<script src="./js/component/header/cart-dropdown-renderer.js"></script>
+<script src="./js/component/header/cart.js"></script>
+<script src="./js/component/header/wishlist-dropdown-renderer.js"></script>
+<script src="./js/component/header/wishlist.js"></script>
+<script src="./js/component/header/user-dropdown-renderer.js"></script>
+<script src="./js/component/header/user.js"></script>
 
 <!-- Product rendering -->
-<script src="/201-project/js/core/pop-up.js"></script>
-<script src="/201-project/js/core/product-card-renderer.js"></script>
+<script src="./js/core/pop-up.js"></script>
+<script src="./js/core/product-card-renderer.js"></script>
 
 <!-- Shop page specific components (load in dependency order) -->
-<script src="/201-project/js/pages/shop/sort-strategy.js"></script>
-<script src="/201-project/js/pages/shop/filter-sidebar.js"></script>
-<script src="/201-project/js/pages/shop/show-sort.js"></script>
-<script src="/201-project/js/pages/shop/paging.js"></script>
-<script src="/201-project/js/pages/shop/toolbar.js"></script>
+<script src="./js/pages/shop/sort-strategy.js"></script>
+<script src="./js/pages/shop/filter-sidebar.js"></script>
+<script src="./js/pages/shop/show-sort.js"></script>
+<script src="./js/pages/shop/paging.js"></script>
+<script src="./js/pages/shop/toolbar.js"></script>
 
 <!-- Page managers -->
-<script src="/201-project/js/manager/header-manager.js"></script>
-<script src="/201-project/js/manager/shop-manager.js"></script>
+<script src="./js/manager/header-manager.js"></script>
+<script src="./js/manager/shop-manager.js"></script>
 
 <!-- Main controller (initializes all page managers) -->
-<script src="/201-project/js/manager/main.js"></script>
+<script src="./js/manager/main.js"></script>
 
 <script>
     // Initialize shop page components
